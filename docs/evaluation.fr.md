@@ -12,7 +12,10 @@ title: Évaluation & Discussion
 
 # Évaluation
 
-> :bulb: Cette page sert à présenter comment le projet a été évalué, analysé ou validé.
+!!! info "Avis"
+    À venir.
+
+<!-- > :bulb: Cette page sert à présenter comment le projet a été évalué, analysé ou validé.
 > Elle ne remplace pas le rapport final, mais permet de documenter progressivement les résultats obtenus et leur interprétation.
 
 
@@ -62,4 +65,4 @@ title: Évaluation & Discussion
 > - hypothèses ;
 > - portée limitée ;
 > - temps disponible ;
-> - biais possibles.
+> - biais possibles. -->

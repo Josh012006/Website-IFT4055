@@ -12,7 +12,10 @@ title: Travail réalisé
 
 # Réalisation
 
-> :bulb: Cette page documente l’évolution concrète du projet durant le trimestre.
+!!! info "Avis"
+    À venir.
+
+<!-- > :bulb: Cette page documente l’évolution concrète du projet durant le trimestre.
 > Elle ne remplace pas le rapport final, mais permet de documenter progressivement le travail effectué, les décisions prises et les principaux résultats obtenus.
 
 
@@ -64,4 +67,4 @@ title: Travail réalisé
 > - diagrammes ;
 > - graphiques ;
 > - prototypes ;
-> - extraits de résultats.
+> - extraits de résultats. -->

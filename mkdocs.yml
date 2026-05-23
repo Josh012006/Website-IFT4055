@@ -1,11 +1,10 @@
-site_name: Site de suivi IFT4055
-site_description: Template de site web pour le cours IFT4055
-site_author: Louis-Edouard Lafontant
-site_url: https://ift4055-template.github.io
+site_name: RL Fine-Tuning of VLAs — Josué Mongan
+site_description: Suivi de projet de recherche — RL Fine-Tuning de modèles VLA au Mila
+site_author: Josué Mongan
+site_url: https://josh012006.github.io/ift4055
 
 theme:
   name: material
-  language: fr
   features:
     - navigation.instant
     - navigation.tabs
@@ -20,32 +19,28 @@ theme:
     - content.code.annotate
   palette:
     - scheme: default
-      primary: indigo
-      accent: indigo
+      primary: teal
+      accent: cyan
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - scheme: slate
-      primary: indigo
-      accent: indigo
+      primary: teal
+      accent: cyan
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
   font:
     text: Roboto
     code: Roboto Mono
-    
-copyright: "&copy; 2026 <b>DIRO</b> &ndash; Template de site pour le cours IFT4055 <br>Département d'informatique et de recherche opérationnelle <br>Université de Montréal"
+  favicon: images/icon.png
+  icon:
+    logo: material/robot
 
-repo_name: ift4055-template
-repo_url: https://github.com/ift4055-template/ift4055-template.github.io
-# edit_uri: edit/main/docs/
+copyright: "&copy; 2026 <b>Josué Mongan</b> &ndash; Mila / Université de Montréal <br>Département d'informatique et de recherche opérationnelle"
 
-# extra:
-#   social:
-#     - icon: fontawesome/brands/github
-#       link: https://github.com/udem-diro/template-projet
-#       name: squidfunk on Fosstodon
+repo_name: Project's repository
+repo_url: https://github.com/montrealrobotics/RLinf
 
 markdown_extensions:
   - admonition
@@ -67,7 +62,28 @@ markdown_extensions:
 
 plugins:
   - search
-
+  - i18n:
+      docs_structure: suffix
+      languages:
+        - locale: fr
+          default: true
+          name: Français
+          build: true
+          nav_translations:
+            Vue d'ensemble: Vue d'ensemble
+            Suivi: Suivi
+            Études préliminaires: Études préliminaires
+            Réalisation: Réalisation
+            Évaluation: Évaluation
+        - locale: en
+          name: English
+          build: true
+          nav_translations:
+            Vue d'ensemble: Project Overview
+            Suivi: Progress
+            Études préliminaires: Preliminary Studies
+            Réalisation: Implementation
+            Évaluation: Evaluation
 
 nav:
   - Vue d'ensemble: index.md
