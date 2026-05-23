@@ -56,3 +56,46 @@ Here are some simulation environments used for training and evaluating RL models
 - **LIBERO**: A robotics benchmark designed to evaluate the generalization and transfer capabilities of robotic policies across varied and compositional tasks.
 - **RoboCasa**: A simulation environment focused on realistic household tasks, enabling evaluation of manipulation and interaction with everyday objects.
 - **ManiSkill**: A robotics simulation framework oriented toward manipulation tasks, offering complex environments that require precision and planning.
+
+<!-- ### Literature Review or State of the Art
+
+> Present the existing works, approaches, or solutions relevant to the project.  
+> Compare the identified approaches and discuss their strengths, limitations, or differences.
+
+### Problem Analysis
+
+> Break down the studied problem:
+>
+> - constraints;
+> - assumptions;
+> - limitations of existing approaches;
+> - important needs or criteria.
+
+### Preliminary Explorations and Experiments
+
+> Present the initial tests, prototypes, analyses, or experiments carried out to better understand the subject.
+
+### Selected Choices
+
+> Explain and justify the methodological, technical, or conceptual choices retained for the continuation of the project. -->
+
+### References
+
+<!-- > Include the main references used:
+>
+> - scientific articles;
+> - documentation;
+> - books;
+> - similar projects;
+> - technical resources. -->
+
+#### Scientific Articles
+
+To better approach this project, here is a list of the scientific articles I have consulted:
+
+- ["OpenVLA: An Open-Source Vision-Language-Action Model for Robotic Control"](https://arxiv.org/abs/2406.09475): Currently reading
+- ["LoRA: Low-Rank Adaptation of Large Language Models"](https://arxiv.org/abs/2106.09685): Currently reading
+- ["Training language models to follow instructions with human feedback"](https://arxiv.org/abs/2203.02155): Currently reading
+- ["Fine-Tuning Vision-Language-Action Models: Optimizing Speed and Success"](https://arxiv.org/abs/2502.19645): Currently reading
+- ["LIBERO-Plus: In-depth Robustness Analysis of Vision-Language-Action Models"](https://arxiv.org/abs/2510.13626): Currently reading
+- ["VLAs Are Confined yet Capable of Generalizing to Novel Tasks"](https://openreview.net/forum?id=jtrhwfgseW): Currently reading
