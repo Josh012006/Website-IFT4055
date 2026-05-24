@@ -94,7 +94,7 @@ Voici quelques environnements de simulation utilisés pour l’entraînement et 
 
 Pour mieux aborder ce projet, voici une liste des articles scientifiques que j'ai consulté : 
 
-- ["OpenVLA: An Open-Source Vision-Language-Action Model for Robotic Control"](https://arxiv.org/abs/2406.09475) : En cours de lecture
+- ["OpenVLA: An Open-Source Vision-Language-Action Model"](https://arxiv.org/abs/2406.09246) : En cours de lecture
 - ["LoRA: Low-Rank Adaptation of Large Language Models"](https://arxiv.org/abs/2106.09685) : En cours de lecture
 - ["Training language models to follow instructions with human feedback"](https://arxiv.org/abs/2203.02155) : En cours de lecture
 - ["Fine-Tuning Vision-Language-Action Models: Optimizing Speed and Success"](https://arxiv.org/abs/2502.19645) : En cours de lecture
