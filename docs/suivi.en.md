@@ -12,48 +12,44 @@ title: Project Tracking
 
 # Project Tracking
 
-!!! info "Notice"
-    Coming soon.
+## Week 1 (May 5–9, 2026)
 
-<!-- > :bulb: This page documents the project’s progress over time.
-> It is used to make decisions, adjustments, and learning visible.
-> Entries can be weekly or bi-weekly.  
-> Remember to remove or comment out notes (`>`) before final submission.
-
----
-
-## Week 1 (January 12–18)
-
-### Period objectives
-- Clarify the problem statement
-- Explore existing solutions
-- Produce an initial conceptual prototype
+### Goals for the period
+- Get in touch with the team and set up the work environment
+- Launch a first RL training run on the Mila cluster
+- Identify and resolve infrastructure issues
 
 ### Work completed
 
 !!! abstract "Progress"
-    - [x] Analysis of existing solutions
-        - Comparison of three similar tools
-    - [x] Low-fidelity prototype (Figma)
-    - [ ] User validation
-        - Postponed to next week
+    - [x] Connected with the team, joined the lab's Slack
+    - [x] Read the RLinf documentation (LIBERO)
+    - [x] Connected to the Mila cluster and resolved access issues with IT support
+    - [x] Cloned the repository and installed dependencies on an interactive compute node (`salloc --no-root`)
+    - [x] Wrote the `job.sh` script and submitted it via `sbatch`
+    - [x] Progressively resolved errors: wrong normalization key, insufficient CPU RAM, insufficient GPU VRAM, multi-GPU NCCL timeout
+    - [x] Switched to A100L GPU (80GB) with `enable_offload: True` and `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`
+    - [x] First successful training run reaching 132 steps
+    - [x] Migrated project to `$SCRATCH`, created symbolic link from `$HOME`, added automatic checkpoint cleanup script
+    - [x] Full 1000-step training completed (31h40)
+    - [x] Versioned job script and config on GitHub
+    - [ ] Batch size increase — deferred to next week
 
 ### Decisions and adjustments
 
-> Fill this section only if structural decisions were made
-> or if the project direction changed.
-
 !!! info "Decisions"
-    - Abandonment of approach X due to excessive complexity
-    - Reformulation of the problem statement after initial analysis
+    - Dropped L40S GPU (44GB insufficient) in favor of A100L (80GB)
+    - Switched to single-GPU setup with `enable_offload: True` instead of multi-GPU (NCCL issues)
+    - Reduced scope: moved away from LIBERO-90 (90 simultaneous tasks) toward a more focused configuration
+    - Added checkpoint cleanup script to avoid filling up storage
 
 ### Difficulties encountered
 
-> Fill this section only if obstacles significantly impacted
-> project progress.
-
 !!! warning "Difficulties"
-    - Issue configuring the Mermaid plugin
-        - Confusion between `mkdocs-mermaid2-plugin` (pip)
-          and `mermaid2` (plugin name)
-        - Resolved after cleanup and correct configuration in `mkdocs.yml` -->
+    - The model is loaded twice into GPU memory (RolloutGroup + ActorGroup), doubling the memory footprint and causing OOM errors
+    - Resolved by enabling `enable_offload: True` and setting `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`
+    - Corrupted checkpoint at step 50: the `$HOME` directory (96GB) was too small to store checkpoints (~50GB each)
+    - Resolved by moving the project to `$SCRATCH` and adding the cleanup script
+    - Ray conflict on the assigned node: a residual Ray cluster from another user prevented initialization
+    - Resolved by excluding the contaminated node via `#SBATCH --exclude`
+    - Training results at 1000 steps: occasional reward spikes (~0.13) with no stable learning trend — batch size too small to extract a robust learning signal
