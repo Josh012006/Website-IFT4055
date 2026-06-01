@@ -12,7 +12,7 @@ title: Project Tracking
 
 # Project Tracking
 
-## Week 1 (May 5–9, 2026)
+## Week 1 (May 4–9, 2026)
 
 ### Goals for the period
 - Get in touch with the team and set up the work environment
@@ -53,3 +53,99 @@ title: Project Tracking
     - Ray conflict on the assigned node: a residual Ray cluster from another user prevented initialization
     - Resolved by excluding the contaminated node via `#SBATCH --exclude`
     - Training results at 1000 steps: occasional reward spikes (~0.13) with no stable learning trend — batch size too small to extract a robust learning signal
+
+
+## Week 2 (May 11–15, 2026)
+
+### Goals for the period
+- Analyze the previous training results and plan next steps
+- Switch environment and model based on supervisor recommendations
+- Launch a first training run with the new setup
+
+### Work completed
+
+!!! abstract "Progress"
+    - [x] Discussion with the team on Week 1 results and next steps
+    - [x] Switched to RoboCasa environment with the π0 model (~3B parameters) using PPO
+    - [x] Installed RoboCasa dependencies and downloaded kitchen assets (~5GB)
+    - [ ] First successful training run with π0 — blocked by a Ray initialization hang
+
+### Decisions and adjustments
+
+!!! info "Decisions"
+    - Dropped OpenVLA-OFT as the primary model in favor of π0 (~3B), better suited for research
+    - Dropped LIBERO as the primary benchmark (mostly saturated) in favor of RoboCasa
+    - LoRA will be enabled to reduce memory footprint in the next training run
+
+### Difficulties encountered
+
+!!! warning "Difficulties"
+    - The reward spikes from the previous week are explained by an exploration issue, not batch size — gradient accumulation has no effect on learning dynamics
+    - Ray hang at job startup: the Ray process initializes then blocks with no further output. Root cause under investigation.
+
+
+## Week 3 (May 18–22, 2026)
+
+### Goals for the period
+- Launch a successful π0 training run on RoboCasa
+- Start a LIBERO-Spatial training run with OpenVLA-OFT
+- Document and share experiments with the team
+
+### Work completed
+
+!!! abstract "Progress"
+    - [x] Enabled LoRA (rank 32) for π0 and tuned config for single A100L (80GB)
+    - [x] First successful π0 + RoboCasa CloseDrawer (PPO) run — 24 steps, `success_once` reaching 0.8125 at step 20
+    - [x] Resolved `robosuite` version conflict between LIBERO and RoboCasa — created two separate venvs (`.venv-robocasa` and `.venv-libero`)
+    - [x] Updated all job scripts to point to the correct venv
+    - [x] Opened PR on `montrealrobotics/RLinf` with configs, job scripts, and `EXPERIMENTS_README.md`
+    - [x] Started LIBERO-Spatial GRPO run — `success_once` oscillating between 0.22 and 0.875 over 38 steps
+    - [x] π0 + RoboCasa CloseDrawer run completed at 150 steps — final metrics: `success_once` ~0.82, `critic/value_loss` ~0.005, `approx_kl` ~0.036
+    - [x] Visualized results via TensorBoard, saved episode videos
+    - [x] Uploaded final weights to HuggingFace (`josh11234/RLinf-Pi0-RoboCasa-CloseDrawer-PPO`)
+    - [x] Shared results and videos with the group via Slack
+    - [ ] LIBERO-Spatial run still ongoing
+
+### Decisions and adjustments
+
+!!! info "Decisions"
+    - LIBERO and RoboCasa require separate venvs due to dependency conflicts — this constraint is documented in the README
+    - RoboCasa CloseDrawer proved too easy as a starting task: the SFT base model already achieves 0.6–0.7 from step 1, leaving little room for RL improvement
+    - LIBERO-Long identified as the next target task — harder for SFT (11.9% base rate), better candidate to demonstrate RL's contribution
+    - Added `unset RAY_ADDRESS` to job scripts to prevent conflicts with residual Ray clusters from other users
+
+### Difficulties encountered
+
+!!! warning "Difficulties"
+    - Job crashed at step 24 with `FileNotFoundError: omron_mobile_base.xml` — RoboCasa assets missing after venv reinstall. Resolved by downloading assets separately with `python -m robocasa.scripts.download_kitchen_assets`
+    - Recurring Ray version conflicts on multiple nodes (`cn-g008`, `cn-g012`, `cn-g026`) — residual clusters from other users. Resolved with `unset RAY_ADDRESS` and node exclusion
+    - LIBERO-Spatial run preempted after ~19h — resumed from last checkpoint
+
+
+## Week 4 (May 25–29, 2026)
+
+### Goals for the period
+- Analyze LIBERO-Spatial results and plan next steps
+- Launch LIBERO-Long training
+- Deepen the literature review
+
+### Work completed
+
+!!! abstract "Progress"
+    - [x] Analyzed LIBERO-Spatial run results — insufficient performance, suspected learning rate not adapted after reducing the number of epochs
+    - [x] Read the full OpenVLA-OFT research paper — confirms that the A100 + LoRA configuration is the one recommended by the authors themselves
+    - [x] Comprehensive review of the RLinf repository and documentation — catalogued available tasks per benchmark with their respective SFT base models
+    - [x] Configured and launched LIBERO-Long training run (150 steps) with OpenVLA-OFT + GRPO
+    - [x] Run preempted at step 145 — resumed from last checkpoint, completion imminent
+    - [ ] LIBERO-Long results analysis — pending run completion
+
+### Decisions and adjustments
+
+!!! info "Decisions"
+    - LIBERO-Long prioritized as the main task: the SFT base model only achieves 11.9% success rate, leaving a large margin for RL improvement
+    - Learning rate to be adjusted for future runs following the instabilities observed on LIBERO-Spatial
+
+### Difficulties encountered
+
+!!! warning "Difficulties"
+    - LIBERO-Long run preempted at step 145 before completing the planned 150 steps — resumed from available checkpoint

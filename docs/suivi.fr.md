@@ -12,7 +12,7 @@ title: Suivi du projet
 
 # Suivi de projet
 
-## Semaine 1 (5–9 mai 2026)
+## Semaine 1 (4–9 mai 2026)
 
 ### Objectifs de la période
 - Prendre contact avec l'équipe et configurer l'environnement de travail
@@ -53,3 +53,99 @@ title: Suivi du projet
     - Conflit Ray sur le nœud assigné : un cluster Ray résiduel d'un autre utilisateur empêchait l'initialisation
     - Résolu en excluant le nœud contaminé via `#SBATCH --exclude`
     - Résultats de l'entraînement à 1000 steps : pics de récompense occasionnels (~0.13) sans tendance stable — batch size trop petit pour extraire un signal d'apprentissage robuste
+
+
+## Semaine 2 (11–15 mai 2026)
+
+### Objectifs de la période
+- Analyser les résultats de l'entraînement précédent et planifier la suite
+- Changer d'environnement et de modèle selon les recommandations du superviseur
+- Lancer un premier entraînement avec le nouveau setup
+
+### Travail réalisé
+
+!!! abstract "Avancement"
+    - [x] Discussion avec l'équipe sur les résultats de la semaine 1 et les prochaines étapes
+    - [x] Passage à l'environnement RoboCasa avec le modèle π0 (~3B paramètres) en PPO
+    - [x] Installation des dépendances RoboCasa et téléchargement des assets de cuisine (~5GB)
+    - [ ] Premier entraînement fonctionnel avec π0 — bloqué par un problème d'initialisation Ray
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - Abandon d'OpenVLA-OFT comme modèle principal au profit de π0 (~3B), plus adapté à la recherche
+    - Abandon de LIBERO comme benchmark principal (trop saturé) au profit de RoboCasa
+    - LoRA sera activé pour réduire l'empreinte mémoire lors du prochain entraînement
+
+### Difficultés rencontrées
+
+!!! warning "Difficultés"
+    - Les pics de récompense observés la semaine précédente s'expliquent par un problème d'exploration, pas de batch size — l'accumulation de gradients n'a pas d'effet sur la dynamique d'apprentissage
+    - Ray hang au démarrage du job : le processus Ray s'initialise puis bloque sans produire d'output. Cause en cours d'investigation.
+
+
+## Semaine 3 (18–22 mai 2026)
+
+### Objectifs de la période
+- Lancer un entraînement fonctionnel de π0 sur RoboCasa
+- Démarrer un entraînement LIBERO-Spatial avec OpenVLA-OFT
+- Documenter et partager les expériences avec l'équipe
+
+### Travail réalisé
+
+!!! abstract "Avancement"
+    - [x] Activation de LoRA (rank 32) pour π0 et tuning de la config pour un seul A100L (80GB)
+    - [x] Premier run fonctionnel π0 + RoboCasa CloseDrawer (PPO) — 24 steps, `success_once` atteignant 0.8125 au step 20
+    - [x] Résolution du conflit de versions `robosuite` entre LIBERO et RoboCasa — création de deux venvs séparés (`.venv-robocasa` et `.venv-libero`)
+    - [x] Mise à jour de tous les scripts `job.sh` pour pointer vers le bon venv
+    - [x] Ouverture d'une PR sur `montrealrobotics/RLinf` avec les configs, scripts et `EXPERIMENTS_README.md`
+    - [x] Démarrage du run LIBERO-Spatial GRPO — `success_once` oscillant entre 0.22 et 0.875 sur 38 steps
+    - [x] Run π0 + RoboCasa CloseDrawer complété à 150 steps — métriques finales : `success_once` ~0.82, `critic/value_loss` ~0.005, `approx_kl` ~0.036
+    - [x] Visualisation des résultats via TensorBoard, sauvegarde des vidéos d'épisodes
+    - [x] Upload des poids finaux sur HuggingFace (`josh11234/RLinf-Pi0-RoboCasa-CloseDrawer-PPO`)
+    - [x] Partage des résultats et vidéos avec le groupe via Slack
+    - [ ] Run LIBERO-Spatial toujours en cours
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - LIBERO et RoboCasa nécessitent des venvs séparés en raison de conflits de dépendances — cette contrainte est documentée dans le README
+    - RoboCasa CloseDrawer s'avère trop facile comme tâche de départ : le modèle SFT de base atteint déjà 0.6–0.7 dès le step 1, laissant peu de place à l'amélioration par RL
+    - LIBERO-Long identifié comme prochaine tâche cible — plus difficile pour le SFT (11.9% de base), meilleur candidat pour démontrer l'apport du RL
+    - `unset RAY_ADDRESS` ajouté aux scripts de job pour éviter les conflits avec des clusters Ray résiduels d'autres utilisateurs
+
+### Difficultés rencontrées
+
+!!! warning "Difficultés"
+    - Job crashé au step 24 avec `FileNotFoundError: omron_mobile_base.xml` — assets RoboCasa manquants après réinstallation du venv. Résolu en téléchargeant les assets séparément avec `python -m robocasa.scripts.download_kitchen_assets`
+    - Conflits de versions Ray récurrents sur plusieurs nœuds (`cn-g008`, `cn-g012`, `cn-g026`) — clusters résiduels d'autres utilisateurs. Résolu par `unset RAY_ADDRESS` et exclusion des nœuds contaminés
+    - Run LIBERO-Spatial préempté après ~19h — reprise depuis le dernier checkpoint
+
+
+## Semaine 4 (25–29 mai 2026)
+
+### Objectifs de la période
+- Analyser les résultats de LIBERO-Spatial et planifier la suite
+- Lancer l'entraînement LIBERO-Long
+- Approfondir la revue de littérature
+
+### Travail réalisé
+
+!!! abstract "Avancement"
+    - [x] Analyse des résultats du run LIBERO-Spatial — performances insuffisantes, suspicion d'un learning rate inadapté après réduction du nombre d'epochs
+    - [x] Lecture complète du papier de recherche OpenVLA-OFT — confirme que la configuration A100 + LoRA est celle recommandée par les auteurs eux-mêmes
+    - [x] Revue exhaustive du dépôt et de la documentation RLinf — inventaire des tâches disponibles par benchmark avec leurs modèles SFT de base respectifs
+    - [x] Configuration et lancement du run LIBERO-Long (150 steps) avec OpenVLA-OFT + GRPO
+    - [x] Run préempté au step 145 — reprise depuis le dernier checkpoint, fin imminente
+    - [ ] Analyse des résultats LIBERO-Long — en attente de la fin du run
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - LIBERO-Long priorisé comme tâche principale : le modèle SFT de base n'atteint que 11.9% de succès, ce qui laisse une large marge d'amélioration pour le RL
+    - Learning rate à ajuster pour les prochains runs suite aux instabilités observées sur LIBERO-Spatial
+
+### Difficultés rencontrées
+
+!!! warning "Difficultés"
+    - Run LIBERO-Long préempté au step 145 avant la fin des 150 steps prévus — repris depuis le checkpoint disponible
