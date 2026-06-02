@@ -849,7 +849,7 @@
 <p><strong>Auteur(s)</strong>: <a href="https://mila.quebec/en/directory/josue-mongan">Josué Saint-martin Junior Mongan</a> (Matricule 20290870)</p>
 <p><strong>Thème(s)</strong>: Stage de recherche en - <strong>Apprentissage par renforcement pour le fine-tuning de modèles vision-langage (fine-tuning, RL, VLAs)</strong></p>
 <p><strong>Superviseur(s)</strong>: <a href="https://mila.quebec/fr/annuaire/glen-berseth">Glen Berseth</a></p>
-<p><strong>Collaborateur(s):</strong> <a href="https://mila.quebec/fr/annuaire/florence-cloutier">Florence Cloutier</a></p>
+<p><strong>Collaborateur(s):</strong> <a href="https://mila.quebec/fr/annuaire/florence-cloutier">Florence Cloutier</a>, <a href="https://mila.quebec/fr/annuaire/albert-zhan">Albert Zhan</a>, <a href="https://mila.quebec/fr/annuaire/jesse-silverberg">Jesse Silverberg</a></p>
 </div>
 <h2 id="description-du-projet"><strong>Description du projet</strong><a class="headerlink" href="#description-du-projet" title="Permanent link">&para;</a></h2>
 <p>Ce projet s'inscrit dans le domaine émergent du fine-tuning par apprentissage par renforcement (RL) appliqué 
@@ -867,18 +867,19 @@ soulève des défis fondamentaux d'optimisation, de stabilité d'entraînement e
 <p>L'apprentissage par imitation a permis des avancées significatives en robotique, mais requiert des démonstrations 
 expertes en grande quantité, ce qui est coûteux et peu scalable. Le RL offre une alternative en permettant au robot 
 d'apprendre directement par interaction avec son environnement, guidé par un signal de récompense. 
-Appliqué aux VLAs, le RL pourrait permettre d'améliorer les capacités de raisonnement et de planification de ces 
-modèles sur des tâches nécessitant une précision ou une séquentialité élevées. Cependant, l'optimisation RL sur 
-des modèles de grande taille reste un défi ouvert, notamment en termes de stabilité algorithmique, 
-d'efficacité computationnelle et de conception du signal de récompense.</p>
+Appliqué aux VLAs, le RL pourrait permettre à ces modèles d'apprendre au-delà de leur distribution 
+d'entraînement initiale, en développant des comportements que l'imitation seule ne peut pas capturer. 
+Cependant, l'optimisation RL sur des modèles de grande taille reste un défi ouvert, notamment en termes de 
+stabilité algorithmique, d'efficacité computationnelle, et de capacité à généraliser.</p>
 <h3 id="problematique">Problématique<a class="headerlink" href="#problematique" title="Permanent link">&para;</a></h3>
 <!-- > Décrivez la problématique, la question de recherche ou l’hypothèse que votre projet cherche à explorer.  
 > La question doit être suffisamment claire pour orienter la revue de littérature, la méthodologie et l’analyse. -->
 
 <ul>
-<li><strong>Dans quelles conditions le fine-tuning par RL améliore-t-il les capacités des VLAs au-delà de ce que le SFT permet d'atteindre ?</strong> </li>
-<li><strong>Quels algorithmes, architectures et types de tâches sont les plus propices à ce type d'amélioration ?</strong> </li>
-<li><strong>Et comment concevoir des tâches et des signaux de récompense qui forcent le modèle à développer de véritables capacités de raisonnement plutôt que de simplement mémoriser des comportements ?</strong></li>
+<li><strong>Le fine-tuning par RL peut-il permettre aux VLAs d'apprendre au-delà de leur distribution de données d'entraînement SFT ?</strong></li>
+<li><strong>L'exploration ou l'optimisation constitue-t-elle le principal obstacle au fine-tuning RL des VLAs ?</strong> </li>
+<li><strong>Quels algorithmes, architectures et types de tâches sont les plus propices à ce type d'amélioration ?</strong></li>
+<li><strong>Comment le RL pourrait améliorer la capacité du modèle à développer de véritables capacités de raisonnement plutôt que de simplement mémoriser des comportements ?</strong></li>
 </ul>
 <h3 id="etat-de-lart-preliminaire">État de l’art préliminaire<a class="headerlink" href="#etat-de-lart-preliminaire" title="Permanent link">&para;</a></h3>
 <!-- > Présentez brièvement les approches, travaux ou concepts importants déjà identifiés.  
@@ -905,10 +906,10 @@ de représentations robustes et généralisables.</p>
 > Assurez-vous qu’ils sont réalistes pour un trimestre. -->
 
 <ol>
-<li><strong>Explorer</strong> les conditions sous lesquelles le RL améliore les performances des VLAs par rapport au SFT, en termes d'algorithmes, d'architectures et de types de tâches.</li>
-<li><strong>Identifier</strong> les types de tâches où le SFT seul est insuffisant et où le RL apporte une contribution claire — notamment les tâches nécessitant précision, planification séquentielle ou raisonnement.</li>
-<li><strong>Étudier</strong> l'impact de la conception du signal de récompense sur l'efficacité du fine-tuning RL.</li>
-<li><strong>Contribuer</strong> à la compréhension des défis d'optimisation propres au RL sur VLAs, en documentant les pratiques et configurations qui fonctionnent dans un contexte de ressources limitées.</li>
+<li><strong>Réfuter</strong> l'hypothèse selon laquelle le RL ne fait que redistribuer la masse de probabilité du modèle pré-entraîné, en testant sur des tâches maximalement différentes des données d'entraînement SFT.</li>
+<li><strong>Identifier</strong> si c'est l'exploration ou l'optimisation qui constitue le principal obstacle au fine-tuning RL des VLAs.</li>
+<li><strong>Comparer</strong> différentes architectures (OpenVLA-OFT, π0,...) et algorithmes (PPO, GRPO,...) en termes d'efficacité et de stabilité sur un seul GPU A100.</li>
+<li><strong>Contribuer</strong> à la compréhension des conditions minimales nécessaires pour que le RL améliore véritablement les capacités d'un VLA au-delà de son entraînement supervisé initial.</li>
 </ol>
 <h3 id="methodologie-envisagee">Méthodologie envisagée<a class="headerlink" href="#methodologie-envisagee" title="Permanent link">&para;</a></h3>
 <!-- > Expliquez comment vous comptez aborder le projet : revue de littérature, analyse théorique, expérimentation, reproduction de résultats, prototype exploratoire, comparaison d’approches, etc.  
@@ -916,11 +917,11 @@ de représentations robustes et généralisables.</p>
 
 <p>Le projet adopte une approche expérimentale comparative. Des expériences de fine-tuning RL sont conduites sur 
 plusieurs architectures VLA et plusieurs suites de tâches de manipulation robotique en simulation, 
-en utilisant le framework RLinf. Les algorithmes d'apprentissage par renforcement (PPO, GRPO, etc.) sont comparés, 
-ainsi que différents types d'architectures (OpenVLA-OFT, π0). </p>
-<p>Une attention particulière est portée à la sélection des tâches — en privilégiant des tâches où le modèle SFT de base est faible, 
-afin de mieux isoler la contribution du RL. La conception du signal de récompense et son impact sur la qualité de l'apprentissage 
-font également partie des axes à explorer.</p>
+en utilisant des frameworks comme RLinf. Les algorithmes d'apprentissage par renforcement sont comparés, 
+ainsi que différents types d'architectures. </p>
+<p>Une attention particulière est portée à la sélection des tâches — en privilégiant des tâches où le modèle SFT de base est faible 
+et où les données d'entraînement du modèle sont connues précisément, afin d'évaluer rigoureusement si le RL permet une 
+généralisation hors distribution.</p>
 <h3 id="evaluation-des-resultats">Évaluation des résultats<a class="headerlink" href="#evaluation-des-resultats" title="Permanent link">&para;</a></h3>
 <!-- > Expliquez comment vous évaluerez ou analyserez les résultats : mesures quantitatives, comparaison qualitative, discussion critique, validation expérimentale, limites observées, etc. -->
 <p>Les résultats sont évalués via le taux de succès épisodique (<code>success_once</code>), comparé entre le modèle SFT de base et le modèle après fine-tuning RL. 

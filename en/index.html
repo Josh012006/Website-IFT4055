@@ -849,20 +849,25 @@
 <p><strong>Author(s)</strong>: <a href="https://mila.quebec/en/directory/josue-mongan">Josué Saint-martin Junior Mongan</a> (Student ID 20290870)</p>
 <p><strong>Theme(s)</strong>: Research internship in - <strong>Reinforcement Learning for fine-tuning vision-language models (fine-tuning, RL, VLAs)</strong></p>
 <p><strong>Supervisor(s)</strong>: <a href="https://mila.quebec/fr/annuaire/glen-berseth">Glen Berseth</a></p>
-<p><strong>Collaborator(s)</strong>: <a href="https://mila.quebec/fr/annuaire/florence-cloutier">Florence Cloutier</a></p>
+<p><strong>Collaborator(s)</strong>: <a href="https://mila.quebec/fr/annuaire/florence-cloutier">Florence Cloutier</a>, <a href="https://mila.quebec/fr/annuaire/albert-zhan">Albert Zhan</a>, <a href="https://mila.quebec/fr/annuaire/jesse-silverberg">Jesse Silverberg</a></p>
 </div>
 <h2 id="project-description"><strong>Project description</strong><a class="headerlink" href="#project-description" title="Permanent link">&para;</a></h2>
 <p>This project is part of the emerging field of reinforcement learning (RL)-based fine-tuning applied to vision-language-action (VLA) models. VLAs are multimodal foundation models that combine visual understanding, linguistic reasoning, and motor action generation for robotics applications.<br />
 <br /></p>
 <p>While these models achieve strong performance on simple tasks through supervised imitation learning (SFT), their generalization and reasoning capabilities on complex tasks remain limited. Post-SFT reinforcement learning is a promising direction to overcome these limitations, but its application to VLAs is still underexplored and raises fundamental challenges in optimization, training stability, and reward design.</p>
 <h3 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h3>
-<p>Imitation learning has led to significant advances in robotics, but it requires large amounts of expert demonstrations, which are costly and difficult to scale. RL offers an alternative by enabling agents to learn directly through interaction with their environment, guided by a reward signal.<br />
-When applied to VLAs, RL could improve reasoning and planning capabilities on tasks requiring precision or long-horizon decision-making. However, RL optimization on large-scale models remains an open challenge, particularly in terms of algorithmic stability, computational efficiency, and reward signal design.</p>
+<p>Imitation learning has enabled significant advances in robotics, but requires large quantities of expert 
+demonstrations, which is costly and difficult to scale. RL offers an alternative by allowing the robot to 
+learn directly through environment interaction, guided by a reward signal. Applied to VLAs, RL could enable 
+these models to learn beyond their initial training distribution, developing behaviors that imitation alone 
+cannot capture. However, RL optimization on large-scale models remains an open challenge, particularly in 
+terms of algorithmic stability, computational efficiency, and the ability to generalize.</p>
 <h3 id="problem-statement">Problem statement<a class="headerlink" href="#problem-statement" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Under what conditions does RL-based fine-tuning improve VLA capabilities beyond what SFT can achieve?</strong>  </li>
-<li><strong>Which algorithms, architectures, and task types are most suitable for such improvements?</strong>  </li>
-<li><strong>How can tasks and reward signals be designed to encourage genuine reasoning rather than memorized behavior?</strong></li>
+<li><strong>Can RL fine-tuning enable VLAs to learn beyond their SFT training data distribution?</strong></li>
+<li><strong>Is exploration or optimization the primary bottleneck in RL fine-tuning of VLAs?</strong></li>
+<li><strong>Which algorithms, architectures, and task types are most conducive to this kind of improvement?</strong></li>
+<li><strong>How can RL improve the model's ability to develop genuine reasoning capabilities rather than simply memorizing behaviors?</strong></li>
 </ul>
 <h3 id="preliminary-state-of-the-art">Preliminary state of the art<a class="headerlink" href="#preliminary-state-of-the-art" title="Permanent link">&para;</a></h3>
 <p>Reinforcement learning fine-tuning of large language models (LLMs) has achieved notable success with algorithms such as PPO and GRPO, particularly in works like DeepSeek-R1 and InstructGPT.<br />
@@ -873,14 +878,18 @@ Extending these approaches to vision-language-action (VLA) models is more recent
 <p>Early results indicate that RL can significantly improve performance over supervised fine-tuning (SFT), especially on long-horizon and multi-step tasks. However, the optimal conditions for this improvement remain poorly understood. Recent works (<a href="https://openreview.net/forum?id=jtrhwfgseW">LIBERO-OOD, ICLR 2026</a>; <a href="https://arxiv.org/abs/2510.13626">LIBERO-Plus, arXiv 2510.13626</a>) also show that SFT-trained models suffer from out-of-distribution generalization issues, often memorizing training configurations rather than developing robust task understanding. This suggests that current fine-tuning and evaluation methods do not always promote the learning of robust and generalizable representations.</p>
 <h3 id="research-objectives">Research objectives<a class="headerlink" href="#research-objectives" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Explore</strong> the conditions under which RL improves VLA performance compared to SFT, in terms of algorithms, architectures, and task types.  </li>
-<li><strong>Identify</strong> task categories where SFT is insufficient and RL provides clear benefits—particularly tasks requiring precision, sequential planning, or reasoning.  </li>
-<li><strong>Study</strong> the impact of reward signal design on RL fine-tuning effectiveness.  </li>
-<li><strong>Contribute</strong> to understanding the optimization challenges of RL on VLAs, documenting configurations and practices that work under limited computational resources.</li>
+<li><strong>Disprove</strong> the hypothesis that RL only redistributes probability mass from the pretrained model, by testing on tasks maximally different from the SFT training data.</li>
+<li><strong>Identify</strong> whether exploration or optimization is the primary bottleneck in RL fine-tuning of VLAs.</li>
+<li><strong>Compare</strong> different architectures (OpenVLA-OFT, π0,...) and algorithms (PPO, GRPO,...) in terms of efficiency and stability on a single A100 GPU.</li>
+<li><strong>Contribute</strong> to understanding the minimum conditions required for RL to genuinely expand a VLA's capabilities beyond its initial supervised training.</li>
 </ol>
 <h3 id="proposed-methodology">Proposed methodology<a class="headerlink" href="#proposed-methodology" title="Permanent link">&para;</a></h3>
-<p>The project follows a comparative experimental approach. RL fine-tuning experiments are conducted across multiple VLA architectures and robotic manipulation benchmarks in simulation, using the RLinf framework. Reinforcement learning algorithms (PPO, GRPO, etc.) are compared, along with different model architectures (OpenVLA-OFT, π0).</p>
-<p>Special attention is given to task selection—prioritizing tasks where the base SFT model performs poorly, in order to better isolate the contribution of RL. Reward signal design and its impact on learning quality is also an important axis of investigation.</p>
+<p>The project adopts a comparative experimental approach. RL fine-tuning experiments are conducted across 
+multiple VLA architectures and robotic manipulation task suites in simulation, using frameworks such as RLinf. 
+Reinforcement learning algorithms are compared, as well as different model architectures.</p>
+<p>Particular attention is given to task selection — prioritizing tasks where the SFT base model performs poorly 
+and where the model's training data is precisely documented, in order to rigorously evaluate whether RL enables 
+out-of-distribution generalization.</p>
 <h3 id="evaluation-of-results">Evaluation of results<a class="headerlink" href="#evaluation-of-results" title="Permanent link">&para;</a></h3>
 <p>Results are evaluated using episodic success rate (<code>success_once</code>), comparing the base SFT model with the RL fine-tuned model. Learning curves are used to assess training stability and efficiency.<br />
 A qualitative analysis of learned behaviors (via episode videos) complements the quantitative evaluation. Observed limitations—such as algorithmic instability, computational constraints, and generalization gaps—are integrated into the analysis to better understand open challenges in the field.</p>
