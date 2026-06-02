@@ -21,7 +21,7 @@ title: Project Overview
 
     **Supervisor(s)**: [Glen Berseth](https://mila.quebec/fr/annuaire/glen-berseth)
 
-    **Collaborator(s)**: [Florence Cloutier](https://mila.quebec/fr/annuaire/florence-cloutier)
+    **Collaborator(s)**: [Florence Cloutier](https://mila.quebec/fr/annuaire/florence-cloutier), [Albert Zhan](https://mila.quebec/fr/annuaire/albert-zhan), [Jesse Silverberg](https://mila.quebec/fr/annuaire/jesse-silverberg)
 
 ## **Project description**
 
@@ -32,14 +32,19 @@ While these models achieve strong performance on simple tasks through supervised
 
 ### Context
 
-Imitation learning has led to significant advances in robotics, but it requires large amounts of expert demonstrations, which are costly and difficult to scale. RL offers an alternative by enabling agents to learn directly through interaction with their environment, guided by a reward signal.  
-When applied to VLAs, RL could improve reasoning and planning capabilities on tasks requiring precision or long-horizon decision-making. However, RL optimization on large-scale models remains an open challenge, particularly in terms of algorithmic stability, computational efficiency, and reward signal design.
+Imitation learning has enabled significant advances in robotics, but requires large quantities of expert 
+demonstrations, which is costly and difficult to scale. RL offers an alternative by allowing the robot to 
+learn directly through environment interaction, guided by a reward signal. Applied to VLAs, RL could enable 
+these models to learn beyond their initial training distribution, developing behaviors that imitation alone 
+cannot capture. However, RL optimization on large-scale models remains an open challenge, particularly in 
+terms of algorithmic stability, computational efficiency, and the ability to generalize.
 
 ### Problem statement
 
-- **Under what conditions does RL-based fine-tuning improve VLA capabilities beyond what SFT can achieve?**  
-- **Which algorithms, architectures, and task types are most suitable for such improvements?**  
-- **How can tasks and reward signals be designed to encourage genuine reasoning rather than memorized behavior?**
+- **Can RL fine-tuning enable VLAs to learn beyond their SFT training data distribution?**
+- **Is exploration or optimization the primary bottleneck in RL fine-tuning of VLAs?**
+- **Which algorithms, architectures, and task types are most conducive to this kind of improvement?**
+- **How can RL improve the model's ability to develop genuine reasoning capabilities rather than simply memorizing behaviors?**
 
 ### Preliminary state of the art
 
@@ -54,16 +59,20 @@ Early results indicate that RL can significantly improve performance over superv
 
 ### Research objectives
 
-1. **Explore** the conditions under which RL improves VLA performance compared to SFT, in terms of algorithms, architectures, and task types.  
-2. **Identify** task categories where SFT is insufficient and RL provides clear benefits—particularly tasks requiring precision, sequential planning, or reasoning.  
-3. **Study** the impact of reward signal design on RL fine-tuning effectiveness.  
-4. **Contribute** to understanding the optimization challenges of RL on VLAs, documenting configurations and practices that work under limited computational resources.
+1. **Disprove** the hypothesis that RL only redistributes probability mass from the pretrained model, by testing on tasks maximally different from the SFT training data.
+2. **Identify** whether exploration or optimization is the primary bottleneck in RL fine-tuning of VLAs.
+3. **Compare** different architectures (OpenVLA-OFT, π0,...) and algorithms (PPO, GRPO,...) in terms of efficiency and stability on a single A100 GPU.
+4. **Contribute** to understanding the minimum conditions required for RL to genuinely expand a VLA's capabilities beyond its initial supervised training.
 
 ### Proposed methodology
 
-The project follows a comparative experimental approach. RL fine-tuning experiments are conducted across multiple VLA architectures and robotic manipulation benchmarks in simulation, using the RLinf framework. Reinforcement learning algorithms (PPO, GRPO, etc.) are compared, along with different model architectures (OpenVLA-OFT, π0).
+The project adopts a comparative experimental approach. RL fine-tuning experiments are conducted across 
+multiple VLA architectures and robotic manipulation task suites in simulation, using frameworks such as RLinf. 
+Reinforcement learning algorithms are compared, as well as different model architectures.
 
-Special attention is given to task selection—prioritizing tasks where the base SFT model performs poorly, in order to better isolate the contribution of RL. Reward signal design and its impact on learning quality is also an important axis of investigation.
+Particular attention is given to task selection — prioritizing tasks where the SFT base model performs poorly 
+and where the model's training data is precisely documented, in order to rigorously evaluate whether RL enables 
+out-of-distribution generalization.
 
 ### Evaluation of results
 
