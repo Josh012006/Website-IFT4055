@@ -149,3 +149,32 @@ title: Project Tracking
 
 !!! warning "Difficulties"
     - LIBERO-Long run preempted at step 145 before completing the planned 150 steps — resumed from available checkpoint
+
+
+
+## Week 5 (June 01–05, 2026)
+
+### Goals for the period
+- Visualize VLA training datasets to analyze endpoint distributions and identify out-of-distribution tasks
+- Study to what extent good performance can be maintained while reducing training time through hyperparameter tuning
+- Conceptually think through how RL can be guided to achieve our out-of-distribution generalization objective
+- Read relevant research papers on the topic
+- Analyze the results of the LIBERO-Long run
+
+### Work completed
+
+!!! abstract "Progress"
+    - [x] Discussion with the team on the true objective of the project: demonstrating that RL enables out-of-distribution generalization beyond what SFT can achieve, rather than simply improving performance on tasks the SFT model already handles well
+    - [ ] Dataset visualization and endpoint distribution analysis
+    - [ ] Hyperparameter exploration to reduce training time
+    - [ ] Conceptual reflection on RL levers for out-of-distribution generalization
+    - [ ] Reading of relevant research papers
+    - [ ] Analysis of LIBERO-Long run results
+
+<!-- ### Decisions and adjustments
+
+!!! info "Decisions"
+
+### Difficulties encountered
+
+!!! warning "Difficulties" -->

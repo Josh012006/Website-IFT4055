@@ -149,3 +149,31 @@ title: Suivi du projet
 
 !!! warning "Difficultés"
     - Run LIBERO-Long préempté au step 145 avant la fin des 150 steps prévus — repris depuis le checkpoint disponible
+
+
+## Semaine 5 (01–05 juin 2026)
+
+### Objectifs de la période
+- Visualiser les datasets d'entraînement des VLAs pour analyser la distribution des endpoints et identifier des tâches hors distribution
+- Étudier dans quelle mesure on peut maintenir de bonnes performances tout en réduisant le temps d'entraînement via les hyperparamètres
+- Réfléchir conceptuellement à comment orienter le RL pour atteindre notre objectif de généralisation hors distribution
+- Lire les papiers de recherche pertinents sur le sujet
+- Analyser les résultats du run LIBERO-Long
+
+### Travail réalisé
+
+!!! abstract "Avancement"
+    - [x] Discussion avec l'équipe sur le vrai objectif du projet : démontrer que le RL permet une généralisation hors distribution au-delà de ce que le SFT permet d'atteindre, et non simplement améliorer les performances sur des tâches déjà maîtrisées par le SFT
+    - [ ] Visualisation des datasets et analyse de la distribution des endpoints
+    - [ ] Exploration des hyperparamètres pour réduire le temps d'entraînement
+    - [ ] Réflexion conceptuelle sur les leviers RL pour la généralisation hors distribution
+    - [ ] Lecture de papiers de recherche pertinents
+    - [ ] Analyse des résultats du run LIBERO-Long
+
+<!-- ### Décisions et ajustements
+
+!!! info "Décisions"
+
+### Difficultés rencontrées
+
+!!! warning "Difficultés" -->
