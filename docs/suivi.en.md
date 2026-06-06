@@ -165,7 +165,7 @@ title: Project Tracking
 
 !!! abstract "Progress"
     - [x] Discussion with the team on the true objective of the project: demonstrating that RL enables out-of-distribution generalization beyond what SFT can achieve, rather than simply improving performance on tasks the SFT model already handles well
-    - [ ] Dataset visualization and endpoint distribution analysis
+    - [x] Dataset visualization and endpoint distribution analysis
     - [ ] Hyperparameter exploration to reduce training time
     - [ ] Conceptual reflection on RL levers for out-of-distribution generalization
     - [ ] Reading of relevant research papers

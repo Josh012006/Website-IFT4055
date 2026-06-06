@@ -164,7 +164,7 @@ title: Suivi du projet
 
 !!! abstract "Avancement"
     - [x] Discussion avec l'équipe sur le vrai objectif du projet : démontrer que le RL permet une généralisation hors distribution au-delà de ce que le SFT permet d'atteindre, et non simplement améliorer les performances sur des tâches déjà maîtrisées par le SFT
-    - [ ] Visualisation des datasets et analyse de la distribution des endpoints
+    - [x] Visualisation des datasets et analyse de la distribution des endpoints
     - [ ] Exploration des hyperparamètres pour réduire le temps d'entraînement
     - [ ] Réflexion conceptuelle sur les leviers RL pour la généralisation hors distribution
     - [ ] Lecture de papiers de recherche pertinents
