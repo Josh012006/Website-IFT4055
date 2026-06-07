@@ -1347,8 +1347,8 @@
 <li>Ray conflict on the assigned node: a residual Ray cluster from another user prevented initialization</li>
 <li>Resolved by excluding the contaminated node via <code>#SBATCH --exclude</code></li>
 <li>Training results at 1000 steps: occasional reward spikes (~0.13) with no stable learning trend — batch size too small to extract a robust learning signal
-    <img alt="LIBERO-90 GRPO Training Results Success Once" src="../../images/libero90_grpo_training1_success_once.png" />
-    <img alt="LIBERO-90 GRPO Training Results Approx KL" src="../../images/libero90_grpo_training1_approx_kl.png" /></li>
+    <img alt="LIBERO-90 GRPO Training Results Success Once" src="/ift4055/images/libero90_grpo_training1_success_once.png" />
+    <img alt="LIBERO-90 GRPO Training Results Approx KL" src="/ift4055/images/libero90_grpo_training1_approx_kl.png" /></li>
 </ul>
 </div>
 <h2 id="week-2-may-1115-2026">Week 2 (May 11–15, 2026)<a class="headerlink" href="#week-2-may-1115-2026" title="Permanent link">&para;</a></h2>
@@ -1403,15 +1403,17 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Opened PR on <code>montrealrobotics/RLinf</code> with configs, job scripts, and <code>EXPERIMENTS_README.md</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Started LIBERO-Spatial GRPO run — <code>success_once</code> oscillating between 0.22 and 0.875 over 38 steps</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> π0 + RoboCasa CloseDrawer run completed at 150 steps — final metrics: <code>success_once</code> ~0.82, <code>critic/value_loss</code> ~0.005, <code>approx_kl</code> ~0.036
-    <img alt="RoboCasa CloseDrawer PPO Training Results Success Once" src="../../images/robocasa_close_drawer_ppo_training1_success_once.png" />
-    <img alt="RoboCasa CloseDrawer PPO Training Results Approx KL" src="../../images/robocasa_close_drawer_ppo_training1_approx_kl.png" />
-    <img alt="RoboCasa CloseDrawer PPO Training Results Value Loss" src="../../images/robocasa_close_drawer_ppo_training1_value_loss.png" /></li>
+    <img alt="RoboCasa CloseDrawer PPO Training Results Success Once" src="/ift4055/images/robocasa_close_drawer_ppo_training1_success_once.png" />
+    <img alt="RoboCasa CloseDrawer PPO Training Results Approx KL" src="/ift4055/images/robocasa_close_drawer_ppo_training1_approx_kl.png" />
+    <img alt="RoboCasa CloseDrawer PPO Training Results Value Loss" src="/ift4055/images/robocasa_close_drawer_ppo_training1_value_loss.png" /></li>
 <li class="task-list-item">
 <p><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Visualized results via TensorBoard, saved episode videos</p>
-<p><video width="480" controls>
-  <source src="images/robocasa_close_drawer_training1_ppo_step_150.mp4" type="video/mp4">
-</video>
-<em>π0 + RoboCasa CloseDrawer — episode at step 150 (after PPO training)</em></p>
+<p><div style="text-align: center">
+    <video width="480" controls poster="/ift4055/images/robocasa_close_drawer_thumbnail.png">
+        <source src="/ift4055/images/robocasa_close_drawer_training1_ppo_step_150.mp4" type="video/mp4">
+    </video>
+</div></p>
+<p><em>π0 + RoboCasa CloseDrawer — episode at step 150 (after PPO training)</em></p>
 </li>
 <li class="task-list-item">
 <p><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Uploaded final weights to HuggingFace (<code>josh11234/RLinf-Pi0-RoboCasa-CloseDrawer-PPO</code>)</p>
@@ -1451,8 +1453,8 @@
 <p class="admonition-title">Progress</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Analyzed LIBERO-Spatial run results — insufficient performance, suspected learning rate not adapted after reducing the number of epochs
-    <img alt="LIBERO-Spatial GRPO Training Results Success Once" src="../../images/libero_spatial_grpo_training1_success_once.png" />
-    <img alt="LIBERO-Spatial GRPO Training Results Approx KL" src="../../images/libero_spatial_grpo_training1_approx_kl.png" /></li>
+    <img alt="LIBERO-Spatial GRPO Training Results Success Once" src="/ift4055/images/libero_spatial_grpo_training1_success_once.png" />
+    <img alt="LIBERO-Spatial GRPO Training Results Approx KL" src="/ift4055/images/libero_spatial_grpo_training1_approx_kl.png" /></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Read the full OpenVLA-OFT research paper — confirms that the A100 + LoRA configuration is the one recommended by the authors themselves</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Comprehensive review of the RLinf repository and documentation — catalogued available tasks per benchmark with their respective SFT base models</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Configured and launched LIBERO-Long training run (150 steps) with OpenVLA-OFT + GRPO</li>
@@ -1496,8 +1498,8 @@
 </ul>
 </li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Analysis of LIBERO-Long run results: as the RLinf documentation indicates, LIBERO-Long is the hardest suite with an SFT base rate of only 11.9%. The training ran across 4 resumed sessions totaling ~150 steps (~37 hours). <code>success_once</code> oscillated between 0.06 and 0.19 without a clear upward trend, hovering around the SFT baseline. <code>approx_kl</code> remained stable between 0.035 and 0.048 throughout all sessions, indicating the policy updates were controlled — the lack of improvement is therefore more likely an exploration bottleneck than an optimization instability.
-    <img alt="LIBERO-Long GRPO Training Results Success Once" src="../../images/libero_long_grpo_training1_success_once.png" />
-    <img alt="LIBERO-Long GRPO Training Results Approx KL" src="../../images/libero_long_grpo_training1_approx_kl.png" /></li>
+    <img alt="LIBERO-Long GRPO Training Results Success Once" src="/ift4055/images/libero_long_grpo_training1_success_once.png" />
+    <img alt="LIBERO-Long GRPO Training Results Approx KL" src="/ift4055/images/libero_long_grpo_training1_approx_kl.png" /></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Hyperparameter exploration to reduce training time : the goal is to see if increasing the replay ratio in the appropriate way can reduce training time while maintaining good performance<ul>
 <li>Relauched a LIBERO-Spatial GRPO (OpenVLA-OFT) run with <code>lr=1.0e-6</code>, <code>rollout_epoch=8</code> (instead of 4) and fewer epochs (<code>max_epochs=100</code> instead of 150)</li>
 <li>Relaunched a RoboCasa CloseDrawer PPO (π0) run with <code>lr=1.0e-6</code> and <code>update_epoch=4</code> (instead of 2)</li>
