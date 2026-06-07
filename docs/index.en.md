@@ -88,11 +88,11 @@ A qualitative analysis of learned behaviors (via episode videos) complements the
 !!! info
     Full tracking is available on the [Project Tracking](suivi.md) page.
 
-| Activities                      | Start   | End     | Deliverable                          | Status       |
-|--------------------------------|---------|---------|--------------------------------------|--------------|
-| Topic definition               | May 4   | May 15  | Project proposal                     | Completed    |
-| Preliminary literature review  | May 4   | May 29  | Annotated bibliography / synthesis   | In progress  |
-| Methodology and analysis plan  | May 18  | Jun 5   | Methodological plan                  | In progress  |
-| Experimentation or analysis    | Jun 1   | Jul 24  | Preliminary results                  | Upcoming     |
-| Synthesis and interpretation   | Jul 20  | Aug 7   | Discussion of results and limitations| Upcoming     |
-| Presentation + final report    | Aug 7   | Aug 14  | Presentation + research report       | Upcoming     |
+| Activities                     | Start   | End     | Deliverable                          | Status          |
+|--------------------------------|---------|---------|--------------------------------------|-----------------|
+| Topic definition               | May 4   | May 15  | Project proposal                     | ✅ Completed    |
+| Preliminary literature review  | May 4   | May 29  | Annotated bibliography / synthesis   | 🔄 In progress  |
+| Methodology and analysis plan  | May 18  | Jun 5   | Methodological plan                  | 🔄 In progress  |
+| Experimentation or analysis    | Jun 1   | Jul 24  | Preliminary results                  | ⏳ Upcoming     |
+| Synthesis and interpretation   | Jul 20  | Aug 7   | Discussion of results and limitations| ⏳ Upcoming     |
+| Presentation + final report    | Aug 7   | Aug 14  | Presentation + research report       | ⏳ Upcoming     |
