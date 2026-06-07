@@ -53,7 +53,8 @@ title: Project Tracking
     - Ray conflict on the assigned node: a residual Ray cluster from another user prevented initialization
     - Resolved by excluding the contaminated node via `#SBATCH --exclude`
     - Training results at 1000 steps: occasional reward spikes (~0.13) with no stable learning trend — batch size too small to extract a robust learning signal
-
+        ![LIBERO-90 GRPO Training Results Success Once](images/libero90_grpo_training1_success_once.png)
+        ![LIBERO-90 GRPO Training Results Approx KL](images/libero90_grpo_training1_approx_kl.png)
 
 ## Week 2 (May 11–15, 2026)
 
@@ -101,7 +102,14 @@ title: Project Tracking
     - [x] Opened PR on `montrealrobotics/RLinf` with configs, job scripts, and `EXPERIMENTS_README.md`
     - [x] Started LIBERO-Spatial GRPO run — `success_once` oscillating between 0.22 and 0.875 over 38 steps
     - [x] π0 + RoboCasa CloseDrawer run completed at 150 steps — final metrics: `success_once` ~0.82, `critic/value_loss` ~0.005, `approx_kl` ~0.036
+        ![RoboCasa CloseDrawer PPO Training Results Success Once](images/robocasa_close_drawer_ppo_training1_success_once.png)
+        ![RoboCasa CloseDrawer PPO Training Results Approx KL](images/robocasa_close_drawer_ppo_training1_approx_kl.png)
+        ![RoboCasa CloseDrawer PPO Training Results Value Loss](images/robocasa_close_drawer_ppo_training1_value_loss.png)
     - [x] Visualized results via TensorBoard, saved episode videos
+        <video width="480" controls>
+          <source src="images/robocasa_close_drawer_training1_ppo_step_150.mp4" type="video/mp4">
+        </video>
+        *π0 + RoboCasa CloseDrawer — episode at step 150 (after PPO training)*
     - [x] Uploaded final weights to HuggingFace (`josh11234/RLinf-Pi0-RoboCasa-CloseDrawer-PPO`)
     - [x] Shared results and videos with the group via Slack
     - [ ] LIBERO-Spatial run still ongoing
@@ -133,6 +141,8 @@ title: Project Tracking
 
 !!! abstract "Progress"
     - [x] Analyzed LIBERO-Spatial run results — insufficient performance, suspected learning rate not adapted after reducing the number of epochs
+        ![LIBERO-Spatial GRPO Training Results Success Once](images/libero_spatial_grpo_training1_success_once.png)
+        ![LIBERO-Spatial GRPO Training Results Approx KL](images/libero_spatial_grpo_training1_approx_kl.png)
     - [x] Read the full OpenVLA-OFT research paper — confirms that the A100 + LoRA configuration is the one recommended by the authors themselves
     - [x] Comprehensive review of the RLinf repository and documentation — catalogued available tasks per benchmark with their respective SFT base models
     - [x] Configured and launched LIBERO-Long training run (150 steps) with OpenVLA-OFT + GRPO
@@ -166,10 +176,41 @@ title: Project Tracking
 !!! abstract "Progress"
     - [x] Discussion with the team on the true objective of the project: demonstrating that RL enables out-of-distribution generalization beyond what SFT can achieve, rather than simply improving performance on tasks the SFT model already handles well
     - [x] Dataset visualization and endpoint distribution analysis
-    - [ ] Hyperparameter exploration to reduce training time
-    - [ ] Conceptual reflection on RL levers for out-of-distribution generalization
+        - Created a Jupyter notebook for dataset visualization and endpoint distribution analysis
+        - [Notebook](https://colab.research.google.com/github/Josh012006/OpenX-Embodiment-Datasets-Visualization/blob/main/colabs/Open_X_Embodiment_Datasets.ipynb)
+        - [Repository](https://github.com/Josh012006/OpenX-Embodiment-Datasets-Visualization)
+    - [x] Analysis of LIBERO-Long run results: as the RLinf documentation indicates, LIBERO-Long is the hardest suite with an SFT base rate of only 11.9%. The training ran across 4 resumed sessions totaling ~150 steps (~37 hours). `success_once` oscillated between 0.06 and 0.19 without a clear upward trend, hovering around the SFT baseline. `approx_kl` remained stable between 0.035 and 0.048 throughout all sessions, indicating the policy updates were controlled — the lack of improvement is therefore more likely an exploration bottleneck than an optimization instability.
+        ![LIBERO-Long GRPO Training Results Success Once](images/libero_long_grpo_training1_success_once.png)
+        ![LIBERO-Long GRPO Training Results Approx KL](images/libero_long_grpo_training1_approx_kl.png)
+    - [x] Hyperparameter exploration to reduce training time : the goal is to see if increasing the replay ratio in the appropriate way can reduce training time while maintaining good performance
+        - Relauched a LIBERO-Spatial GRPO (OpenVLA-OFT) run with `lr=1.0e-6`, `rollout_epoch=8` (instead of 4) and fewer epochs (`max_epochs=100` instead of 150)
+        - Relaunched a RoboCasa CloseDrawer PPO (π0) run with `lr=1.0e-6` and `update_epoch=4` (instead of 2)
     - [ ] Reading of relevant research papers
-    - [ ] Analysis of LIBERO-Long run results
+    - [ ] Conceptual reflection on RL levers for out-of-distribution generalization
+
+### Decisions and adjustments
+
+!!! info "Decisions"
+    - Decided to focus on precise, short-horizon tasks for the initial phase of the project, rather than long-horizon tasks with multiple subgoals. 
+
+
+
+## Week 6 (June 08–12, 2026)
+
+### Goals for the period
+- Analyze endpoint distributions and identify out-of-distribution tasks
+- Continue to study to what extent good performance can be maintained while reducing training time through hyperparameter tuning
+- Conceptually think through how RL can be guided to achieve our out-of-distribution generalization objective
+- Read relevant research papers on the topic
+
+### Work completed
+
+!!! abstract "Progress"
+    - [ ] Discussion with the team on the visualization analysis
+    - [ ] Identification of out-of-distribution tasks based on the endpoint distribution analysis
+    - [ ] Build an OOD dataset for our future work on out-of-distribution generalization
+    - [ ] Analysis of hyperparameter exploration for reduction of training time
+    - [ ] Finish reading of relevant research papers
 
 <!-- ### Decisions and adjustments
 

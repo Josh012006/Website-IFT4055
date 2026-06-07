@@ -19,9 +19,9 @@ title: Project Overview
 
     **Theme(s)**: Research internship in - **Reinforcement Learning for fine-tuning vision-language models (fine-tuning, RL, VLAs)**
 
-    **Supervisor(s)**: [Glen Berseth](https://mila.quebec/fr/annuaire/glen-berseth)
+    **Supervisor(s)**: [Glen Berseth](https://mila.quebec/en/annuaire/glen-berseth)
 
-    **Collaborator(s)**: [Florence Cloutier](https://mila.quebec/fr/annuaire/florence-cloutier), [Albert Zhan](https://mila.quebec/fr/annuaire/albert-zhan), [Jesse Silverberg](https://mila.quebec/fr/annuaire/jesse-silverberg)
+    **Collaborator(s)**: [Florence Cloutier](https://mila.quebec/en/annuaire/florence-cloutier), [Albert Zhan](https://mila.quebec/en/annuaire/albert-zhan), [Jesse Silverberg](https://mila.quebec/en/annuaire/jesse-silverberg)
 
 ## **Project description**
 

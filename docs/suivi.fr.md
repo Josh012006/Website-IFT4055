@@ -53,6 +53,8 @@ title: Suivi du projet
     - Conflit Ray sur le nœud assigné : un cluster Ray résiduel d'un autre utilisateur empêchait l'initialisation
     - Résolu en excluant le nœud contaminé via `#SBATCH --exclude`
     - Résultats de l'entraînement à 1000 steps : pics de récompense occasionnels (~0.13) sans tendance stable — batch size trop petit pour extraire un signal d'apprentissage robuste
+        ![LIBERO-90 GRPO Training Results Success Once](images/libero90_grpo_training1_success_once.png)
+        ![LIBERO-90 GRPO Training Results Approx KL](images/libero90_grpo_training1_approx_kl.png)
 
 
 ## Semaine 2 (11–15 mai 2026)
@@ -101,7 +103,14 @@ title: Suivi du projet
     - [x] Ouverture d'une PR sur `montrealrobotics/RLinf` avec les configs, scripts et `EXPERIMENTS_README.md`
     - [x] Démarrage du run LIBERO-Spatial GRPO — `success_once` oscillant entre 0.22 et 0.875 sur 38 steps
     - [x] Run π0 + RoboCasa CloseDrawer complété à 150 steps — métriques finales : `success_once` ~0.82, `critic/value_loss` ~0.005, `approx_kl` ~0.036
+        ![RoboCasa CloseDrawer PPO Training Results Success Once](images/robocasa_close_drawer_ppo_training1_success_once.png)
+        ![RoboCasa CloseDrawer PPO Training Results Approx KL](images/robocasa_close_drawer_ppo_training1_approx_kl.png)
+        ![RoboCasa CloseDrawer PPO Training Results Value Loss](images/robocasa_close_drawer_ppo_training1_value_loss.png)
     - [x] Visualisation des résultats via TensorBoard, sauvegarde des vidéos d'épisodes
+        <video width="480" controls>
+          <source src="images/robocasa_close_drawer_training1_ppo_step_150.mp4" type="video/mp4">
+        </video>
+        *π0 + RoboCasa CloseDrawer — épisode au step 150 (après entraînement PPO)*
     - [x] Upload des poids finaux sur HuggingFace (`josh11234/RLinf-Pi0-RoboCasa-CloseDrawer-PPO`)
     - [x] Partage des résultats et vidéos avec le groupe via Slack
     - [ ] Run LIBERO-Spatial toujours en cours
@@ -133,6 +142,8 @@ title: Suivi du projet
 
 !!! abstract "Avancement"
     - [x] Analyse des résultats du run LIBERO-Spatial — performances insuffisantes, suspicion d'un learning rate inadapté après réduction du nombre d'epochs
+        ![LIBERO-Spatial GRPO Training Results Success Once](images/libero_spatial_grpo_training1_success_once.png)
+        ![LIBERO-Spatial GRPO Training Results Approx KL](images/libero_spatial_grpo_training1_approx_kl.png)
     - [x] Lecture complète du papier de recherche OpenVLA-OFT — confirme que la configuration A100 + LoRA est celle recommandée par les auteurs eux-mêmes
     - [x] Revue exhaustive du dépôt et de la documentation RLinf — inventaire des tâches disponibles par benchmark avec leurs modèles SFT de base respectifs
     - [x] Configuration et lancement du run LIBERO-Long (150 steps) avec OpenVLA-OFT + GRPO
@@ -165,10 +176,41 @@ title: Suivi du projet
 !!! abstract "Avancement"
     - [x] Discussion avec l'équipe sur le vrai objectif du projet : démontrer que le RL permet une généralisation hors distribution au-delà de ce que le SFT permet d'atteindre, et non simplement améliorer les performances sur des tâches déjà maîtrisées par le SFT
     - [x] Visualisation des datasets et analyse de la distribution des endpoints
-    - [ ] Exploration des hyperparamètres pour réduire le temps d'entraînement
-    - [ ] Réflexion conceptuelle sur les leviers RL pour la généralisation hors distribution
+        - Création d'un notebook Jupyter pour la visualisation d'ensembles de données et l'analyse de la répartition des points d'extrémité
+        - [Notebook](https://colab.research.google.com/github/Josh012006/OpenX-Embodiment-Datasets-Visualization/blob/main/colabs/Open_X_Embodiment_Datasets.ipynb)
+        - [Répertoire](https://github.com/Josh012006/OpenX-Embodiment-Datasets-Visualization)
+    - [x] Analyse des résultats du run LIBERO-Long : comme indiqué dans la documentation RLinf, LIBERO-Long est la suite la plus difficile avec un taux de base SFT de seulement 11.9%. L'entraînement s'est déroulé sur 4 sessions reprises totalisant ~150 steps (~37 heures). `success_once` a oscillé entre 0.06 et 0.19 sans tendance à la hausse, restant proche du niveau SFT de base. `approx_kl` est resté stable entre 0.035 et 0.048 tout au long des sessions, indiquant que les mises à jour de politique étaient contrôlées — le manque d'amélioration est donc davantage lié à un problème d'exploration qu'à une instabilité d'optimisation.
+        ![LIBERO-Long GRPO Training Results Success Once](images/libero_long_grpo_training1_success_once.png)
+        ![LIBERO-Long GRPO Training Results Approx KL](images/libero_long_grpo_training1_approx_kl.png)
+    - [x] Exploration des hyperparamètres pour réduire le temps d'entraînement : l'objectif est de voir si l'augmentation du replay ratio de manière appropriée peut réduire le temps d'entraînement tout en maintenant de bonnes performances
+        - Relancement d'un run LIBERO-Spatial GRPO (OpenVLA-OFT) avec `lr=1.0e-6`, `rollout_epoch=8` (au lieu de 4) et moins d'epochs (`max_epochs=100` au lieu de 150)
+        - Relancement d'un run RoboCasa CloseDrawer PPO (π0) avec `lr=1.0e-6` et `update_epoch=4` (au lieu de 2)
     - [ ] Lecture de papiers de recherche pertinents
-    - [ ] Analyse des résultats du run LIBERO-Long
+    - [ ] Réflexion conceptuelle sur les leviers RL pour la généralisation hors distribution
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - Décision de se concentrer sur des tâches précises à horizon court pour la phase initiale du projet, plutôt que sur des tâches longues à multiples sous-objectifs.
+
+
+
+## Semaine 6 (8–12 juin 2026)
+
+### Objectifs de la période
+- Analyser les distributions d'endpoints et identifier des tâches hors distribution
+- Continuer à étudier dans quelle mesure on peut maintenir de bonnes performances tout en réduisant le temps d'entraînement
+- Réfléchir conceptuellement à comment orienter le RL pour atteindre notre objectif de généralisation hors distribution
+- Lire les papiers de recherche pertinents sur le sujet
+
+### Travail réalisé
+
+!!! abstract "Avancement"
+    - [ ] Discussion avec l'équipe sur l'analyse de visualisation
+    - [ ] Identification des tâches hors distribution à partir de l'analyse de distribution des endpoints
+    - [ ] Construction d'un dataset OOD pour nos futurs travaux sur la généralisation hors distribution
+    - [ ] Analyse de l'exploration des hyperparamètres pour la réduction du temps d'entraînement
+    - [ ] Fin de la lecture des papiers de recherche pertinents
 
 <!-- ### Décisions et ajustements
 
