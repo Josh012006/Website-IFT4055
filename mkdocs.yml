@@ -1,7 +1,7 @@
 site_name: RL Fine-Tuning of VLAs — Josué Mongan
 site_description: Suivi de projet de recherche — RL Fine-Tuning de modèles VLA au Mila
 site_author: Josué Mongan
-site_url: https://josh012006.github.io/ift4055
+site_url: https://josh012006.github.io/Website-IFT4055
 
 theme:
   name: material
