@@ -107,6 +107,7 @@ title: Suivi du projet
         ![RoboCasa CloseDrawer PPO Training Results Approx KL](images/robocasa_close_drawer_ppo_training1_approx_kl.png)
         ![RoboCasa CloseDrawer PPO Training Results Value Loss](images/robocasa_close_drawer_ppo_training1_value_loss.png)
     - [x] Visualisation des résultats via TensorBoard, sauvegarde des vidéos d'épisodes
+    
         <video width="480" controls>
           <source src="images/robocasa_close_drawer_training1_ppo_step_150.mp4" type="video/mp4">
         </video>
