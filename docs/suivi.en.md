@@ -189,8 +189,16 @@ title: Project Tracking
     - [x] Hyperparameter exploration to reduce training time : the goal is to see if increasing the replay ratio in the appropriate way can reduce training time while maintaining good performance
         - Relauched a LIBERO-Spatial GRPO (OpenVLA-OFT) run with `lr=1.0e-6`, `rollout_epoch=8` (instead of 4) and fewer epochs (`max_epochs=100` instead of 150)
         - Relaunched a RoboCasa CloseDrawer PPO (π0) run with `lr=1.0e-6` and `update_epoch=4` (instead of 2)
-    - [ ] Reading of relevant research papers
-    - [ ] Conceptual reflection on RL levers for out-of-distribution generalization
+    - [x] Reading of relevant research papers
+    - [x] Conceptual reflection on RL levers for out-of-distribution generalization
+        The first question we ask is obviously: does using RL for fine-tuning enable generalization? This answer will be given once we have the opportunity to
+        test fine-tuning on an OOD dataset. If we find that fine-tuning does not enable generalization, then we will need to consider whether it is possible to help RL favor generalization and, if so, how.
+        If the objective is not to modify the reward design:
+        - One approach would be to help the model extrapolate using a curriculum learning strategy. For example, we could imagine doing RL fine-tuning on
+        tasks of increasing difficulty, starting with tasks close to the SFT training distribution and progressing towards more distant tasks. The idea would be that the model can learn to generalize progressively
+        as it is exposed to increasingly challenging tasks.
+        - Another approach would be to work on the model's exploration capacity during RL fine-tuning. For example, we could try to encourage the model to explore different actions or strategies than those it has
+        learned during SFT, in order to favor the discovery of more general solutions. We would need to find methods that promote its curiosity (temperature, entropy bonus, etc.).
 
 ### Decisions and adjustments
 

@@ -190,8 +190,16 @@ title: Suivi du projet
     - [x] Exploration des hyperparamètres pour réduire le temps d'entraînement : l'objectif est de voir si l'augmentation du replay ratio de manière appropriée peut réduire le temps d'entraînement tout en maintenant de bonnes performances
         - Relancement d'un run LIBERO-Spatial GRPO (OpenVLA-OFT) avec `lr=1.0e-6`, `rollout_epoch=8` (au lieu de 4) et moins d'epochs (`max_epochs=100` au lieu de 150)
         - Relancement d'un run RoboCasa CloseDrawer PPO (π0) avec `lr=1.0e-6` et `update_epoch=4` (au lieu de 2)
-    - [ ] Lecture de papiers de recherche pertinents
-    - [ ] Réflexion conceptuelle sur les leviers RL pour la généralisation hors distribution
+    - [x] Lecture de papiers de recherche pertinents
+    - [x] Réflexion conceptuelle sur les leviers RL pour la généralisation hors distribution
+        La première question qu'on se pose est évidemment : est-ce que utiliser le RL pour faire le fine-tuning permet la généralisation ? Cette réponse nous sera donnée une fois qu'on aura pu
+        tester le fine tuning sur un dataset OOD. S'il se trouve que le fine tuning ne permet pas la généralisation, alors il faudra se demander est ce qu'il est possible d'aider le RL à favoriser la généralisation et si oui comment.
+        Si l'objectif est de ne pas modifier le design de la reward : 
+        - une première piste serait d'aider le modèle à extrapoler à l'aide d'un curriculum d'entraînement. Par exemple, on pourrait imaginer faire du fine-tuning RL sur des 
+        tâches de difficulté croissante, en commençant par des tâches proches de la distribution d'entraînement SFT et en progressant vers des tâches plus éloignées. L'idée serait que le modèle puisse apprendre à généraliser progressivement 
+        à mesure qu'il est exposé à des tâches de plus en plus difficiles. 
+        - une autre piste serait de travailler sur la capacité d'exploration du modèle pendant le fine-tuning RL. Par exemple, on pourrait essayer d'encourager le modèle à explorer des actions ou des stratégies différentes de celles qu'il a 
+        apprises pendant le SFT, afin de favoriser la découverte de solutions plus générales. Il faudrait trouver des méthodes qui favorisent sa curiosité (température, bonus d'entropie, etc.).
 
 ### Décisions et ajustements
 

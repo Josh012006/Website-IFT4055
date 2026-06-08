@@ -94,8 +94,10 @@ Here are some simulation environments used for training and evaluating RL models
 To better approach this project, here is a list of the scientific articles I have consulted:
 
 - ["OpenVLA: An Open-Source Vision-Language-Action Model"](https://arxiv.org/abs/2406.09246): Finished reading
-- ["LoRA: Low-Rank Adaptation of Large Language Models"](https://arxiv.org/abs/2106.09685): Currently reading
-- ["Training language models to follow instructions with human feedback"](https://arxiv.org/abs/2203.02155): Currently reading
-- ["Fine-Tuning Vision-Language-Action Models: Optimizing Speed and Success"](https://arxiv.org/abs/2502.19645): Currently reading
-- ["LIBERO-Plus: In-depth Robustness Analysis of Vision-Language-Action Models"](https://arxiv.org/abs/2510.13626): Currently reading
-- ["VLAs Are Confined yet Capable of Generalizing to Novel Tasks"](https://openreview.net/forum?id=jtrhwfgseW): Currently reading
+- ["LoRA: Low-Rank Adaptation of Large Language Models"](https://arxiv.org/abs/2106.09685): Currently reading (10%)
+- ["Training language models to follow instructions with human feedback"](https://arxiv.org/abs/2203.02155): Currently reading (10%)
+- ["Fine-Tuning Vision-Language-Action Models: Optimizing Speed and Success"](https://arxiv.org/abs/2502.19645): Currently reading (10%)
+- ["LIBERO-Plus: In-depth Robustness Analysis of Vision-Language-Action Models"](https://arxiv.org/abs/2510.13626): Currently reading (10%)
+- ["VLAs Are Confined yet Capable of Generalizing to Novel Tasks"](https://openreview.net/forum?id=jtrhwfgseW): Currently reading (75%)
+- ["Curiosity-driven Exploration by Self-supervised Prediction"](https://arxiv.org/abs/1705.05363) : Plan to read
+- ["Exploration by Random Network Distillation"](https://arxiv.org/abs/1810.12894) : Plan to read
