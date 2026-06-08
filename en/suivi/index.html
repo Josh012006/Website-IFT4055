@@ -1505,8 +1505,18 @@
 <li>Relaunched a RoboCasa CloseDrawer PPO (π0) run with <code>lr=1.0e-6</code> and <code>update_epoch=4</code> (instead of 2)</li>
 </ul>
 </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Reading of relevant research papers</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Conceptual reflection on RL levers for out-of-distribution generalization</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Reading of relevant research papers</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Conceptual reflection on RL levers for out-of-distribution generalization
+    The first question we ask is obviously: does using RL for fine-tuning enable generalization? This answer will be given once we have the opportunity to
+    test fine-tuning on an OOD dataset. If we find that fine-tuning does not enable generalization, then we will need to consider whether it is possible to help RL favor generalization and, if so, how.
+    If the objective is not to modify the reward design:<ul>
+<li>One approach would be to help the model extrapolate using a curriculum learning strategy. For example, we could imagine doing RL fine-tuning on
+tasks of increasing difficulty, starting with tasks close to the SFT training distribution and progressing towards more distant tasks. The idea would be that the model can learn to generalize progressively
+as it is exposed to increasingly challenging tasks.</li>
+<li>Another approach would be to work on the model's exploration capacity during RL fine-tuning. For example, we could try to encourage the model to explore different actions or strategies than those it has
+learned during SFT, in order to favor the discovery of more general solutions. We would need to find methods that promote its curiosity (temperature, entropy bonus, etc.).</li>
+</ul>
+</li>
 </ul>
 </div>
 <h3 id="decisions-and-adjustments_4">Decisions and adjustments<a class="headerlink" href="#decisions-and-adjustments_4" title="Permanent link">&para;</a></h3>
