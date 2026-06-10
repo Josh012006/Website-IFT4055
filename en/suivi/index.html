@@ -819,6 +819,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#decisions-and-adjustments_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decisions and adjustments
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1267,6 +1278,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#decisions-and-adjustments_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decisions and adjustments
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1541,8 +1563,19 @@ learned during SFT, in order to favor the discovery of more general solutions. W
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Discussion with the team on the visualization analysis</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Identification of out-of-distribution tasks based on the endpoint distribution analysis</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Build an OOD dataset for our future work on out-of-distribution generalization</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Analysis of hyperparameter exploration for reduction of training time</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Analysis of hyperparameter exploration for reduction of training time<ul>
+<li>Increasing the replay ratio (<code>rollout_epoch</code> 4→8 for GRPO, <code>update_epoch</code> 2→4 for PPO) shifted the bottleneck from rollout collection to gradient updates, resulting in slower training overall (~27 min/step vs ~14 min/step)</li>
+<li>Reverting to original replay ratio values and reducing <code>max_episode_steps</code> (512→352 for LIBERO-Spatial, 300→200 for RoboCasa) and max_epochs (100→75 for both) to see if things are better</li>
+</ul>
+</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Finish reading of relevant research papers</li>
+</ul>
+</div>
+<h3 id="decisions-and-adjustments_5">Decisions and adjustments<a class="headerlink" href="#decisions-and-adjustments_5" title="Permanent link">&para;</a></h3>
+<div class="admonition info">
+<p class="admonition-title">Decisions</p>
+<ul>
+<li>Increasing the replay ratio does not reduce training time on large models (OpenVLA-OFT 7B, π0 3B) — gradient updates are the bottleneck, not rollout collection. Reverted to original replay ratio values. </li>
 </ul>
 </div>
 <!-- ### Decisions and adjustments
