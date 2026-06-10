@@ -195,10 +195,10 @@ title: Suivi du projet
         La première question qu'on se pose est évidemment : est-ce que utiliser le RL pour faire le fine-tuning permet la généralisation ? Cette réponse nous sera donnée une fois qu'on aura pu
         tester le fine tuning sur un dataset OOD. S'il se trouve que le fine tuning ne permet pas la généralisation, alors il faudra se demander est ce qu'il est possible d'aider le RL à favoriser la généralisation et si oui comment.
         Si l'objectif est de ne pas modifier le design de la reward : 
-        - une première piste serait d'aider le modèle à extrapoler à l'aide d'un curriculum d'entraînement. Par exemple, on pourrait imaginer faire du fine-tuning RL sur des 
+        - Une première piste serait d'aider le modèle à extrapoler à l'aide d'un curriculum d'entraînement. Par exemple, on pourrait imaginer faire du fine-tuning RL sur des 
         tâches de difficulté croissante, en commençant par des tâches proches de la distribution d'entraînement SFT et en progressant vers des tâches plus éloignées. L'idée serait que le modèle puisse apprendre à généraliser progressivement 
         à mesure qu'il est exposé à des tâches de plus en plus difficiles. 
-        - une autre piste serait de travailler sur la capacité d'exploration du modèle pendant le fine-tuning RL. Par exemple, on pourrait essayer d'encourager le modèle à explorer des actions ou des stratégies différentes de celles qu'il a 
+        - Une autre piste serait de travailler sur la capacité d'exploration du modèle pendant le fine-tuning RL. Par exemple, on pourrait essayer d'encourager le modèle à explorer des actions ou des stratégies différentes de celles qu'il a 
         apprises pendant le SFT, afin de favoriser la découverte de solutions plus générales. Il faudrait trouver des méthodes qui favorisent sa curiosité (température, bonus d'entropie, etc.).
 
 ### Décisions et ajustements
@@ -223,7 +223,14 @@ title: Suivi du projet
     - [ ] Identification des tâches hors distribution à partir de l'analyse de distribution des endpoints
     - [ ] Construction d'un dataset OOD pour nos futurs travaux sur la généralisation hors distribution
     - [ ] Analyse de l'exploration des hyperparamètres pour la réduction du temps d'entraînement
+        - L'augmentation du taux de réitération (`rollout_epoch` de 4 à 8 pour GRPO, `update_epoch` de 2 à 4 pour PPO) a déplacé le goulot d'étranglement de la collecte des rollouts vers les mises à jour des gradients, ce qui a ralenti l'entraînement dans son ensemble (~27 min/étape contre ~14 min/étape)
+        - Retour aux valeurs initiales du taux de relecture et réduction de `max_episode_steps` (512→352 pour LIBERO-Spatial, 300→200 pour RoboCasa) et de max_epochs (100→75 pour les deux) afin de vérifier si les performances s'améliorent
     - [ ] Fin de la lecture des papiers de recherche pertinents
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - Augmenter le replay ratio ne réduit pas le temps d'entraînement sur des grands modèles (OpenVLA-OFT 7B, π0 3B) — les gradient updates sont le goulot d'étranglement, pas la collecte de rollouts. Retour aux valeurs originales du replay ratio.
 
 <!-- ### Décisions et ajustements
 

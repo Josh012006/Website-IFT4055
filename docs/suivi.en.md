@@ -222,7 +222,14 @@ title: Project Tracking
     - [ ] Identification of out-of-distribution tasks based on the endpoint distribution analysis
     - [ ] Build an OOD dataset for our future work on out-of-distribution generalization
     - [ ] Analysis of hyperparameter exploration for reduction of training time
+        - Increasing the replay ratio (`rollout_epoch` 4→8 for GRPO, `update_epoch` 2→4 for PPO) shifted the bottleneck from rollout collection to gradient updates, resulting in slower training overall (~27 min/step vs ~14 min/step)
+        - Reverting to original replay ratio values and reducing `max_episode_steps` (512→352 for LIBERO-Spatial, 300→200 for RoboCasa) and max_epochs (100→75 for both) to see if things are better
     - [ ] Finish reading of relevant research papers
+
+### Decisions and adjustments
+
+!!! info "Decisions"
+    - Increasing the replay ratio does not reduce training time on large models (OpenVLA-OFT 7B, π0 3B) — gradient updates are the bottleneck, not rollout collection. Reverted to original replay ratio values. 
 
 <!-- ### Decisions and adjustments
 
