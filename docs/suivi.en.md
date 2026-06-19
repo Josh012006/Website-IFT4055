@@ -218,23 +218,79 @@ title: Project Tracking
 ### Work completed
 
 !!! abstract "Progress"
-    - [ ] Discussion with the team on the visualization analysis
-    - [ ] Identification of out-of-distribution tasks based on the endpoint distribution analysis
-    - [ ] Build an OOD dataset for our future work on out-of-distribution generalization
-    - [ ] Analysis of hyperparameter exploration for reduction of training time
+    - [x] Discussion with the team on the visualization analysis
+    - [x] Identification of out-of-distribution tasks based on the endpoint distribution analysis
+    - [x] Build an OOD dataset for our future work on out-of-distribution generalization : we chose maniskill
+    - [x] Analysis of hyperparameter exploration for reduction of training time
         - Increasing the replay ratio (`rollout_epoch` 4→8 for GRPO, `update_epoch` 2→4 for PPO) shifted the bottleneck from rollout collection to gradient updates, resulting in slower training overall (~27 min/step vs ~14 min/step)
-        - Reverting to original replay ratio values and reducing `max_episode_steps` (512→352 for LIBERO-Spatial, 300→200 for RoboCasa) and max_epochs (100→75 for both) to see if things are better
+        - Reverting to original replay ratio values and reducing `max_episode_steps` (512→352 for LIBERO-Spatial, 300→200 for RoboCasa) and max_epochs (100→75 for both) to see if things are better. The training time did decrease.
     - [ ] Finish reading of relevant research papers
 
 ### Decisions and adjustments
 
 !!! info "Decisions"
     - Increasing the replay ratio does not reduce training time on large models (OpenVLA-OFT 7B, π0 3B) — gradient updates are the bottleneck, not rollout collection. Reverted to original replay ratio values. 
+    - The solution to reduce training time is to reduce the maximum episode length (`max_episode_steps`) and the number of epochs (`max_epochs`), which has a direct impact on rollout collection time and gradient update time respectively. This is a more effective way to speed up training while maintaining good performance. It's just impportant not to forget to adapt the learning rate accordingly to prevent instabilities.
+    - Instead of using OpenVLA-OFT, the research question will shift towards understanding whether RL fine-tuning can enable out-of-distribution generalization directly on the base model OpenVLA. We will start with the `StackCube-v1` maniskill task.
+
+
+
+## Week 7 (June 15–19, 2026)
+
+### Goals for the period
+- Refine the definition of OOD for this research project
+- Discover how to add new tasks to the RLinf framework
+- Analyze RL performance on the stack cube task
+
+### Work completed
+
+!!! abstract "Progress"
+    - [x] Integrate StackCube into RLinf pipeline
+    - [x] Document the process of adding a new task to RLinf in a new section of the README (`ADDING_TASKS.md`)
+    - [x] Launch GRPO and PPO runs with OpenVLA base
+    - [x] Discussion with the team on the runs results
+
+### Decisions and adjustments
+
+!!! info "Decisions"
+    - We will keep the definition of OOD basic and simple : a hard task on which the model doesn't perform well
+    - We won't use RL directly with the base model OpenVLA and on-policy algorithms. It won't work
+    - We will try to reproduce the [ExpoFT project](https://pd-perry.github.io/expo-ft/) and then see what we can improve on it
+
+### Difficulties encountered
+
+!!! warning "Difficulties"
+    - The RL fine tuning runs on `StackCube-v1` (PPO and GRPO) had 0% success.
+    - With on-policy algorithms like PPO and GRPO, even improving the exploration strategy isn't sufficient without prior SFT.
+
+
+
+## Week 8 (June 22–26, 2026)
+
+### Goals for the period
+- Read the ExpoFT paper and understand the residual policy architecture
+- Reproduce ExpoFT results in their original codebase on StackCube
+- Integrate the residual policy architecture into the RLinf framework and reproduce ExpoFT results there too if possible
+- Read more on off-policy algorithms
+
+### Work completed
+
+!!! abstract "Progress"
+    - [ ] Read the ExpoFT paper and understood the residual policy architecture
+    - [ ] Reproduced ExpoFT results in their original codebase on StackCube
+    - [ ] Integrated the residual policy architecture into the RLinf framework
+    - [ ] Launched training runs with the residual policy architecture on StackCube
+    - [ ] Discussion with the team on the runs results
+    - [ ] Optionnally add a task description visualization part to my visualization notebook. Might help me better understand how different the datasets are.
 
 <!-- ### Decisions and adjustments
 
 !!! info "Decisions"
+    - We won't use RL directly with the base model OpenVLA and on-policy algorithms. It won't work
+    - We will try to reproduce the [ExpoFT project](https://pd-perry.github.io/expo-ft/) and then see what we can improve on it
 
 ### Difficulties encountered
 
-!!! warning "Difficulties" -->
+!!! warning "Difficulties"
+    - The RL fine tuning runs on `StackCube-v1` (PPO and GRPO) had 0% success.
+    - With on-policy algorithms like PPO and GRPO, even improving the exploration strategy isn't sufficient without prior SFT. -->

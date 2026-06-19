@@ -63,23 +63,17 @@ stabilité algorithmique, d'efficacité computationnelle, et de capacité à gé
 <!-- > Présentez brièvement les approches, travaux ou concepts importants déjà identifiés.  
 > L’objectif n’est pas encore de faire une revue complète, mais de situer votre projet par rapport aux travaux existants. -->
 
-Le fine-tuning par apprentissage par renforcement des grands modèles de langage (LLMs) a connu des succès notables 
-avec des algorithmes comme PPO et GRPO, notamment dans des travaux tels que DeepSeek-R1 et InstructGPT. 
-L’extension de ces approches aux modèles vision-langage-action (VLAs) est plus récente et soulève des défis 
-supplémentaires liés à la nature multimodale et à la dimension action de ces modèles. 
+Le fine-tuning par apprentissage par renforcement (RL) des grands modèles de langage (LLM) a connu un succès notable avec des algorithmes tels que PPO et GRPO, notamment dans des travaux comme DeepSeek-R1 et InstructGPT.
+L'extension de ces approches aux modèles vision-langage-action (VLA) est plus récente et introduit des défis supplémentaires en raison de leur nature multimodale et orientée action.
 <br />
-
-Des frameworks récents comme [RLinf](https://github.com/RLinf/RLinf) proposent une infrastructure unifiée permettant 
-d’appliquer le RL à différents modèles vision-langage-action, tout en supportant plusieurs architectures (OpenVLA, π0, GR00T) 
-et environnements (LIBERO, ManiSkill, RoboCasa). 
+ 
+Des frameworks récents tels que [RLinf](https://github.com/RLinf/RLinf) fournissent une infrastructure unifiée pour appliquer le RL aux modèles VLA, supportant plusieurs architectures (OpenVLA, π0, GR00T) et environnements (LIBERO, ManiSkill, RoboCasa).
 <br />
-
-Les premiers résultats montrent que le RL peut améliorer significativement les performances obtenues par supervised fine-tuning (SFT), 
-notamment sur les tâches longues et multi-étapes, mais les conditions optimales de cet apprentissage restent encore mal comprises. 
-Des travaux récents ([LIBERO-OOD, ICLR 2026](https://openreview.net/forum?id=jtrhwfgseW) ; [LIBERO-Plus, arXiv 2510.13626](https://arxiv.org/abs/2510.13626)) montrent également que les modèles entraînés par SFT souffrent d’un problème de généralisation hors distribution, 
-mémorisant souvent les configurations vues à l’entraînement plutôt que de développer une compréhension robuste des tâches. 
-Cette limitation suggère que les méthodes actuelles de fine-tuning et d’évaluation ne favorisent pas toujours l’acquisition 
-de représentations robustes et généralisables.
+ 
+Les premiers résultats indiquent que le RL peut significativement améliorer la performance par rapport au fine-tuning supervisé (SFT), particulièrement sur des tâches à long horizon et multi-étapes. Cependant, les conditions optimales pour cette amélioration restent mal comprises. Des travaux récents ([LIBERO-OOD, ICLR 2026](https://openreview.net/forum?id=jtrhwfgseW) ; [LIBERO-Plus, arXiv 2510.13626](https://arxiv.org/abs/2510.13626)) montrent également que les modèles entraînés par SFT souffrent de problèmes de généralisation hors distribution, mémorisant souvent les configurations d'entraînement plutôt que de développer une compréhension robuste de la tâche. Cela suggère que les méthodes actuelles de fine-tuning et d'évaluation ne favorisent pas toujours l'apprentissage de représentations robustes et généralisables.
+<br />
+ 
+Sur des tâches où le modèle de base atteint un taux de succès proche de zéro, les algorithmes RL on-policy purs (par exemple PPO, GRPO) peinent à produire un quelconque signal d'apprentissage, puisque la politique n'observe jamais de trajectoire réussie à renforcer. Un nombre croissant de travaux aborde ce goulot d'étranglement lié à l'exploration en amorçant le RL avec un petit nombre de démonstrations via des méthodes off-policy — incluant le RL avec données préalables (RLPD), l'apprentissage par imitation, et des approches d'apprentissage de politique résiduelle comme ExpoFT, qui entraîne une politique de correction légère par-dessus un VLA figé en utilisant une fonction Q apprise plutôt que des gradients de politique. Ces méthodes évitent le besoin d'une log-probabilité valide sur les actions, les rendant applicables même aux VLA qui prédisent des actions continues via flow matching, où les vraisemblances exactes sont intractables.
 
 ### Objectifs de recherche
 
@@ -87,24 +81,21 @@ de représentations robustes et généralisables.
 > Les objectifs peuvent viser à comprendre, comparer, tester, reproduire, améliorer ou explorer une approche.  
 > Assurez-vous qu’ils sont réalistes pour un trimestre. -->
 
-1. **Réfuter** l'hypothèse selon laquelle le RL ne fait que redistribuer la masse de probabilité du modèle pré-entraîné, en testant sur des tâches maximalement différentes des données d'entraînement SFT.
-2. **Identifier** si c'est l'exploration ou l'optimisation qui constitue le principal obstacle au fine-tuning RL des VLAs.
+1. **Réfuter** l'hypothèse selon laquelle le RL ne fait que redistribuer la masse de probabilité du modèle pré-entraîné, en testant sur des tâches aussi différentes que possible des données d'entraînement SFT.
+2. **Identifier** si l'exploration ou l'optimisation constitue le principal goulot d'étranglement dans le fine-tuning par RL des VLA.
 3. **Comparer** différentes architectures (OpenVLA-OFT, π0,...) et algorithmes (PPO, GRPO,...) en termes d'efficacité et de stabilité sur un seul GPU A100.
-4. **Contribuer** à la compréhension des conditions minimales nécessaires pour que le RL améliore véritablement les capacités d'un VLA au-delà de son entraînement supervisé initial.
+4. **Contribuer** à la compréhension des conditions minimales requises pour que le RL puisse réellement étendre les capacités d'un VLA au-delà de son entraînement supervisé initial.
 
 ### Méthodologie envisagée
 
 <!-- > Expliquez comment vous comptez aborder le projet : revue de littérature, analyse théorique, expérimentation, reproduction de résultats, prototype exploratoire, comparaison d’approches, etc.  
 > Précisez les données, outils, modèles, articles ou méthodes qui pourraient être utilisés. -->
 
-Le projet adopte une approche expérimentale comparative. Des expériences de fine-tuning RL sont conduites sur 
-plusieurs architectures VLA et plusieurs suites de tâches de manipulation robotique en simulation, 
-en utilisant des frameworks comme RLinf. Les algorithmes d'apprentissage par renforcement sont comparés, 
-ainsi que différents types d'architectures. 
-
-Une attention particulière est portée à la sélection des tâches — en privilégiant des tâches où le modèle SFT de base est faible 
-et où les données d'entraînement du modèle sont connues précisément, afin d'évaluer rigoureusement si le RL permet une 
-généralisation hors distribution.
+Le projet adopte une approche expérimentale comparative. Des expériences de fine-tuning par RL sont menées sur plusieurs architectures de VLA et suites de tâches de manipulation robotique en simulation, en utilisant des frameworks tels que RLinf. Différents algorithmes de RL sont comparés, ainsi que différentes architectures de modèles.
+ 
+Lorsque le RL on-policy pur ne parvient pas à générer de signal d'apprentissage sur des tâches où le taux de succès de base est proche de zéro, la méthodologie part d'une configuration plus supervisée — RL off-policy amorcé avec un petit nombre de démonstrations via l'apprentissage de politique résiduelle (ExpoFT) — puis retire progressivement des composantes (démonstrations, préchauffage SFT) afin de déterminer la supervision minimale requise et de distinguer le goulot d'étranglement lié à l'exploration de celui lié à l'optimisation.
+ 
+Une attention particulière est portée à la sélection des tâches — en priorisant celles où le modèle de base SFT performe mal et dont les données d'entraînement sont précisément documentées, afin d'évaluer rigoureusement si le RL permet une généralisation hors distribution.
 
 ### Évaluation des résultats
 

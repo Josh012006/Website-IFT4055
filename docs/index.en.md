@@ -48,14 +48,17 @@ terms of algorithmic stability, computational efficiency, and the ability to gen
 
 ### Preliminary state of the art
 
-Reinforcement learning fine-tuning of large language models (LLMs) has achieved notable success with algorithms such as PPO and GRPO, particularly in works like DeepSeek-R1 and InstructGPT.  
-Extending these approaches to vision-language-action (VLA) models is more recent and introduces additional challenges due to their multimodal and action-oriented nature.  
+Reinforcement learning fine-tuning of large language models (LLMs) has achieved notable success with algorithms such as PPO and GRPO, particularly in works like DeepSeek-R1 and InstructGPT.
+Extending these approaches to vision-language-action (VLA) models is more recent and introduces additional challenges due to their multimodal and action-oriented nature.
 <br />
-
-Recent frameworks such as [RLinf](https://github.com/RLinf/RLinf) provide unified infrastructure for applying RL to VLA models, supporting multiple architectures (OpenVLA, π0, GR00T) and environments (LIBERO, ManiSkill, RoboCasa).  
+ 
+Recent frameworks such as [RLinf](https://github.com/RLinf/RLinf) provide unified infrastructure for applying RL to VLA models, supporting multiple architectures (OpenVLA, π0, GR00T) and environments (LIBERO, ManiSkill, RoboCasa).
 <br />
-
+ 
 Early results indicate that RL can significantly improve performance over supervised fine-tuning (SFT), especially on long-horizon and multi-step tasks. However, the optimal conditions for this improvement remain poorly understood. Recent works ([LIBERO-OOD, ICLR 2026](https://openreview.net/forum?id=jtrhwfgseW); [LIBERO-Plus, arXiv 2510.13626](https://arxiv.org/abs/2510.13626)) also show that SFT-trained models suffer from out-of-distribution generalization issues, often memorizing training configurations rather than developing robust task understanding. This suggests that current fine-tuning and evaluation methods do not always promote the learning of robust and generalizable representations.
+<br />
+ 
+On tasks where the base model achieves near-zero success, pure on-policy RL algorithms (e.g. PPO, GRPO) struggle to produce any learning signal, since the policy never observes a successful trajectory to reinforce. A growing body of work addresses this exploration bottleneck by bootstrapping RL with a small number of demonstrations through off-policy methods — including RL with Prior Data (RLPD), imitation learning, and residual policy learning approaches such as ExpoFT, which trains a lightweight correction policy on top of a frozen VLA using a learned Q-function rather than policy gradients. These methods avoid the need for a valid log-probability over actions, making them applicable even to VLAs that predict continuous actions via flow matching, where exact likelihoods are intractable.
 
 ### Research objectives
 
@@ -66,13 +69,11 @@ Early results indicate that RL can significantly improve performance over superv
 
 ### Proposed methodology
 
-The project adopts a comparative experimental approach. RL fine-tuning experiments are conducted across 
-multiple VLA architectures and robotic manipulation task suites in simulation, using frameworks such as RLinf. 
-Reinforcement learning algorithms are compared, as well as different model architectures.
-
-Particular attention is given to task selection — prioritizing tasks where the SFT base model performs poorly 
-and where the model's training data is precisely documented, in order to rigorously evaluate whether RL enables 
-out-of-distribution generalization.
+The project adopts a comparative experimental approach. RL fine-tuning experiments are conducted across multiple VLA architectures and robotic manipulation task suites in simulation, using frameworks such as RLinf. Reinforcement learning algorithms are compared, as well as different model architectures.
+ 
+Where pure on-policy RL fails to generate a learning signal on tasks with near-zero base success rate, the methodology starts from a more supervised setting — off-policy RL bootstrapped with a small number of demonstrations via residual policy learning (ExpoFT) — and progressively strips away components (demonstrations, SFT warmup) to determine the minimum supervision required and to disentangle the exploration bottleneck from the optimization bottleneck.
+ 
+Particular attention is given to task selection — prioritizing tasks where the SFT base model performs poorly and where the model's training data is precisely documented, in order to rigorously evaluate whether RL enables out-of-distribution generalization.
 
 ### Evaluation of results
 

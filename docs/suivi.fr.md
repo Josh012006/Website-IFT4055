@@ -211,31 +211,75 @@ title: Suivi du projet
 ## Semaine 6 (8–12 juin 2026)
 
 ### Objectifs de la période
-- Analyser les distributions d'endpoints et identifier des tâches hors distribution
-- Continuer à étudier dans quelle mesure on peut maintenir de bonnes performances tout en réduisant le temps d'entraînement
-- Réfléchir conceptuellement à comment orienter le RL pour atteindre notre objectif de généralisation hors distribution
-- Lire les papiers de recherche pertinents sur le sujet
+- Analyser les distributions des endpoints et identifier les tâches hors distribution (OOD)
+- Continuer à étudier dans quelle mesure on peut maintenir de bonnes performances tout en réduisant le temps d'entraînement par l'ajustement des hyperparamètres
+- Réfléchir conceptuellement à la manière dont le RL peut être guidé pour atteindre notre objectif de généralisation hors distribution
+- Lire les articles de recherche pertinents sur le sujet
 
-### Travail réalisé
+### Travail accompli
 
-!!! abstract "Avancement"
-    - [ ] Discussion avec l'équipe sur l'analyse de visualisation
-    - [ ] Identification des tâches hors distribution à partir de l'analyse de distribution des endpoints
-    - [ ] Construction d'un dataset OOD pour nos futurs travaux sur la généralisation hors distribution
-    - [ ] Analyse de l'exploration des hyperparamètres pour la réduction du temps d'entraînement
-        - L'augmentation du taux de réitération (`rollout_epoch` de 4 à 8 pour GRPO, `update_epoch` de 2 à 4 pour PPO) a déplacé le goulot d'étranglement de la collecte des rollouts vers les mises à jour des gradients, ce qui a ralenti l'entraînement dans son ensemble (~27 min/étape contre ~14 min/étape)
-        - Retour aux valeurs initiales du taux de relecture et réduction de `max_episode_steps` (512→352 pour LIBERO-Spatial, 300→200 pour RoboCasa) et de max_epochs (100→75 pour les deux) afin de vérifier si les performances s'améliorent
-    - [ ] Fin de la lecture des papiers de recherche pertinents
+!!! abstract "Progrès"
+    - [x] Discussion avec l'équipe sur l'analyse de visualisation
+    - [x] Identification des tâches hors distribution à partir de l'analyse de distribution des endpoints
+    - [x] Construction d'un jeu de données OOD pour nos futurs travaux sur la généralisation hors distribution : nous avons choisi maniskill
+    - [x] Analyse exploratoire des hyperparamètres pour la réduction du temps d'entraînement
+        - L'augmentation du ratio de replay (`rollout_epoch` 4→8 pour GRPO, `update_epoch` 2→4 pour PPO) a déplacé le goulot d'étranglement de la collecte de rollouts vers les mises à jour de gradient, ce qui a ralenti l'entraînement global (~27 min/étape contre ~14 min/étape)
+        - Retour aux valeurs initiales du ratio de replay et réduction de `max_episode_steps` (512→352 pour LIBERO-Spatial, 300→200 pour RoboCasa) ainsi que de max_epochs (100→75 pour les deux) pour voir si les résultats s'améliorent. Le temps d'entraînement a effectivement diminué.
+    - [ ] Terminer la lecture des articles de recherche pertinents
 
 ### Décisions et ajustements
 
 !!! info "Décisions"
-    - Augmenter le replay ratio ne réduit pas le temps d'entraînement sur des grands modèles (OpenVLA-OFT 7B, π0 3B) — les gradient updates sont le goulot d'étranglement, pas la collecte de rollouts. Retour aux valeurs originales du replay ratio.
+    - Augmenter le ratio de replay ne réduit pas le temps d'entraînement sur les grands modèles (OpenVLA-OFT 7B, π0 3B) — les mises à jour de gradient constituent le goulot d'étranglement, pas la collecte de rollouts. Retour aux valeurs initiales du ratio de replay.
+    - La solution pour réduire le temps d'entraînement consiste à réduire la longueur maximale des épisodes (`max_episode_steps`) et le nombre d'epochs (`max_epochs`), ce qui a un impact direct sur le temps de collecte de rollouts et le temps de mise à jour de gradient respectivement. C'est une façon plus efficace d'accélérer l'entraînement tout en maintenant de bonnes performances. Il est simplement important de ne pas oublier d'adapter le taux d'apprentissage en conséquence afin d'éviter les instabilités.
+    - Plutôt que d'utiliser OpenVLA-OFT, la question de recherche s'orientera vers la compréhension de la capacité du RL fine-tuning à permettre une généralisation hors distribution directement sur le modèle de base OpenVLA. Nous commencerons avec la tâche `StackCube-v1` de maniskill.
 
-<!-- ### Décisions et ajustements
+
+
+## Semaine 7 (15–19 juin 2026)
+
+### Objectifs de la période
+- Affiner la définition de l'OOD pour ce projet de recherche
+- Découvrir comment ajouter de nouvelles tâches au framework RLinf
+- Analyser les performances du RL sur la tâche stack cube
+
+### Travail accompli
+
+!!! abstract "Progrès"
+    - [x] Intégration de StackCube dans le pipeline RLinf
+    - [x] Documentation du processus d'ajout d'une nouvelle tâche à RLinf dans une nouvelle section du README (`ADDING_TASKS.md`)
+    - [x] Lancement des entraînements GRPO et PPO avec OpenVLA de base
+    - [x] Discussion avec l'équipe sur les résultats des entraînements
+
+### Décisions et ajustements
 
 !!! info "Décisions"
+    - Nous conserverons une définition simple et basique de l'OOD : une tâche difficile sur laquelle le modèle ne performe pas bien
+    - Nous n'utiliserons pas le RL directement avec le modèle de base OpenVLA et des algorithmes on-policy. Cela ne fonctionnera pas
+    - Nous tenterons de reproduire le [projet ExpoFT](https://pd-perry.github.io/expo-ft/), puis nous verrons ce que nous pouvons y améliorer
 
 ### Difficultés rencontrées
 
-!!! warning "Difficultés" -->
+!!! warning "Difficultés"
+    - Les entraînements de RL fine-tuning sur `StackCube-v1` (PPO et GRPO) ont obtenu un taux de réussite de 0 %.
+    - Avec des algorithmes on-policy comme PPO et GRPO, même l'amélioration de la stratégie d'exploration ne suffit pas sans SFT préalable.
+
+
+
+## Semaine 8 (22–26 juin 2026)
+
+### Objectifs de la période
+- Lire l'article ExpoFT et comprendre l'architecture de politique résiduelle (residual policy)
+- Reproduire les résultats d'ExpoFT dans leur base de code originale sur StackCube
+- Intégrer l'architecture de politique résiduelle dans le framework RLinf et reproduire les résultats d'ExpoFT également là, si possible
+- Lire davantage sur les algorithmes off-policy
+
+### Travail accompli
+
+!!! abstract "Progrès"
+    - [ ] Lecture de l'article ExpoFT et compréhension de l'architecture de politique résiduelle
+    - [ ] Reproduction des résultats d'ExpoFT dans leur base de code originale sur StackCube
+    - [ ] Intégration de l'architecture de politique résiduelle dans le framework RLinf
+    - [ ] Lancement des entraînements avec l'architecture de politique résiduelle sur StackCube
+    - [ ] Discussion avec l'équipe sur les résultats des entraînements
+    - [ ] Ajout facultatif d'une visualisation de description des tâches à mon notebook de visualisation. Cela pourrait m'aider à mieux comprendre à quel point les jeux de données diffèrent.
