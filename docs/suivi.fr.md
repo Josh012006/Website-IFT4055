@@ -277,7 +277,7 @@ title: Suivi du projet
 ### Travail accompli
 
 !!! abstract "Progrès"
-    - [ ] Lecture de l'article ExpoFT et compréhension de l'architecture de politique résiduelle
+    - [x] Lecture de l'article ExpoFT et compréhension de l'architecture de politique résiduelle
     - [ ] Reproduction des résultats d'ExpoFT dans leur base de code originale sur StackCube
     - [ ] Intégration de l'architecture de politique résiduelle dans le framework RLinf
     - [ ] Lancement des entraînements avec l'architecture de politique résiduelle sur StackCube

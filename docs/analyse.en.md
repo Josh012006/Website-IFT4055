@@ -98,6 +98,8 @@ To better approach this project, here is a list of the scientific articles I hav
 - ["Training language models to follow instructions with human feedback"](https://arxiv.org/abs/2203.02155): Currently reading (10%)
 - ["Fine-Tuning Vision-Language-Action Models: Optimizing Speed and Success"](https://arxiv.org/abs/2502.19645): Currently reading (10%)
 - ["LIBERO-Plus: In-depth Robustness Analysis of Vision-Language-Action Models"](https://arxiv.org/abs/2510.13626): Currently reading (10%)
-- ["VLAs Are Confined yet Capable of Generalizing to Novel Tasks"](https://openreview.net/forum?id=jtrhwfgseW): Currently reading (75%)
+- ["VLAs Are Confined yet Capable of Generalizing to Novel Tasks"](https://openreview.net/forum?id=jtrhwfgseW): Finished reading
 - ["Curiosity-driven Exploration by Self-supervised Prediction"](https://arxiv.org/abs/1705.05363) : Plan to read
 - ["Exploration by Random Network Distillation"](https://arxiv.org/abs/1810.12894) : Plan to read
+- ["EXPO-FT: Sample-Efficient Reinforcement Learning Finetuning for Vision-Language-Action Models"](https://arxiv.org/abs/2605.25477) : Finished reading
+- ["Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor"](https://arxiv.org/abs/1801.01290) : Currently reading (10%)

@@ -276,7 +276,7 @@ title: Project Tracking
 ### Work completed
 
 !!! abstract "Progress"
-    - [ ] Read the ExpoFT paper and understood the residual policy architecture
+    - [x] Read the ExpoFT paper and understand the residual policy architecture
     - [ ] Reproduced ExpoFT results in their original codebase on StackCube
     - [ ] Integrated the residual policy architecture into the RLinf framework
     - [ ] Launched training runs with the residual policy architecture on StackCube
