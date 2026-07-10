@@ -231,13 +231,13 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/montrealrobotics/RLinf" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://github.com/Josh012006/expo-ft" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    Project's repository
+    EXPO-FT fork
   </div>
 </a>
       </div>
@@ -385,13 +385,13 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/montrealrobotics/RLinf" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://github.com/Josh012006/expo-ft" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
-    Project's repository
+    EXPO-FT fork
   </div>
 </a>
     </div>
@@ -495,6 +495,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -511,6 +529,346 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-and-general-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture and general approach
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture and general approach">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#research-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-openvla-05-over-flow-matching-vlas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why OpenVLA / π₀.₅ over flow-matching VLAs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#working-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Working environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiments-and-analyses-performed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments and analyses performed
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiments and analyses performed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-on-policy-rl-baselines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — On-policy RL baselines
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1 — On-policy RL baselines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#libero-90-grpo-openvla-oft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LIBERO-90 GRPO (OpenVLA-OFT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#robocasa-closedrawer-ppo-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RoboCasa CloseDrawer PPO (π₀)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#libero-spatial-grpo-openvla-oft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LIBERO-Spatial GRPO (OpenVLA-OFT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#libero-long-grpo-openvla-oft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LIBERO-Long GRPO (OpenVLA-OFT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stackcube-v1-ppo-and-grpo-openvla-base-on-policy-no-sft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        StackCube-v1 PPO and GRPO (OpenVLA base, on-policy, no SFT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ood-dataset-selection-and-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OOD dataset selection and visualization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hyperparameter-exploration-training-time-reduction-phase-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hyperparameter exploration — training time reduction (Phase 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-expoft-repository-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — ExpoFT: repository setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-sft-stage-action-space-diagnosis-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — SFT stage: action-space diagnosis and validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-task-suite-stackcube-pushcube-and-pickcube-dropped-then-reintegrated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Task suite: StackCube, PushCube, and PickCube (dropped, then reintegrated)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-code-review-and-infrastructure-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: code review and infrastructure fixes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-the-central-instability-finding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: the central instability finding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#major-difficulties-encountered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Major difficulties encountered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Major difficulties encountered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exploration-bottleneck-phase-1-fundamental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exploration bottleneck (Phase 1, fundamental)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#action-space-mismatch-and-the-major-reset-phase-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action-space mismatch and the MAJOR RESET (Phase 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pickcube-task-design-incompatibility-resolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PickCube task-design incompatibility (resolved)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rl-critic-instability-phase-2-current-central-difficulty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RL critic instability (Phase 2, current central difficulty)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-cluster-ray-and-storage-phase-1-and-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure — cluster, Ray, and storage (Phase 1 and 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adjustments-and-key-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adjustments and key decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#figures-visuals-and-demonstrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Figures, visuals, and demonstrations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -563,6 +921,335 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-and-general-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture and general approach
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture and general approach">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#research-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Research objective
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-openvla-05-over-flow-matching-vlas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why OpenVLA / π₀.₅ over flow-matching VLAs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#working-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Working environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiments-and-analyses-performed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments and analyses performed
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiments and analyses performed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-on-policy-rl-baselines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — On-policy RL baselines
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1 — On-policy RL baselines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#libero-90-grpo-openvla-oft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LIBERO-90 GRPO (OpenVLA-OFT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#robocasa-closedrawer-ppo-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RoboCasa CloseDrawer PPO (π₀)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#libero-spatial-grpo-openvla-oft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LIBERO-Spatial GRPO (OpenVLA-OFT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#libero-long-grpo-openvla-oft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LIBERO-Long GRPO (OpenVLA-OFT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stackcube-v1-ppo-and-grpo-openvla-base-on-policy-no-sft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        StackCube-v1 PPO and GRPO (OpenVLA base, on-policy, no SFT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ood-dataset-selection-and-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OOD dataset selection and visualization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hyperparameter-exploration-training-time-reduction-phase-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hyperparameter exploration — training time reduction (Phase 1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-expoft-repository-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — ExpoFT: repository setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-sft-stage-action-space-diagnosis-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — SFT stage: action-space diagnosis and validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-task-suite-stackcube-pushcube-and-pickcube-dropped-then-reintegrated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Task suite: StackCube, PushCube, and PickCube (dropped, then reintegrated)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-code-review-and-infrastructure-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: code review and infrastructure fixes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-the-central-instability-finding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: the central instability finding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#major-difficulties-encountered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Major difficulties encountered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Major difficulties encountered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exploration-bottleneck-phase-1-fundamental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exploration bottleneck (Phase 1, fundamental)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#action-space-mismatch-and-the-major-reset-phase-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Action-space mismatch and the MAJOR RESET (Phase 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pickcube-task-design-incompatibility-resolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PickCube task-design incompatibility (resolved)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rl-critic-instability-phase-2-current-central-difficulty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RL critic instability (Phase 2, current central difficulty)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-cluster-ray-and-storage-phase-1-and-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure — cluster, Ray, and storage (Phase 1 and 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adjustments-and-key-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adjustments and key decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#figures-visuals-and-demonstrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Figures, visuals, and demonstrations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -590,63 +1277,373 @@
 </style>
 
 <h1 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">&para;</a></h1>
-<div class="admonition info">
-<p class="admonition-title">Notice</p>
-<p>Coming soon.</p>
+<h2 id="architecture-and-general-approach">Architecture and general approach<a class="headerlink" href="#architecture-and-general-approach" title="Permanent link">&para;</a></h2>
+<h3 id="research-objective">Research objective<a class="headerlink" href="#research-objective" title="Permanent link">&para;</a></h3>
+<p>The central question of this project is whether RL fine-tuning can enable <strong>out-of-distribution (OOD) generalization</strong> in Vision-Language-Action (VLA) models — that is, allowing a model to succeed on tasks that are maximally distant from its SFT training distribution. A secondary question is whether the primary bottleneck to RL improvement is <strong>exploration</strong> (the policy cannot discover reward signal) or <strong>optimization</strong> (the policy cannot improve given a signal).</p>
+<h3 id="pipeline-overview">Pipeline overview<a class="headerlink" href="#pipeline-overview" title="Permanent link">&para;</a></h3>
+<p>The project went through two major phases:</p>
+<p><strong>Phase 1 — On-policy RL (Weeks 1–7):</strong> Direct RL fine-tuning using GRPO/PPO on top of OpenVLA-OFT and π₀ in LIBERO and RoboCasa environments. This phase established the exploration bottleneck hypothesis and the limits of on-policy approaches without SFT warmup.</p>
+<p><strong>Phase 2 — ExpoFT residual policy (Week 8–present):</strong> Reproduction and adaptation of the <a href="https://pd-perry.github.io/expo-ft/">ExpoFT architecture</a> into a dedicated, ManiSkill-simulation-driven codebase (<code>expo-ft</code>), replacing ExpoFT's original real-robot (DROID) data pipeline while keeping the algorithm itself untouched. The VLA (π₀.₅) is kept <strong>frozen</strong>, and a small residual correction policy is trained on top of it via a Q-function, using a combination of off-policy RL and motion-planning demonstrations. This design avoids two limitations of Phase 1: it does not require valid action log-probabilities (which flow-matching VLAs like π₀/π₀.₅ cannot provide, ruling out standard policy-gradient RL on the base model directly) and it bypasses the cold-start exploration problem by seeding the replay buffer with demonstrations.</p>
+<p>The chosen methodology is <strong>progressive component stripping</strong>: start from the full ExpoFT recipe (SFT warmup + demonstrations + off-policy RL) and validate each stage rigorously before removing components (dataset size, SFT warmup itself) to identify the minimum supervision actually needed.</p>
+<h3 id="why-openvla-05-over-flow-matching-vlas">Why OpenVLA / π₀.₅ over flow-matching VLAs<a class="headerlink" href="#why-openvla-05-over-flow-matching-vlas" title="Permanent link">&para;</a></h3>
+<p>OpenVLA(-OFT) and π₀.₅ use <strong>discrete action tokens</strong>, which yield valid log-probabilities and therefore support principled policy-gradient RL (GRPO/PPO in Phase 1). Flow-matching models (π₀, MoMaLM) cannot provide tractable likelihoods, which would pollute the experimental design for any approach relying on exact policy gradients. This is also why ExpoFT's residual-policy formulation — which sidesteps the need for VLA log-probabilities entirely by acting as an additive correction learned via a Q-function — is an attractive way to keep using a frozen, capable VLA without being blocked by this limitation.</p>
+<h3 id="working-environment">Working environment<a class="headerlink" href="#working-environment" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Cluster:</strong> Mila HPC (SLURM), A100/A100L GPUs (40GB/80GB)</li>
+<li><strong>Models tested:</strong> OpenVLA-OFT (7B), π₀ (3B) (Phase 1); π₀.₅ (<code>pi05_droid_jointpos</code> checkpoint, frozen) + residual policy (Phase 2)</li>
+<li><strong>Environments:</strong> LIBERO (Spatial, Long), RoboCasa (CloseDrawer) — Phase 1; ManiSkill (StackCube-v1, PushCube-v1, PickCube-v1) — Phase 2</li>
+<li><strong>RL algorithms:</strong> GRPO, PPO (Phase 1); off-policy Q-learning / REDQ-style critic ensemble via ExpoFT (Phase 2)</li>
+<li><strong>Framework:</strong> RLinf (<code>montrealrobotics/RLinf</code>) for Phase 1; standalone <code>expo-ft</code> repository (own fork of <code>openpi</code> and <code>ManiSkill</code> as git submodules) for Phase 2</li>
+<li><strong>Key infrastructure:</strong> Four separate Python venvs to manage dependency conflicts; repository living on <code>$HOME</code> with <code>logs/</code> and <code>demos/</code> symlinked to <code>$SCRATCH</code>; large package caches relocated to <code>$SCRATCH</code></li>
+</ul>
+<hr />
+<h2 id="experiments-and-analyses-performed">Experiments and analyses performed<a class="headerlink" href="#experiments-and-analyses-performed" title="Permanent link">&para;</a></h2>
+<h3 id="phase-1-on-policy-rl-baselines">Phase 1 — On-policy RL baselines<a class="headerlink" href="#phase-1-on-policy-rl-baselines" title="Permanent link">&para;</a></h3>
+<h4 id="libero-90-grpo-openvla-oft">LIBERO-90 GRPO (OpenVLA-OFT)<a class="headerlink" href="#libero-90-grpo-openvla-oft" title="Permanent link">&para;</a></h4>
+<p>First experiment. 1000 steps (~31h40). <code>success_once</code> showed occasional spikes (~0.13) with no stable upward trend. Initially attributed to small batch size; later confirmed as an exploration bottleneck.</p>
+<p><img alt="LIBERO-90 GRPO Training Results Success Once" src="https://josh012006.github.io/Website-IFT4055//images/libero90_grpo_training1_success_once.png" />
+<img alt="LIBERO-90 GRPO Training Results Approx KL" src="https://josh012006.github.io/Website-IFT4055//images/libero90_grpo_training1_approx_kl.png" /></p>
+<h4 id="robocasa-closedrawer-ppo-0">RoboCasa CloseDrawer PPO (π₀)<a class="headerlink" href="#robocasa-closedrawer-ppo-0" title="Permanent link">&para;</a></h4>
+<p>150-step run with LoRA (rank 32). Final metrics: <code>success_once</code> ~0.82, <code>critic/value_loss</code> ~0.005, <code>approx_kl</code> ~0.036. Demonstrated that RL can improve performance when the task is within distribution — but CloseDrawer was too easy (SFT base already ~0.6–0.7), leaving limited room for RL contribution.</p>
+<p><img alt="RoboCasa CloseDrawer PPO Training Results Success Once" src="https://josh012006.github.io/Website-IFT4055//images/robocasa_close_drawer_ppo_training1_success_once.png" />
+<img alt="RoboCasa CloseDrawer PPO Training Results Approx KL" src="https://josh012006.github.io/Website-IFT4055//images/robocasa_close_drawer_ppo_training1_approx_kl.png" />
+<img alt="RoboCasa CloseDrawer PPO Training Results Value Loss" src="https://josh012006.github.io/Website-IFT4055//images/robocasa_close_drawer_ppo_training1_value_loss.png" /></p>
+<div style="text-align: center">
+    <video width="480" controls poster="https://josh012006.github.io/Website-IFT4055//images/robocasa_close_drawer_thumbnail.png">
+        <source src="https://josh012006.github.io/Website-IFT4055//images/robocasa_close_drawer_training1_ppo_step_150.mp4" type="video/mp4">
+    </video>
 </div>
-<!-- > :bulb: This page documents the concrete progress of the project throughout the term.
-> It does not replace the final report, but serves to progressively document the work carried out, the decisions made, and the main results obtained.
 
+<p><em>π₀ + RoboCasa CloseDrawer — episode at step 150 (after PPO training)</em></p>
+<h4 id="libero-spatial-grpo-openvla-oft">LIBERO-Spatial GRPO (OpenVLA-OFT)<a class="headerlink" href="#libero-spatial-grpo-openvla-oft" title="Permanent link">&para;</a></h4>
+<p>~38-step run. <code>success_once</code> oscillated between 0.22 and 0.875 without clear convergence. Identified as a learning rate misconfiguration following epoch reduction.</p>
+<p><img alt="LIBERO-Spatial GRPO Training Results Success Once" src="https://josh012006.github.io/Website-IFT4055//images/libero_spatial_grpo_training1_success_once.png" />
+<img alt="LIBERO-Spatial GRPO Training Results Approx KL" src="https://josh012006.github.io/Website-IFT4055//images/libero_spatial_grpo_training1_approx_kl.png" /></p>
+<h4 id="libero-long-grpo-openvla-oft">LIBERO-Long GRPO (OpenVLA-OFT)<a class="headerlink" href="#libero-long-grpo-openvla-oft" title="Permanent link">&para;</a></h4>
+<p>~150 steps across 4 resumed sessions (~37h total). <code>success_once</code> oscillated between 0.06 and 0.19 with no upward trend. <code>approx_kl</code> remained stable at ~0.035–0.048 throughout — policy updates were controlled, confirming the bottleneck is <strong>exploration</strong>, not optimization instability.</p>
+<p><img alt="LIBERO-Long GRPO Training Results Success Once" src="https://josh012006.github.io/Website-IFT4055//images/libero_long_grpo_training1_success_once.png" />
+<img alt="LIBERO-Long GRPO Training Results Approx KL" src="https://josh012006.github.io/Website-IFT4055//images/libero_long_grpo_training1_approx_kl.png" /></p>
+<h4 id="stackcube-v1-ppo-and-grpo-openvla-base-on-policy-no-sft">StackCube-v1 PPO and GRPO (OpenVLA base, on-policy, no SFT)<a class="headerlink" href="#stackcube-v1-ppo-and-grpo-openvla-base-on-policy-no-sft" title="Permanent link">&para;</a></h4>
+<p>Both runs produced 0% success rate. Without SFT warmup, the base policy cannot produce any task-relevant behavior, so on-policy exploration cannot bootstrap a learning signal. This result directly motivated the pivot to ExpoFT. Here are the results for the PPO and GRPO runs on StackCube-v1:</p>
+<div style="text-align: center">
+    <video width="480" controls>
+        <source src="https://josh012006.github.io/Website-IFT4055//images/stackcube-ppo-nosft.mp4" type="video/mp4">
+    </video>
+</div>
 
-## Suggested structure
+<p><em>OpenVLA on maniskill StackCube-v1 after PPO</em></p>
+<div style="text-align: center">
+    <video width="480" controls>
+        <source src="https://josh012006.github.io/Website-IFT4055//images/stackcube-grpo-nosft.mp4" type="video/mp4">
+    </video>
+</div>
 
-> The following structure is provided as a guideline.  
-> You may adapt it depending on your project.
+<p><em>OpenVLA on maniskill StackCube-v1 after GRPO</em></p>
+<h3 id="ood-dataset-selection-and-visualization">OOD dataset selection and visualization<a class="headerlink" href="#ood-dataset-selection-and-visualization" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Created a Jupyter notebook for endpoint distribution analysis across Open X-Embodiment datasets (<a href="https://colab.research.google.com/github/Josh012006/OpenX-Embodiment-Datasets-Visualization/blob/main/colabs/Open_X_Embodiment_Datasets.ipynb">Colab</a>, <a href="https://github.com/Josh012006/OpenX-Embodiment-Datasets-Visualization">Repo</a>)</li>
+<li>A shared UMAP fit was used across all datasets (rather than a per-dataset fit), since per-dataset fits would make coordinates incomparable across datasets</li>
+<li>Identified ManiSkill as the target OOD benchmark: tasks like StackCube-v1 and PushCube-v1 are maximally distant from the VLA's SFT/pretraining data (DROID/OXE)</li>
+<li>Note: spatial L2 distance across datasets can be misleading due to differing coordinate frames between datasets</li>
+</ul>
+<h3 id="hyperparameter-exploration-training-time-reduction-phase-1">Hyperparameter exploration — training time reduction (Phase 1)<a class="headerlink" href="#hyperparameter-exploration-training-time-reduction-phase-1" title="Permanent link">&para;</a></h3>
+<p>Tested increasing the replay ratio (<code>rollout_epoch</code> 4→8 for GRPO, <code>update_epoch</code> 2→4 for PPO) to reduce wall-clock time. Result: the bottleneck shifted from rollout collection to gradient updates, making training <em>slower</em> (~27 min/step vs ~14 min/step). Effective approach is instead to reduce <code>max_episode_steps</code> and <code>max_epochs</code> directly.</p>
+<hr />
+<h3 id="phase-2-expoft-repository-setup">Phase 2 — ExpoFT: repository setup<a class="headerlink" href="#phase-2-expoft-repository-setup" title="Permanent link">&para;</a></h3>
+<p>The ExpoFT algorithm was reproduced in a dedicated, ManiSkill-driven repository (<code>~/projects/expo-ft</code>) rather than inside RLinf, to keep the original algorithm's code as untouched as possible while only swapping out the environment/data layer. Two dependencies — <code>openpi</code> (the π₀.₅ implementation) and <code>ManiSkill</code> — were forked and wired in as proper editable git submodules (rather than untracked/<code>pip</code>-installed dependencies), enabling direct, trackable modifications instead of runtime monkeypatches. <code>.gitmodules</code> uses HTTPS URLs for public clone compatibility, with SSH remotes configured locally for pushing.</p>
+<p>Storage layout follows Mila's cluster guidance: the repository itself lives on <code>$HOME</code> (backed up, 100GB), while large, regenerable artifacts (<code>logs/</code>, <code>demos/</code>) are symlinked to <code>$SCRATCH</code> (5TB, auto-cleaned). Large package caches (<code>uv</code>, <code>openpi</code>, <code>huggingface</code>, <code>pip</code>, <code>jax</code>, ~90GB total) were relocated to <code>$SCRATCH/cache/</code> with symlinks back into <code>~/.cache</code>, freeing up the <code>$HOME</code> quota.</p>
+<h3 id="phase-2-sft-stage-action-space-diagnosis-and-validation">Phase 2 — SFT stage: action-space diagnosis and validation<a class="headerlink" href="#phase-2-sft-stage-action-space-diagnosis-and-validation" title="Permanent link">&para;</a></h3>
+<p>The first SFT warmup run (Week 8), on StackCube-v1 demonstrations converted to the DROID/LeRobot format, produced a near-0% success rate — the arm only approached the cubes without completing the stack. This was initially suspected to be a genuine task-difficulty ceiling, but a systematic investigation traced it to a <strong>fundamental action-space mismatch</strong>: π₀.₅'s DROID pretraining expects joint-position actions in physical units, while the pipeline was using ManiSkill's <code>pd_ee_delta_pose</code> cartesian control, causing the majority of demonstration actions to be silently clipped out of range.</p>
+<p>The fix — switching the full pipeline to joint-space control end-to-end (<code>control_mode=pd_joint_delta_pos</code>, <code>pi05_droid_jointpos</code> checkpoint, <code>observation/joint_position</code> state, <code>normalize_action=True</code>, <code>output_action_dim=8</code>, DROID norm stats from GCS) — immediately moved the large majority of actions back in-range during replay validation.</p>
+<p>This triggered a broader systematic review ("MAJOR RESET") that surfaced a cluster of further silent bugs before the SFT numbers could be trusted:</p>
+<ul>
+<li>An eval script unconditionally overriding the official DROID normalization stats, even for baseline evaluation</li>
+<li>A leftover cartesian-space action rescaling artifact from the abandoned control mode, corrupting a meaningful fraction of the now-joint-space actions</li>
+<li>A truncation-length mismatch between the environment and the eval loop</li>
+<li>A simulation backend mismatch preventing correct control-mode conversion</li>
+</ul>
+<p>To regain confidence in the data pipeline, <code>validate_demos_full_pipeline.py</code> was built as a rigorous end-to-end replay tool (using the real normalization stats, the real environment wrapper, and the exact recorded seeds). After the fixes above, this tool confirmed <strong>100% demo replay success on StackCube</strong>, giving real confidence that the action space and data conversion were finally correct.</p>
+<p>Proper evaluation tooling was also built at this stage: fixed episode seeds (200 held-out seeds, generated once from a master seed and reused across checkpoints) for apples-to-apples comparison between checkpoints, standard-error bars (<code>SE = sqrt(p(1-p)/n)</code>, a normal approximation rather than a Wilson interval, per the team's explicit preference), and a resumable checkpoint-sweep script that rebuilds its plot after every checkpoint.</p>
+<p>Full SFT checkpoint sweeps on these 200 fixed seeds confirmed <strong>real, validated generalization</strong> (not memorization) on StackCube, with success rates increasing across SFT iterations; PushCube-v1 (added as a second, easier task for sanity-checking) performed even better.</p>
+<p>Here are the SFT checkpoint sweep curves (success rate vs. training step/iteration, with SE error bars, 200 held-out seeds) for <strong>StackCube-v1</strong> and <strong>PushCube-v1</strong>.</p>
+<p><img alt="SFT Checkpoint Sweep Curves PushCube-v1" src="https://josh012006.github.io/Website-IFT4055//images/curve-sft-pushcube.png" /></p>
+<div style="text-align: center">
+    <video width="480" controls>
+        <source src="https://josh012006.github.io/Website-IFT4055//images/pushcube-post-sft.mp4" type="video/mp4">
+    </video>
+</div>
 
-### Architecture, model, or general approach
+<p><em>π₀.5 on maniskill PushCube-v1 after SFT warmup</em></p>
+<p><img alt="SFT Checkpoint Sweep Curves StackCube-v1" src="https://josh012006.github.io/Website-IFT4055//images/curve-sft-stackcube.png" /></p>
+<div style="text-align: center">
+    <video width="480" controls>
+        <source src="https://josh012006.github.io/Website-IFT4055//images/stackcube-post-sft.mp4" type="video/mp4">
+    </video>
+</div>
 
-> Present the overall organization of the project:
->
-> - software architecture;
-> - experimental pipeline;
-> - data structure;
-> - methodology;
-> - working environment;
-> - tools used.
+<p><em>π₀.5 on maniskill StackCube-v1 after SFT warmup</em></p>
+<p>And these are episode recordings of the best SFT checkpoint's behavior on StackCube-v1 and PushCube-v1, to visually accompany the sweep curves above (same style as the RoboCasa CloseDrawer video in Phase 1).</p>
+<h3 id="phase-2-task-suite-stackcube-pushcube-and-pickcube-dropped-then-reintegrated">Phase 2 — Task suite: StackCube, PushCube, and PickCube (dropped, then reintegrated)<a class="headerlink" href="#phase-2-task-suite-stackcube-pushcube-and-pickcube-dropped-then-reintegrated" title="Permanent link">&para;</a></h3>
+<p>PickCube-v1 was added as a third task to further diversify the OOD suite, but initially showed a persistent 0% success rate. This was traced to a <strong>task-design incompatibility</strong> rather than a policy or exploration problem: ManiSkill's PickCube-v1 hides the goal marker (<code>goal_site</code>) from the sensor cameras by default, and while <code>obs['extra']['goal_pos']</code> is technically accessible in the simulator, the DROID-mimicking observation schema used throughout this project (image + proprioception only, matching what a real robot would have) had no channel for it. The policy therefore had zero access to the per-episode goal position — visually or numerically — making the task appear fundamentally unsolvable.</p>
+<p>PickCube-v1 was dropped in a first pass rather than worked around with a privileged state channel, since that would not match what a real robot could perceive. However, a monkeypatch unhiding <code>goal_site</code> from the sensor camera itself — giving the policy genuine <em>visual</em> access to the goal position, exactly as a real camera pointed at a visible target would — was subsequently validated successfully. This resolved the observability gap without compromising the DROID-mimicking observation schema, and <strong>PickCube-v1 was reintegrated into the active task suite</strong>.</p>
+<p>So I also ran an SFT-warmup on PickCube-v1. Here are the performances :</p>
+<p><img alt="SFT Checkpoint Sweep Curves PickCube-v1" src="https://josh012006.github.io/Website-IFT4055//images/curve-sft-pickcube.png" /></p>
+<div style="text-align: center">
+    <video width="480" controls>
+        <source src="https://josh012006.github.io/Website-IFT4055//images/pickcube-post-sft.mp4" type="video/mp4">
+    </video>
+</div>
 
-### Development, experiments, or analyses performed
+<p><em>π₀.5 on maniskill PickCube-v1 after SFT warmup</em></p>
+<p><strong>Active task suite going forward: StackCube-v1, PushCube-v1, and PickCube-v1.</strong></p>
+<h3 id="phase-2-rl-stage-code-review-and-infrastructure-fixes">Phase 2 — RL stage: code review and infrastructure fixes<a class="headerlink" href="#phase-2-rl-stage-code-review-and-infrastructure-fixes" title="Permanent link">&para;</a></h3>
+<p>Before trusting any RL result, the RL training stage received the same level of line-by-line review as the SFT stage. This surfaced another cluster of real bugs:</p>
+<ul>
+<li>A norm-stats override bug identical to the one previously found in SFT evaluation</li>
+<li>Roughly 15 CLI flags being passed to the training script that it silently never read (orphaned hyperparameters — present in configs, never actually consumed by the code)</li>
+<li>A hardcoded checkpoint-overwrite flag that crashed every fresh (non-resumed) run</li>
+<li>A mismatch between two different copies of a key training flag, causing a crash whenever it was set to a non-default value</li>
+<li>Several RL hyperparameters defined in the task YAML configs that were never actually read by the training script, silently falling back to different defaults defined elsewhere in the codebase</li>
+<li>One hyperparameter's value being silently parsed as text instead of a float by the config reader (PyYAML parses bare scientific notation like <code>3e-4</code> as a string, not a float)</li>
+</ul>
+<p>Separately, <code>eval_policy.py</code> was found to default to <code>only_base_actions=True</code>, meaning it had been silently evaluating only the frozen base VLA policy — never the trained residual policy — on every RL checkpoint evaluated so far. Proper support for loading and evaluating the full trained RL agent (residual policy and critic together) was built and used for all evaluations from this point forward.</p>
+<p>Two distinct causes of repeated out-of-memory crashes during RL training were also diagnosed and fixed:
+- A JAX recompilation issue triggered by an inconsistent input shape partway through training (an <code>actor_batch</code> <code>None</code>→dict pytree structure flip across a <code>jax.jit</code> boundary caused JAX to silently compile and keep a second XLA program resident)
+- JAX's default GPU memory allocator reserving only 75% of the card by default, rather than the full card — resolved with <code>XLA_PYTHON_CLIENT_MEM_FRACTION=0.95</code></p>
+<p>Finally, training-time TensorBoard logging was found to be silently dropping most training metrics (only success rate and loop time were visible, while wandb showed everything correctly) due to a type-filtering issue — JAX <code>jnp.float32</code> scalars fail Python's <code>isinstance(v, (int, float))</code> checks. Fixed with an explicit <code>float()</code> cast.</p>
+<p>The paper's exact training data augmentation recipe was reproduced from its description and confirmed to already be correctly implemented in the codebase.</p>
+<h3 id="phase-2-rl-stage-the-central-instability-finding">Phase 2 — RL stage: the central instability finding<a class="headerlink" href="#phase-2-rl-stage-the-central-instability-finding" title="Permanent link">&para;</a></h3>
+<p>With the infrastructure and evaluation bugs fixed, and with PickCube-v1 reintegrated after its observability fix, the first real RL fine-tuning runs were launched from validated SFT checkpoints on all three active tasks. Full evaluation curves (200 held-out fixed seeds per checkpoint) were then run across a battery of comparison experiments varying the <strong>update-to-data (UTD) ratio</strong> and the proportion of each training batch drawn from demonstration data, including a run reproducing the paper's own exact hyperparameters within the paper's own validated training length.</p>
+<p><strong>Key result:</strong> every RL configuration tried so far — across all three active tasks (StackCube, PushCube, PickCube) and every UTD ratio / demonstration-ratio setting tested — <strong>degrades the SFT-pretrained policy's success rate rather than improving it</strong>:</p>
+<ul>
+<li><code>utd_ratio=10</code>: catastrophic collapse within ~2–5k steps</li>
+<li><code>utd_ratio=2</code> + <code>offline_ratio=0.5</code>: delays collapse to ~35–40k steps, eventually degrading to ~0.3–0.4 success by ~85–90k steps</li>
+<li><code>utd_ratio=20</code> (the paper's exact value, run within the paper's own validated step range of ~20–24k steps): collapsed <strong>faster and more severely</strong> than the long <code>utd_ratio=2</code> run — this refutes the hypothesis that simply training within the paper's shorter real-robot budget would avoid the problem; <code>utd_ratio</code> itself, not total training duration, appears to be the dominant driver of the instability</li>
+</ul>
+<p>The degradation is consistently preceded and accompanied by <strong>growing instability in the critic's training loss</strong> (progressive critic loss spikes), suggesting the root cause is a progressively destabilizing value function rather than a pipeline bug — this was further confirmed by verifying that evaluation is demonstrably using the trained residual policy and critic, not silently falling back to the frozen base policy (see the <code>eval_policy.py</code> fix above).</p>
+<p>Confirmed hyperparameter matching against the original paper: <code>offline_ratio=0</code> (demonstrations are placed into the single online replay buffer, not a separate 50/50 offline buffer — that convention belongs to RLPD, not this paper), <code>hidden_dims=3×256</code>, <code>init_temperature=1.0</code>, <code>num_qs=10</code> / <code>num_min_qs=2</code> (REDQ-style critic ensemble), <code>tau=0.005</code>. Known deviations from the paper: <code>batch_size=24</code> (paper uses 64; constrained by available GPU memory) and a flat <code>edit_scale=0.2</code> (paper uses 0.05–0.2, scaled by task difficulty).</p>
+<p>Here is a comparison of the training metrics across the three UTD ratio configurations described above, for PushCube-v1, the most easy task of the three :</p>
+<p><em>Critic loss evolution during training</em> :</p>
+<table>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/config1-critic-loss-pushcube.png" alt="Curve">
 
-> Present the main work carried out:
->
-> - implemented features;
-> - prototypes;
-> - experiments;
-> - analyses;
-> - data processing;
-> - tested models.
+            *utd_ratio=10*
+        </td>
+    </tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/config2-critic-loss-pushcube.png" alt="Curve">
 
-### Major difficulties encountered
+            *utd_ratio=2` + `offline_ratio=0.5*
+        </td>
+    <tr>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/config3-critic-loss-pushcube.png" alt="Curve">
 
-> Describe the main technical, methodological, or conceptual challenges faced during the project, as well as possible solutions considered.
+            *utd_ratio=20*
+        </td>
+    </tr>
+</table>
 
-### Adjustments and key decisions
+<p><em>Residual actor loss evolution during training</em> :</p>
+<table>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/config1-residual-actor-loss-pushcube.png" alt="Curve">
 
-> Present the important changes made during the project:
->
-> - objective redefinition;
-> - methodological changes;
-> - technical choices;
-> - identified limitations.
+            *utd_ratio=10*
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/config2-residual-actor-loss-pushcube.png" alt="Curve">
 
-### Figures, visuals, or demonstrations
+            *utd_ratio=2` + `offline_ratio=0.5*
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/config3-residual-actor-loss-pushcube.png" alt="Curve">
 
-> Add any useful material illustrating the evolution of the project:
->
-> - screenshots;
-> - diagrams;
-> - plots;
-> - prototypes;
-> - result excerpts. -->
+            *utd_ratio=20*
+        </td>
+    </tr>
+</table>
+
+<p><em>Evaluation success rate evolution during training</em> :</p>
+<table>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/config1-eval-success-pushcube.png" alt="Curve">
+
+            *utd_ratio=10*
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/config2-eval-success-pushcube.png" alt="Curve">
+
+            *utd_ratio=2` + `offline_ratio=0.5*
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/config3-eval-success-pushcube.png" alt="Curve">
+
+            *utd_ratio=20*
+        </td>
+    </tr>
+</table>
+
+<p>And this is a video showing the degradation of the policy's behavior on StackCube-v1 after ~120k steps of RL fine-tuning:</p>
+<table>
+    <tr>
+        <td>
+            <div style="text-align: center">
+                <video width="480" controls>
+                    <source src="https://josh012006.github.io/Website-IFT4055//images/stackcube-post-sft.mp4" type="video/mp4">
+                </video>
+            </div>
+
+            *Before RL fine tuning with expo*
+        </td>
+        <td>
+            <div style="text-align: center">
+                <video width="480" controls>
+                    <source src="https://josh012006.github.io/Website-IFT4055//images/stackcube-post-rl-degradation.mp4" type="video/mp4">
+                </video>
+            </div>
+
+            *After RL fine tuning with expo*
+        </td>
+    </tr>
+</table>
+
+<p><strong>Open research question</strong>, raised to the group for discussion: is this a fundamental limitation of high-UTD off-policy critic training that the paper's own short real-robot runs simply don't run long enough to expose, or is it specific to this simulated setup (smaller dataset, the frozen-VLA + residual-policy architecture, or the memory-constrained batch size)? This bears directly on the project's central research question, since it currently blocks demonstrating any positive RL contribution on top of the validated SFT baseline.</p>
+<p><strong>Untested leads identified for next steps:</strong> a smaller <code>edit_scale</code> (e.g. 0.05) specifically for StackCube, since it is the most precision-demanding task and collapsed most dramatically; <code>replan_steps=4</code> for StackCube (currently a flat 8, while the paper uses 4–8 depending on task); and <code>batch_size=32</code> as a low-risk next test (never yet tried).</p>
+<hr />
+<h2 id="major-difficulties-encountered">Major difficulties encountered<a class="headerlink" href="#major-difficulties-encountered" title="Permanent link">&para;</a></h2>
+<h3 id="exploration-bottleneck-phase-1-fundamental">Exploration bottleneck (Phase 1, fundamental)<a class="headerlink" href="#exploration-bottleneck-phase-1-fundamental" title="Permanent link">&para;</a></h3>
+<p>On-policy algorithms (PPO, GRPO) cannot generate a learning signal when the base policy has ~0% success. This applies to LIBERO-Long (11.9% SFT base) and directly to StackCube with the base OpenVLA model. No exploration strategy (temperature, entropy bonus) is sufficient without a prior SFT warmup or demonstrations — this directly motivated the pivot to ExpoFT.</p>
+<h3 id="action-space-mismatch-and-the-major-reset-phase-2">Action-space mismatch and the MAJOR RESET (Phase 2)<a class="headerlink" href="#action-space-mismatch-and-the-major-reset-phase-2" title="Permanent link">&para;</a></h3>
+<p>The single largest source of wasted effort in Phase 2: a cartesian-vs-joint-space control mismatch produced symptoms (near-0% success, arm approaching but not completing the task) that looked identical to a genuine task-difficulty ceiling. Diagnosing it required building rigorous, ground-truth replay validation tooling rather than trusting training curves alone. Several of the further bugs found during the systematic review that followed were silent — they did not crash anything, they simply produced plausible-looking but wrong numbers — which is what made a full systematic review necessary rather than a targeted fix.</p>
+<h3 id="pickcube-task-design-incompatibility-resolved">PickCube task-design incompatibility (resolved)<a class="headerlink" href="#pickcube-task-design-incompatibility-resolved" title="Permanent link">&para;</a></h3>
+<p>A failure mode that initially looked like a policy or exploration problem (0% success, no improvement) turned out to be a fundamental observability gap between the task's design (hidden goal marker) and the project's DROID-mimicking observation schema. Required camera-level diagnostics to trace correctly, and PickCube-v1 was dropped in a first pass as a result. A subsequent monkeypatch unhiding the goal marker from the sensor camera resolved the gap without compromising the observation schema, and the task was reintegrated. Lesson generalized: verify VLA camera/observability alignment with a given ManiSkill task's design (hidden goal markers, fixed camera angle, wrist camera presence) before assuming poor results reflect task difficulty — and before assuming the incompatibility is unfixable.</p>
+<h3 id="rl-critic-instability-phase-2-current-central-difficulty">RL critic instability (Phase 2, current central difficulty)<a class="headerlink" href="#rl-critic-instability-phase-2-current-central-difficulty" title="Permanent link">&para;</a></h3>
+<p>Every RL configuration tried so far degrades rather than improves the validated SFT policy, with the degradation correlated with growing critic loss instability. Reducing the UTD ratio delays the onset of collapse but has not, in any configuration tried, prevented it outright — including a run matching the paper's own exact hyperparameters within the paper's own validated training length. This is currently the central open problem blocking the project's core research question and has been shared with the broader research group for discussion.</p>
+<h3 id="infrastructure-cluster-ray-and-storage-phase-1-and-2">Infrastructure — cluster, Ray, and storage (Phase 1 and 2)<a class="headerlink" href="#infrastructure-cluster-ray-and-storage-phase-1-and-2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Model loaded twice into GPU memory (RolloutGroup + ActorGroup) → OOM on L40S (44GB) → switched to A100L (80GB) with <code>enable_offload: True</code> (Phase 1)</li>
+<li>Residual Ray clusters from other users blocked initialization on multiple nodes → resolved with <code>unset RAY_ADDRESS</code> and node exclusion via <code>#SBATCH --exclude</code> (Phase 1)</li>
+<li><code>$HOME</code> directory too small for checkpoints (~50GB each) → migrated project to <code>$SCRATCH</code>, later re-migrated to <code>$HOME</code> with only large regenerable artifacts symlinked to <code>$SCRATCH</code>, per updated Mila storage guidance (Phase 2)</li>
+<li><code>robosuite</code> dependency conflict between LIBERO and RoboCasa → resolved with two separate venvs (Phase 1)</li>
+<li>JAX GPU out-of-memory crashes during RL training, traced to a recompilation/pytree-structure issue and to JAX's default 75% memory pre-allocation (Phase 2)</li>
+</ul>
+<hr />
+<h2 id="adjustments-and-key-decisions">Adjustments and key decisions<a class="headerlink" href="#adjustments-and-key-decisions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dropped L40S for A100L (80GB)</td>
+<td>L40S VRAM insufficient for models loaded twice in memory</td>
+</tr>
+<tr>
+<td>Dropped multi-GPU for single-GPU + <code>enable_offload</code></td>
+<td>NCCL timeout issues on multi-GPU; single GPU sufficient with offloading</td>
+</tr>
+<tr>
+<td>Dropped LIBERO-90</td>
+<td>Too many simultaneous tasks; unfocused learning signal</td>
+</tr>
+<tr>
+<td>Dropped OpenVLA-OFT as primary model</td>
+<td>Pivoted to π₀ then π₀.₅ for ExpoFT (better suited to the research question)</td>
+</tr>
+<tr>
+<td>Dropped LIBERO / RoboCasa as primary benchmarks</td>
+<td>Partially saturated by SFT; limited OOD potential</td>
+</tr>
+<tr>
+<td>Dropped on-policy RL from the base model</td>
+<td>0% success on StackCube; on-policy cannot bootstrap without SFT or demonstrations</td>
+</tr>
+<tr>
+<td>Selected ManiSkill (StackCube, PushCube, PickCube)</td>
+<td>Maximally OOD relative to π₀.₅'s DROID pretraining data</td>
+</tr>
+<tr>
+<td>Pivoted to ExpoFT residual architecture</td>
+<td>Freezes VLA, trains small residual policy via a Q-function; avoids the log-probability limitation of flow-matching models; bypasses the cold-start exploration problem via demonstrations</td>
+</tr>
+<tr>
+<td>Reproduce ExpoFT in a dedicated ManiSkill repo, not inside RLinf</td>
+<td>Keeps the original algorithm's code close to untouched; only the environment/data layer is swapped</td>
+</tr>
+<tr>
+<td><code>openpi</code> and <code>ManiSkill</code> as git submodules, not <code>pip</code> installs</td>
+<td>Enables direct, trackable modifications instead of runtime monkeypatches</td>
+</tr>
+<tr>
+<td>Full ExpoFT attempted first, components stripped afterward</td>
+<td>Progressive stripping methodology to identify the true minimum supervision needed, rather than guessing upfront</td>
+</tr>
+<tr>
+<td>Switched to joint-space control end-to-end</td>
+<td>Matches π₀.₅'s DROID pretraining action space; cartesian control silently clipped most demonstration actions</td>
+</tr>
+<tr>
+<td>Built <code>validate_demos_full_pipeline.py</code></td>
+<td>Ground-truth, seed-exact replay validation needed after the action-space bug showed training curves alone can't be trusted</td>
+</tr>
+<tr>
+<td>Standard error (not Wilson interval) for all error bars</td>
+<td>Per the team's (Jesse's) explicit preference</td>
+</tr>
+<tr>
+<td>PickCube-v1 dropped (first pass)</td>
+<td>Hidden-goal-marker task design initially appeared incompatible with the DROID-mimicking (image + proprioception only) observation schema</td>
+</tr>
+<tr>
+<td>PickCube-v1 reintegrated</td>
+<td>A monkeypatch unhiding the goal marker from the sensor camera restored genuine visual access to the goal position without adding a privileged state channel — the incompatibility was fixable, not fundamental</td>
+</tr>
+<tr>
+<td>Repository moved from <code>$SCRATCH</code>-only to <code>$HOME</code> + symlinked artifacts</td>
+<td>Follows updated Mila storage guidance; keeps only large, regenerable data on auto-cleaned scratch</td>
+</tr>
+<tr>
+<td><code>XLA_PYTHON_CLIENT_MEM_FRACTION=0.95</code> adopted as standing default</td>
+<td>Resolves recurring RL training OOM crashes tied to JAX's default 75% memory pre-allocation</td>
+</tr>
+<tr>
+<td>Working default of <code>utd_ratio=2</code> (vs. paper's 20)</td>
+<td>Paper's own ratio destabilizes training even faster than the reduced one in this simulated setup</td>
+</tr>
+<tr>
+<td>Deleted catastrophic pre-fix RL runs from <code>$SCRATCH</code></td>
+<td>Frees disk space; keeps only validated SFT checkpoints and post-fix RL runs</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="figures-visuals-and-demonstrations">Figures, visuals, and demonstrations<a class="headerlink" href="#figures-visuals-and-demonstrations" title="Permanent link">&para;</a></h2>
+<p>Key training curves, episode videos, and checkpoint weights for Phase 1 are embedded inline in each experiment section above. Final weights for the RoboCasa CloseDrawer PPO run are available on HuggingFace: <a href="https://huggingface.co/josh11234/RLinf-Pi0-RoboCasa-CloseDrawer-PPO"><code>josh11234/RLinf-Pi0-RoboCasa-CloseDrawer-PPO</code></a>.</p>
+<p>Phase 2 figures and videos are also integrated in the experiments descriptions above. Post-SFT weights for the Pi0.5 on the maniskill tasks are available on HuggingFace: </p>
+<ul>
+<li><a href="https://huggingface.co/josh11234/ExpoFT-Pi05-StackCube-v1-SFT"><code>josh11234/ExpoFT-Pi05-StackCube-v1-SFT</code></a> (41 %success on 200 held-out seeds)</li>
+<li><a href="https://huggingface.co/josh11234/ExpoFT-Pi05-PushCube-v1-SFT-62p"><code>josh11234/ExpoFT-Pi05-PushCube-v1-SFT-62p</code></a> (62 %success on 200 held-out seeds)</li>
+<li><a href="https://huggingface.co/josh11234/ExpoFT-Pi05-PushCube-v1-SFT-86p"><code>josh11234/ExpoFT-Pi05-PushCube-v1-SFT-86p</code></a> (86 %success on 200 held-out seeds)</li>
+<li><a href="https://huggingface.co/josh11234/ExpoFT-Pi05-PickCube-v1-SFT"><code>josh11234/ExpoFT-Pi05-PickCube-v1-SFT</code></a> (22 %success on 200 held-out seeds)</li>
+</ul>
 
 
 
