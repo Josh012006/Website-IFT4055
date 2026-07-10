@@ -21,7 +21,7 @@ title: Project Overview
 
     **Supervisor(s)**: [Glen Berseth](https://mila.quebec/en/annuaire/glen-berseth)
 
-    **Collaborator(s)**: [Florence Cloutier](https://mila.quebec/en/annuaire/florence-cloutier), [Albert Zhan](https://mila.quebec/en/annuaire/albert-zhan), [Jesse Silverberg](https://mila.quebec/en/annuaire/jesse-silverberg)
+    **Collaborator(s)**: [Albert Zhan](https://mila.quebec/en/annuaire/albert-zhan), [Jesse Silverberg](https://mila.quebec/en/annuaire/jesse-silverberg)
 
 ## **Project description**
 

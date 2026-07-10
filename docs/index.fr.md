@@ -21,7 +21,7 @@ title: Vue d'ensemble du projet
 
     **Superviseur(s)**: [Glen Berseth](https://mila.quebec/fr/annuaire/glen-berseth)
 
-    **Collaborateur(s):** [Florence Cloutier](https://mila.quebec/fr/annuaire/florence-cloutier), [Albert Zhan](https://mila.quebec/fr/annuaire/albert-zhan), [Jesse Silverberg](https://mila.quebec/fr/annuaire/jesse-silverberg)
+    **Collaborateur(s):** [Albert Zhan](https://mila.quebec/fr/annuaire/albert-zhan), [Jesse Silverberg](https://mila.quebec/fr/annuaire/jesse-silverberg)
 
 ## **Description du projet**
 
