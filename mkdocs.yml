@@ -39,8 +39,8 @@ theme:
 
 copyright: "&copy; 2026 <b>Josué Mongan</b> &ndash; Mila / Université de Montréal <br>Département d'informatique et de recherche opérationnelle"
 
-repo_name: Project's repository
-repo_url: https://github.com/montrealrobotics/RLinf
+repo_name: EXPO-FT fork
+repo_url: https://github.com/Josh012006/expo-ft
 
 markdown_extensions:
   - admonition
