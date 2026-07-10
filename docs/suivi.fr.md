@@ -15,271 +15,330 @@ title: Suivi du projet
 ## Semaine 1 (4–9 mai 2026)
 
 ### Objectifs de la période
-- Prendre contact avec l'équipe et configurer l'environnement de travail
+- Prendre contact avec l'équipe et mettre en place l'environnement de travail
 - Lancer un premier entraînement RL sur le cluster Mila
 - Identifier et résoudre les problèmes d'infrastructure
 
 ### Travail réalisé
 
 !!! abstract "Avancement"
-    - [x] Prise de contact avec l'équipe, accès au Slack du laboratoire
+    - [x] Prise de contact avec l'équipe, ajout au Slack du laboratoire
     - [x] Lecture de la documentation RLinf (LIBERO)
-    - [x] Connexion au cluster Mila et résolution des problèmes d'accès avec l'aide du support informatique
-    - [x] Clonage du dépôt et installation des dépendances sur un nœud de calcul interactif (`salloc --no-root`)
+    - [x] Connexion au cluster Mila et résolution des problèmes d'accès avec le support informatique
+    - [x] Clonage du dépôt et installation des dépendances sur un nœud de calcul interactif
     - [x] Rédaction du script `job.sh` et soumission via `sbatch`
-    - [x] Résolution progressive des erreurs : mauvaise clé de normalisation, mémoire CPU insuffisante, mémoire GPU insuffisante, timeout NCCL multi-GPU
-    - [x] Passage au GPU A100L (80GB) avec `enable_offload: True` et `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`
-    - [x] Premier entraînement fonctionnel jusqu'à 132 steps
-    - [x] Migration du projet vers `$SCRATCH`, lien symbolique depuis `$HOME`, script de nettoyage automatique des checkpoints
-    - [x] Entraînement complet de 1000 steps (31h40)
-    - [x] Versionnement du script et de la config sur GitHub
+    - [x] Résolution progressive des erreurs d'infrastructure (clé de normalisation, RAM CPU/GPU, timeout NCCL)
+    - [x] Premier entraînement réussi atteignant 132 steps
+    - [x] Migration du projet vers `$SCRATCH`, création d'un lien symbolique depuis `$HOME`, ajout d'un script de nettoyage automatique des checkpoints
+    - [x] Entraînement complet de 1000 steps terminé (31h40)
+    - [x] Versionnement du script de job et de la config sur GitHub
     - [ ] Augmentation du batch size — reportée à la semaine suivante
 
 ### Décisions et ajustements
 
 !!! info "Décisions"
-    - Abandon du GPU L40S (44GB insuffisant) au profit de l'A100L (80GB)
-    - Passage à un seul GPU avec `enable_offload: True` au lieu de multi-GPU (problèmes NCCL)
-    - Réduction du scope : passage de LIBERO-90 (90 tâches simultanées) à une configuration plus ciblée
+    - Abandon du GPU L40S (44GB insuffisant) au profit du A100L (80GB)
+    - Passage à une configuration mono-GPU avec `enable_offload: True` plutôt que multi-GPU (problèmes NCCL)
     - Ajout d'un script de nettoyage des checkpoints pour éviter de saturer le stockage
 
 ### Difficultés rencontrées
 
 !!! warning "Difficultés"
-    - Le modèle est chargé deux fois en mémoire GPU (RolloutGroup + ActorGroup), ce qui double l'empreinte mémoire et cause des erreurs OOM
-    - Résolu par `enable_offload: True` et `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`
-    - Checkpoint corrompu à l'étape 50 : le dossier `$HOME` (96GB) était insuffisant pour stocker les sauvegardes (~50GB chacune)
-    - Résolu en déplaçant le projet vers `$SCRATCH` et en ajoutant le script de nettoyage
-    - Conflit Ray sur le nœud assigné : un cluster Ray résiduel d'un autre utilisateur empêchait l'initialisation
-    - Résolu en excluant le nœud contaminé via `#SBATCH --exclude`
-    - Résultats de l'entraînement à 1000 steps : pics de récompense occasionnels (~0.13) sans tendance stable — batch size trop petit pour extraire un signal d'apprentissage robuste
-        ![LIBERO-90 GRPO Training Results Success Once]({{ config.site_url }}/images/libero90_grpo_training1_success_once.png)
-        ![LIBERO-90 GRPO Training Results Approx KL]({{ config.site_url }}/images/libero90_grpo_training1_approx_kl.png)
+    - Erreurs OOM dues au modèle chargé deux fois en mémoire GPU — résolu avec `enable_offload: True`
+    - Checkpoint corrompu au step 50 à cause de la limite de taille de `$HOME` — résolu en migrant vers `$SCRATCH`
+    - Conflit Ray sur le nœud assigné — résolu en excluant les nœuds contaminés via `#SBATCH --exclude`
+    - Les résultats à 1000 steps montraient des pics de reward occasionnels sans tendance d'apprentissage stable — hypothèse du batch size envisagée initialement, révisée par la suite (voir Semaine 2)
 
 
 ## Semaine 2 (11–15 mai 2026)
 
 ### Objectifs de la période
-- Analyser les résultats de l'entraînement précédent et planifier la suite
+- Analyser les résultats de l'entraînement précédent et planifier les prochaines étapes
 - Changer d'environnement et de modèle selon les recommandations du superviseur
-- Lancer un premier entraînement avec le nouveau setup
+- Lancer un premier entraînement avec la nouvelle configuration
 
 ### Travail réalisé
 
 !!! abstract "Avancement"
-    - [x] Discussion avec l'équipe sur les résultats de la semaine 1 et les prochaines étapes
-    - [x] Passage à l'environnement RoboCasa avec le modèle π0 (~3B paramètres) en PPO
+    - [x] Discussion avec l'équipe sur les résultats de la Semaine 1 et les prochaines étapes
+    - [x] Passage à l'environnement RoboCasa avec le modèle π₀ (~3B paramètres) en PPO
     - [x] Installation des dépendances RoboCasa et téléchargement des assets de cuisine (~5GB)
-    - [ ] Premier entraînement fonctionnel avec π0 — bloqué par un problème d'initialisation Ray
+    - [ ] Premier entraînement réussi avec π₀ — bloqué par un blocage à l'initialisation de Ray
 
 ### Décisions et ajustements
 
 !!! info "Décisions"
-    - Abandon d'OpenVLA-OFT comme modèle principal au profit de π0 (~3B), plus adapté à la recherche
-    - Abandon de LIBERO comme benchmark principal (trop saturé) au profit de RoboCasa
-    - LoRA sera activé pour réduire l'empreinte mémoire lors du prochain entraînement
+    - Abandon d'OpenVLA-OFT comme modèle principal au profit de π₀ (~3B paramètres), mieux adapté à la recherche
+    - Abandon de LIBERO comme benchmark principal (majoritairement saturé) au profit de RoboCasa
+    - LoRA sera activé pour réduire l'empreinte mémoire du prochain entraînement
 
 ### Difficultés rencontrées
 
 !!! warning "Difficultés"
-    - Les pics de récompense observés la semaine précédente s'expliquent par un problème d'exploration, pas de batch size — l'accumulation de gradients n'a pas d'effet sur la dynamique d'apprentissage
-    - Ray hang au démarrage du job : le processus Ray s'initialise puis bloque sans produire d'output. Cause en cours d'investigation.
+    - Les pics de reward de la Semaine 1 s'expliquent par un problème d'exploration, pas par le batch size — l'accumulation de gradient n'a aucun effet sur la dynamique d'apprentissage
+    - Blocage de Ray au démarrage du job : le processus Ray s'initialise puis se bloque sans plus de sortie — cause encore en investigation
 
 
 ## Semaine 3 (18–22 mai 2026)
 
 ### Objectifs de la période
-- Lancer un entraînement fonctionnel de π0 sur RoboCasa
+- Lancer un entraînement π₀ réussi sur RoboCasa
 - Démarrer un entraînement LIBERO-Spatial avec OpenVLA-OFT
 - Documenter et partager les expériences avec l'équipe
 
 ### Travail réalisé
 
 !!! abstract "Avancement"
-    - [x] Activation de LoRA (rank 32) pour π0 et tuning de la config pour un seul A100L (80GB)
-    - [x] Premier run fonctionnel π0 + RoboCasa CloseDrawer (PPO) — 24 steps, `success_once` atteignant 0.8125 au step 20
-    - [x] Résolution du conflit de versions `robosuite` entre LIBERO et RoboCasa — création de deux venvs séparés (`.venv-robocasa` et `.venv-libero`)
-    - [x] Mise à jour de tous les scripts `job.sh` pour pointer vers le bon venv
-    - [x] Ouverture d'une PR sur `montrealrobotics/RLinf` avec les configs, scripts et `EXPERIMENTS_README.md`
-    - [x] Démarrage du run LIBERO-Spatial GRPO — `success_once` oscillant entre 0.22 et 0.875 sur 38 steps
-    - [x] Run π0 + RoboCasa CloseDrawer complété à 150 steps — métriques finales : `success_once` ~0.82, `critic/value_loss` ~0.005, `approx_kl` ~0.036
-        ![RoboCasa CloseDrawer PPO Training Results Success Once]({{ config.site_url }}/images/robocasa_close_drawer_ppo_training1_success_once.png)
-        ![RoboCasa CloseDrawer PPO Training Results Approx KL]({{ config.site_url }}/images/robocasa_close_drawer_ppo_training1_approx_kl.png)
-        ![RoboCasa CloseDrawer PPO Training Results Value Loss]({{ config.site_url }}/images/robocasa_close_drawer_ppo_training1_value_loss.png)
+    - [x] Activation de LoRA (rank 32) pour π₀ et ajustement de la config pour un seul A100L (80GB)
+    - [x] Premier entraînement réussi π₀ + RoboCasa CloseDrawer (PPO) — 24 steps, `success_once` atteignant 0.8125 au step 20
+    - [x] Résolution du conflit de version `robosuite` entre LIBERO et RoboCasa — création de deux venvs séparés
+    - [x] Mise à jour de tous les scripts de job pour pointer vers le bon venv
+    - [x] Ouverture d'une PR sur `montrealrobotics/RLinf` avec les configs, scripts de job et `EXPERIMENTS_README.md`
+    - [x] Démarrage de l'entraînement LIBERO-Spatial GRPO — `success_once` oscillant entre 0.22 et 0.875 sur 38 steps
+    - [x] Entraînement π₀ + RoboCasa CloseDrawer terminé à 150 steps
     - [x] Visualisation des résultats via TensorBoard, sauvegarde des vidéos d'épisodes
-
-        <div style="text-align: center">
-            <video width="480" controls poster="{{ config.site_url }}/images/robocasa_close_drawer_thumbnail.png">
-                <source src="{{ config.site_url }}/images/robocasa_close_drawer_training1_ppo_step_150.mp4" type="video/mp4">
-            </video>
-        </div>
-
-        *π0 + RoboCasa CloseDrawer — épisode au step 150 (après entraînement PPO)*
-
     - [x] Upload des poids finaux sur HuggingFace (`josh11234/RLinf-Pi0-RoboCasa-CloseDrawer-PPO`)
     - [x] Partage des résultats et vidéos avec le groupe via Slack
-    - [ ] Run LIBERO-Spatial toujours en cours
+    - [ ] Entraînement LIBERO-Spatial toujours en cours
 
 ### Décisions et ajustements
 
 !!! info "Décisions"
-    - LIBERO et RoboCasa nécessitent des venvs séparés en raison de conflits de dépendances — cette contrainte est documentée dans le README
-    - RoboCasa CloseDrawer s'avère trop facile comme tâche de départ : le modèle SFT de base atteint déjà 0.6–0.7 dès le step 1, laissant peu de place à l'amélioration par RL
-    - LIBERO-Long identifié comme prochaine tâche cible — plus difficile pour le SFT (11.9% de base), meilleur candidat pour démontrer l'apport du RL
-    - `unset RAY_ADDRESS` ajouté aux scripts de job pour éviter les conflits avec des clusters Ray résiduels d'autres utilisateurs
+    - LIBERO et RoboCasa nécessitent des venvs séparés à cause de conflits de dépendances — documenté dans le README
+    - RoboCasa CloseDrawer est trop facile comme tâche de départ (base SFT déjà ~0.6–0.7) — marge limitée pour la contribution du RL
+    - LIBERO-Long identifiée comme prochaine tâche cible — taux de base SFT plus difficile (11.9%), meilleure candidate pour démontrer les gains du RL
+    - Ajout de `unset RAY_ADDRESS` dans les scripts de job pour éviter les conflits de clusters Ray résiduels
 
 ### Difficultés rencontrées
 
 !!! warning "Difficultés"
-    - Job crashé au step 24 avec `FileNotFoundError: omron_mobile_base.xml` — assets RoboCasa manquants après réinstallation du venv. Résolu en téléchargeant les assets séparément avec `python -m robocasa.scripts.download_kitchen_assets`
-    - Conflits de versions Ray récurrents sur plusieurs nœuds (`cn-g008`, `cn-g012`, `cn-g026`) — clusters résiduels d'autres utilisateurs. Résolu par `unset RAY_ADDRESS` et exclusion des nœuds contaminés
-    - Run LIBERO-Spatial préempté après ~19h — reprise depuis le dernier checkpoint
+    - Job planté au step 24 avec `FileNotFoundError: omron_mobile_base.xml` — résolu en téléchargeant séparément les assets RoboCasa
+    - Conflits de version Ray récurrents sur plusieurs nœuds — résolu avec `unset RAY_ADDRESS` et exclusion de nœuds
+    - Entraînement LIBERO-Spatial préempté après ~19h — repris depuis le dernier checkpoint
 
 
 ## Semaine 4 (25–29 mai 2026)
 
 ### Objectifs de la période
-- Analyser les résultats de LIBERO-Spatial et planifier la suite
+- Analyser les résultats de LIBERO-Spatial et planifier les prochaines étapes
 - Lancer l'entraînement LIBERO-Long
 - Approfondir la revue de littérature
 
 ### Travail réalisé
 
 !!! abstract "Avancement"
-    - [x] Analyse des résultats du run LIBERO-Spatial — performances insuffisantes, suspicion d'un learning rate inadapté après réduction du nombre d'epochs
-        ![LIBERO-Spatial GRPO Training Results Success Once]({{ config.site_url }}/images/libero_spatial_grpo_training1_success_once.png)
-        ![LIBERO-Spatial GRPO Training Results Approx KL]({{ config.site_url }}/images/libero_spatial_grpo_training1_approx_kl.png)
-    - [x] Lecture complète du papier de recherche OpenVLA-OFT — confirme que la configuration A100 + LoRA est celle recommandée par les auteurs eux-mêmes
-    - [x] Revue exhaustive du dépôt et de la documentation RLinf — inventaire des tâches disponibles par benchmark avec leurs modèles SFT de base respectifs
-    - [x] Configuration et lancement du run LIBERO-Long (150 steps) avec OpenVLA-OFT + GRPO
-    - [x] Run préempté au step 145 — reprise depuis le dernier checkpoint, fin imminente
-    - [ ] Analyse des résultats LIBERO-Long — en attente de la fin du run
+    - [x] Analyse des résultats de l'entraînement LIBERO-Spatial — performance insuffisante, learning rate suspecté non adapté après la réduction du nombre d'epochs
+    - [x] Lecture complète du papier de recherche OpenVLA-OFT
+    - [x] Revue exhaustive du dépôt et de la documentation RLinf
+    - [x] Configuration et lancement de l'entraînement LIBERO-Long (150 steps) avec OpenVLA-OFT + GRPO
+    - [x] Entraînement préempté au step 145 — repris depuis le dernier checkpoint, fin imminente
+    - [ ] Analyse des résultats LIBERO-Long — en attente de la fin de l'entraînement
 
 ### Décisions et ajustements
 
 !!! info "Décisions"
-    - LIBERO-Long priorisé comme tâche principale : le modèle SFT de base n'atteint que 11.9% de succès, ce qui laisse une large marge d'amélioration pour le RL
-    - Learning rate à ajuster pour les prochains runs suite aux instabilités observées sur LIBERO-Spatial
+    - LIBERO-Long priorisée comme tâche principale : large marge d'amélioration RL par rapport au taux de base SFT de 11.9%
+    - Learning rate à ajuster pour les prochains entraînements suite aux instabilités observées sur LIBERO-Spatial
 
 ### Difficultés rencontrées
 
 !!! warning "Difficultés"
-    - Run LIBERO-Long préempté au step 145 avant la fin des 150 steps prévus — repris depuis le checkpoint disponible
+    - Entraînement LIBERO-Long préempté au step 145 — repris depuis le checkpoint disponible
 
 
-## Semaine 5 (01–05 juin 2026)
+## Semaine 5 (1–5 juin 2026)
 
 ### Objectifs de la période
-- Visualiser les datasets d'entraînement des VLAs pour analyser la distribution des endpoints et identifier des tâches hors distribution
-- Étudier dans quelle mesure on peut maintenir de bonnes performances tout en réduisant le temps d'entraînement via les hyperparamètres
-- Réfléchir conceptuellement à comment orienter le RL pour atteindre notre objectif de généralisation hors distribution
-- Lire les papiers de recherche pertinents sur le sujet
-- Analyser les résultats du run LIBERO-Long
+- Visualiser les datasets d'entraînement VLA pour analyser les distributions des endpoints et identifier les tâches OOD
+- Étudier comment réduire le temps d'entraînement via l'ajustement des hyperparamètres
+- Réfléchir conceptuellement à comment guider le RL vers notre objectif de généralisation OOD
+- Lire les papiers de recherche pertinents
+- Analyser les résultats de LIBERO-Long
 
 ### Travail réalisé
 
 !!! abstract "Avancement"
-    - [x] Discussion avec l'équipe sur le vrai objectif du projet : démontrer que le RL permet une généralisation hors distribution au-delà de ce que le SFT permet d'atteindre, et non simplement améliorer les performances sur des tâches déjà maîtrisées par le SFT
-    - [x] Visualisation des datasets et analyse de la distribution des endpoints
-        - Création d'un notebook Jupyter pour la visualisation d'ensembles de données et l'analyse de la répartition des points d'extrémité
-        - [Notebook](https://colab.research.google.com/github/Josh012006/OpenX-Embodiment-Datasets-Visualization/blob/main/colabs/Open_X_Embodiment_Datasets.ipynb)
-        - [Répertoire](https://github.com/Josh012006/OpenX-Embodiment-Datasets-Visualization)
-    - [x] Analyse des résultats du run LIBERO-Long : comme indiqué dans la documentation RLinf, LIBERO-Long est la suite la plus difficile avec un taux de base SFT de seulement 11.9%. L'entraînement s'est déroulé sur 4 sessions reprises totalisant ~150 steps (~37 heures). `success_once` a oscillé entre 0.06 et 0.19 sans tendance à la hausse, restant proche du niveau SFT de base. `approx_kl` est resté stable entre 0.035 et 0.048 tout au long des sessions, indiquant que les mises à jour de politique étaient contrôlées — le manque d'amélioration est donc davantage lié à un problème d'exploration qu'à une instabilité d'optimisation.
-        ![LIBERO-Long GRPO Training Results Success Once]({{ config.site_url }}/images/libero_long_grpo_training1_success_once.png)
-        ![LIBERO-Long GRPO Training Results Approx KL]({{ config.site_url }}/images/libero_long_grpo_training1_approx_kl.png)
-    - [x] Exploration des hyperparamètres pour réduire le temps d'entraînement : l'objectif est de voir si l'augmentation du replay ratio de manière appropriée peut réduire le temps d'entraînement tout en maintenant de bonnes performances
-        - Relancement d'un run LIBERO-Spatial GRPO (OpenVLA-OFT) avec `lr=1.0e-6`, `rollout_epoch=8` (au lieu de 4) et moins d'epochs (`max_epochs=100` au lieu de 150)
-        - Relancement d'un run RoboCasa CloseDrawer PPO (π0) avec `lr=1.0e-6` et `update_epoch=4` (au lieu de 2)
-    - [x] Lecture de papiers de recherche pertinents
-    - [x] Réflexion conceptuelle sur les leviers RL pour la généralisation hors distribution
-        La première question qu'on se pose est évidemment : est-ce que utiliser le RL pour faire le fine-tuning permet la généralisation ? Cette réponse nous sera donnée une fois qu'on aura pu
-        tester le fine tuning sur un dataset OOD. S'il se trouve que le fine tuning ne permet pas la généralisation, alors il faudra se demander est ce qu'il est possible d'aider le RL à favoriser la généralisation et si oui comment.
-        Si l'objectif est de ne pas modifier le design de la reward : 
-        - Une première piste serait d'aider le modèle à extrapoler à l'aide d'un curriculum d'entraînement. Par exemple, on pourrait imaginer faire du fine-tuning RL sur des 
-        tâches de difficulté croissante, en commençant par des tâches proches de la distribution d'entraînement SFT et en progressant vers des tâches plus éloignées. L'idée serait que le modèle puisse apprendre à généraliser progressivement 
-        à mesure qu'il est exposé à des tâches de plus en plus difficiles. 
-        - Une autre piste serait de travailler sur la capacité d'exploration du modèle pendant le fine-tuning RL. Par exemple, on pourrait essayer d'encourager le modèle à explorer des actions ou des stratégies différentes de celles qu'il a 
-        apprises pendant le SFT, afin de favoriser la découverte de solutions plus générales. Il faudrait trouver des méthodes qui favorisent sa curiosité (température, bonus d'entropie, etc.).
+    - [x] Discussion avec l'équipe sur le véritable objectif du projet : démontrer que le RL permet une généralisation OOD au-delà de ce que le SFT peut atteindre
+    - [x] Visualisation des datasets et analyse de la distribution des endpoints — notebook Jupyter créé ([Colab](https://colab.research.google.com/github/Josh012006/OpenX-Embodiment-Datasets-Visualization/blob/main/colabs/Open_X_Embodiment_Datasets.ipynb), [Dépôt](https://github.com/Josh012006/OpenX-Embodiment-Datasets-Visualization))
+    - [x] Résultats de LIBERO-Long analysés : `success_once` a oscillé entre 0.06 et 0.19 sans tendance à la hausse — bottleneck d'exploration confirmé (pas une instabilité d'optimisation, `approx_kl` étant resté stable autour de 0.035–0.048)
+    - [x] Exploration d'hyperparamètres pour réduire le temps d'entraînement : test de l'augmentation du replay ratio (`rollout_epoch` 4→8 pour GRPO, `update_epoch` 2→4 pour PPO)
+    - [x] Lecture des papiers de recherche pertinents
 
 ### Décisions et ajustements
 
 !!! info "Décisions"
-    - Décision de se concentrer sur des tâches précises à horizon court pour la phase initiale du projet, plutôt que sur des tâches longues à multiples sous-objectifs.
+    - Décision de se concentrer sur des tâches courtes et précises pour la phase initiale, plutôt que sur des tâches à long horizon avec plusieurs sous-objectifs
 
+### Difficultés rencontrées
+
+!!! warning "Difficultés"
+    - L'augmentation du replay ratio a déplacé le bottleneck de la collecte de rollouts vers les mises à jour de gradient — effet net : entraînement plus lent (~27 min/step vs ~14 min/step). Changement annulé.
 
 
 ## Semaine 6 (8–12 juin 2026)
 
 ### Objectifs de la période
-- Analyser les distributions des endpoints et identifier les tâches hors distribution (OOD)
-- Continuer à étudier dans quelle mesure on peut maintenir de bonnes performances tout en réduisant le temps d'entraînement par l'ajustement des hyperparamètres
-- Réfléchir conceptuellement à la manière dont le RL peut être guidé pour atteindre notre objectif de généralisation hors distribution
-- Lire les articles de recherche pertinents sur le sujet
+- Analyser les distributions des endpoints et identifier les tâches OOD
+- Poursuivre l'exploration d'hyperparamètres pour réduire le temps d'entraînement
+- Réfléchir conceptuellement aux leviers du RL pour la généralisation OOD
+- Lire les papiers de recherche pertinents
 
-### Travail accompli
+### Travail réalisé
 
-!!! abstract "Progrès"
+!!! abstract "Avancement"
     - [x] Discussion avec l'équipe sur l'analyse de visualisation
-    - [x] Identification des tâches hors distribution à partir de l'analyse de distribution des endpoints
-    - [x] Construction d'un jeu de données OOD pour nos futurs travaux sur la généralisation hors distribution : nous avons choisi maniskill
-    - [x] Analyse exploratoire des hyperparamètres pour la réduction du temps d'entraînement
-        - L'augmentation du ratio de replay (`rollout_epoch` 4→8 pour GRPO, `update_epoch` 2→4 pour PPO) a déplacé le goulot d'étranglement de la collecte de rollouts vers les mises à jour de gradient, ce qui a ralenti l'entraînement global (~27 min/étape contre ~14 min/étape)
-        - Retour aux valeurs initiales du ratio de replay et réduction de `max_episode_steps` (512→352 pour LIBERO-Spatial, 300→200 pour RoboCasa) ainsi que de max_epochs (100→75 pour les deux) pour voir si les résultats s'améliorent. Le temps d'entraînement a effectivement diminué.
-    - [ ] Terminer la lecture des articles de recherche pertinents
+    - [x] Identification des tâches OOD à partir de l'analyse de distribution des endpoints
+    - [x] Sélection de ManiSkill comme benchmark OOD
+    - [x] Analyse des résultats de l'exploration d'hyperparamètres — voir Décisions ci-dessous
+    - [ ] Terminer la lecture des papiers de recherche pertinents
 
 ### Décisions et ajustements
 
 !!! info "Décisions"
-    - Augmenter le ratio de replay ne réduit pas le temps d'entraînement sur les grands modèles (OpenVLA-OFT 7B, π0 3B) — les mises à jour de gradient constituent le goulot d'étranglement, pas la collecte de rollouts. Retour aux valeurs initiales du ratio de replay.
-    - La solution pour réduire le temps d'entraînement consiste à réduire la longueur maximale des épisodes (`max_episode_steps`) et le nombre d'epochs (`max_epochs`), ce qui a un impact direct sur le temps de collecte de rollouts et le temps de mise à jour de gradient respectivement. C'est une façon plus efficace d'accélérer l'entraînement tout en maintenant de bonnes performances. Il est simplement important de ne pas oublier d'adapter le taux d'apprentissage en conséquence afin d'éviter les instabilités.
-    - Plutôt que d'utiliser OpenVLA-OFT, la question de recherche s'orientera vers la compréhension de la capacité du RL fine-tuning à permettre une généralisation hors distribution directement sur le modèle de base OpenVLA. Nous commencerons avec la tâche `StackCube-v1` de maniskill.
-
+    - Augmenter le replay ratio ne réduit pas le temps d'entraînement sur de gros modèles — les mises à jour de gradient sont le bottleneck. Retour aux valeurs d'origine.
+    - Stratégie efficace pour réduire le temps d'entraînement : réduire directement `max_episode_steps` et `max_epochs`
+    - Changement d'orientation de la recherche : au lieu d'OpenVLA-OFT, étude du fine-tuning RL du OpenVLA de base sur la tâche ManiSkill `StackCube-v1`
 
 
 ## Semaine 7 (15–19 juin 2026)
 
 ### Objectifs de la période
 - Affiner la définition de l'OOD pour ce projet de recherche
-- Découvrir comment ajouter de nouvelles tâches au framework RLinf
-- Analyser les performances du RL sur la tâche stack cube
+- Apprendre à ajouter de nouvelles tâches au framework RLinf
+- Analyser la performance RL sur la tâche StackCube
 
-### Travail accompli
+### Travail réalisé
 
-!!! abstract "Progrès"
+!!! abstract "Avancement"
     - [x] Intégration de StackCube dans le pipeline RLinf
-    - [x] Documentation du processus d'ajout d'une nouvelle tâche à RLinf dans une nouvelle section du README (`ADDING_TASKS.md`)
-    - [x] Lancement des entraînements GRPO et PPO avec OpenVLA de base
+    - [x] Documentation du processus d'ajout d'une nouvelle tâche à RLinf (`ADDING_TASKS.md`)
+    - [x] Lancement d'entraînements GRPO et PPO avec le OpenVLA de base sur StackCube-v1
     - [x] Discussion avec l'équipe sur les résultats des entraînements
 
 ### Décisions et ajustements
 
 !!! info "Décisions"
-    - Nous conserverons une définition simple et basique de l'OOD : une tâche difficile sur laquelle le modèle ne performe pas bien
-    - Nous n'utiliserons pas le RL directement avec le modèle de base OpenVLA et des algorithmes on-policy. Cela ne fonctionnera pas
-    - Nous tenterons de reproduire le [projet ExpoFT](https://pd-perry.github.io/expo-ft/), puis nous verrons ce que nous pouvons y améliorer
+    - Définition de l'OOD gardée simple : une tâche difficile sur laquelle le modèle ne performe pas bien
+    - Le RL on-policy (PPO/GRPO) directement à partir du modèle de base est insuffisant sans SFT préalable — taux de succès de 0% confirmé
+    - Pivot vers la reproduction du [projet ExpoFT](https://pd-perry.github.io/expo-ft/) comme nouvelle direction de recherche
 
 ### Difficultés rencontrées
 
 !!! warning "Difficultés"
-    - Les entraînements de RL fine-tuning sur `StackCube-v1` (PPO et GRPO) ont obtenu un taux de réussite de 0 %.
-    - Avec des algorithmes on-policy comme PPO et GRPO, même l'amélioration de la stratégie d'exploration ne suffit pas sans SFT préalable.
-
+    - Les entraînements PPO et GRPO sur `StackCube-v1` ont produit 0% de succès — sans warmup SFT, l'exploration on-policy ne peut pas s'amorcer
 
 
 ## Semaine 8 (22–26 juin 2026)
 
 ### Objectifs de la période
-- Lire l'article ExpoFT et comprendre l'architecture de politique résiduelle (residual policy)
-- Reproduire les résultats d'ExpoFT dans leur base de code originale sur StackCube
-- Intégrer l'architecture de politique résiduelle dans le framework RLinf et reproduire les résultats d'ExpoFT également là, si possible
+- Lire le papier ExpoFT et comprendre l'architecture de la residual policy
+- Reproduire les résultats d'ExpoFT dans leur codebase originale sur StackCube
+- Intégrer l'architecture de residual policy dans le framework RLinf
 - Lire davantage sur les algorithmes off-policy
 
-### Travail accompli
+### Travail réalisé
 
-!!! abstract "Progrès"
-    - [x] Lecture de l'article ExpoFT et compréhension de l'architecture de politique résiduelle
-    - [ ] Reproduction des résultats d'ExpoFT dans leur base de code originale sur StackCube
-    - [ ] Intégration de l'architecture de politique résiduelle dans le framework RLinf
-    - [ ] Lancement des entraînements avec l'architecture de politique résiduelle sur StackCube
-    - [ ] Discussion avec l'équipe sur les résultats des entraînements
-    - [ ] Ajout facultatif d'une visualisation de description des tâches à mon notebook de visualisation. Cela pourrait m'aider à mieux comprendre à quel point les jeux de données diffèrent.
+!!! abstract "Avancement"
+    - [x] Lecture du papier ExpoFT et compréhension de l'architecture de la residual policy
+    - [x] Reproduction des résultats d'ExpoFT dans la codebase originale sur StackCube
+    - [ ] Intégration de l'architecture de residual policy dans le framework RLinf
+    - [ ] Lancement d'entraînements avec l'architecture de residual policy sur StackCube
+    - [x] Discussion avec l'équipe sur les résultats des entraînements
+    - [x] Début de l'adaptation de la codebase originale d'ExpoFT (real-robot / DROID) vers un nouveau dépôt autonome (`expo-ft`) piloté entièrement par la simulation ManiSkill
+    - [x] Conversion des premières démonstrations de motion-planning sur StackCube-v1 vers les formats DROID/LeRobot attendus par le pipeline d'entraînement d'ExpoFT
+    - [x] Lancement d'un premier entraînement de warmup SFT sur les démonstrations converties
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - ExpoFT sera d'abord reproduit dans un dépôt dédié basé sur ManiSkill plutôt que dans RLinf, afin de garder le code de l'algorithme original aussi intact que possible en ne remplaçant que la couche environnement
+    - ExpoFT complet (warmup SFT + démonstrations + RL off-policy) sera tenté en premier, avec un retrait progressif des composants par la suite pour identifier la supervision minimale nécessaire
+
+### Difficultés rencontrées
+
+!!! warning "Difficultés"
+    - Le premier entraînement de warmup SFT a montré un taux de succès proche de 0%, le bras se contentant d'approcher les cubes sans compléter l'empilement — encore en investigation pour déterminer si cela reflète un vrai plafond de difficulté de la tâche StackCube ou un problème de configuration ailleurs dans le pipeline nouvellement adapté
+    - Face à ces premiers résultats décevants, début de réflexion sur le fait que StackCube pourrait simplement être une tâche de départ trop difficile pour cette approche, et si une tâche ManiSkill plus facile devrait être essayée à la place
+
+
+## Semaine 9 (29 juin – 3 juillet 2026)
+
+### Objectifs de la période
+- Déterminer si les mauvais résultats SFT sur StackCube reflètent une vraie difficulté de tâche ou un problème de configuration
+- Obtenir une baseline SFT pleinement validée et fiable avant de toucher à l'étape RL
+- Construire l'outillage d'évaluation nécessaire pour faire confiance aux résultats futurs
+- Explorer si d'autres tâches ManiSkill peuvent diversifier la suite de tâches OOD
+
+### Travail réalisé
+
+!!! abstract "Avancement"
+    - [x] Traçage des résultats SFT proches de 0% jusqu'à un problème fondamental d'espace d'action : le pré-entraînement DROID de π₀.₅ attend des actions en position articulaire en unités physiques, alors que le pipeline utilisait le contrôle cartésien `pd_ee_delta_pose` de ManiSkill avec normalisation — causant l'écrêtage (clipping) de la majorité des actions de démonstration
+    - [x] Passage du pipeline complet au contrôle en espace articulaire de bout en bout (`pd_joint_delta_pos`, checkpoint `pi05_droid_jointpos`, état `observation/joint_position`) — la validation par replay est immédiatement passée d'une petite minorité d'actions dans la plage valide à la grande majorité
+    - [x] Relance du SFT avec l'espace d'action corrigé — résultats nettement plus prometteurs, mais plusieurs incohérences restantes signalées à approfondir avant de faire confiance aux chiffres
+    - [x] Découverte et correction d'un ensemble de bugs silencieux supplémentaires lors d'une revue systématique pré-SFT (« MAJOR RESET ») : un script d'évaluation écrasant sans condition les normalisation stats officielles de DROID, y compris pour l'évaluation de la baseline ; un reliquat de rescaling d'action en espace cartésien issu du mode de contrôle abandonné corrompant une part importante des actions désormais en espace articulaire ; un désalignement de longueur de troncature entre l'environnement et la boucle d'évaluation ; et un mismatch de backend de simulation empêchant la bonne conversion du mode de contrôle
+    - [x] Construction de `validate_demos_full_pipeline.py`, un outil de replay de bout en bout rigoureux (vraies normalisation stats, vrai wrapper d'environnement, seeds exactement enregistrés) — confirme 100% de succès de replay des démonstrations sur StackCube après les corrections, donnant une vraie confiance dans le pipeline de données
+    - [x] Construction d'un outillage d'évaluation approprié : seeds d'épisodes fixes partagés entre checkpoints pour une comparaison équitable, barres d'erreur standard (±1 SE), script de sweep de checkpoints reprenable qui reconstruit son graphique après chaque checkpoint
+    - [x] Sweeps complets de checkpoints SFT sur 200 seeds fixes retenus — StackCube atteignant une vraie généralisation validée (pas de la mémorisation) avec des taux de succès croissants au fil des itérations SFT ; PushCube performant encore mieux
+    - [x] Ajout de PushCube-v1 comme deuxième tâche, convertie avec le même pipeline corrigé en espace articulaire
+    - [x] Ajout de PickCube-v1 comme troisième tâche pour diversifier davantage la suite de tâches OOD, et début d'investigation d'un taux de succès persistant de 0% spécifiquement sur cette tâche
+    - [x] Traçage du taux de 0% de PickCube jusqu'à un problème de conception de tâche plutôt qu'un problème de policy : ManiSkill cache le marqueur d'objectif à la caméra que la policy voit réellement, et le schéma d'observation de style DROID n'a aucun autre canal exposant la position de l'objectif — la policy n'avait aucun moyen de savoir où placer le cube
+    - [x] Construction d'un monkeypatch ciblé qui démasque le marqueur d'objectif spécifiquement pour la caméra capteur (plutôt que d'ajouter un canal d'état privilégié qu'un vrai robot n'aurait pas), et confirmation par inspection au niveau caméra que l'objectif est maintenant visible pour la policy
+    - [x] Re-validation de PickCube de bout en bout avec le patch appliqué (replay des démonstrations, configuration caméra, SFT) — réussie, donc PickCube-v1 est finalement conservée comme troisième tâche
+    - [x] Discussion de la question de la taille du dataset soulevée par l'équipe (Jesse/Albert) et construction d'un support de type `--num-demos` pour que le SFT puisse se limiter à un sous-ensemble d'un dataset déjà converti sans reconversion
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - Les mauvais résultats SFT initiaux n'étaient finalement pas un plafond de difficulté de StackCube — ils s'expliquaient entièrement par le mismatch d'espace d'action et les bugs supplémentaires trouvés durant le MAJOR RESET ; StackCube est conservée comme tâche
+    - PushCube-v1 ajoutée comme deuxième tâche, plus facile, pour la vérification de bon fonctionnement du pipeline et la comparaison
+    - PickCube-v1 initialement envisagée pour un retrait à cause du problème de marqueur d'objectif caché, mais conservée après qu'un patch ciblé de visibilité caméra ait résolu le problème sans recourir à un canal d'état privilégié qu'un vrai robot n'aurait pas — les trois tâches (StackCube, PushCube, PickCube) restent dans la suite active
+    - Erreur standard (`SE = sqrt(p(1-p)/n)`), et non un intervalle de Wilson, adoptée pour toutes les barres d'erreur rapportées, à la demande explicite de l'équipe
+    - Prochaine priorité fixée par l'équipe : une ablation sur la taille du dataset (des ~550 démonstrations complètes jusqu'à aussi peu que ~50), suivie d'une ablation sur la nécessité du warmup SFT (sauter le SFT, démarrer le RL directement depuis le modèle de base) — trois prédictions concurrentes enregistrées au sein de l'équipe pour cette dernière
+
+### Difficultés rencontrées
+
+!!! warning "Difficultés"
+    - Diagnostiquer le mismatch d'espace d'action a demandé un effort réel : les symptômes (succès proche de 0%, bras approchant sans compléter la tâche) semblaient identiques à un vrai problème de difficulté de tâche
+    - Plusieurs des bugs du MAJOR RESET étaient silencieux — ils ne faisaient rien planter, ils produisaient simplement des chiffres plausibles mais faux, ce qui est justement ce qui a rendu la revue systématique nécessaire
+    - Le mode d'échec de PickCube ressemblait au départ à un problème de policy/exploration et a nécessité des diagnostics au niveau caméra pour être réellement rattaché à la conception d'observabilité de l'environnement
+
+
+## Semaine 10 (6–10 juillet 2026) — semaine en cours
+
+### Objectifs de la période
+- Réviser l'étape d'entraînement RL/ExpoFT aussi rigoureusement que l'étape SFT l'a été
+- Lancer les premiers vrais entraînements RL sur StackCube, PushCube et PickCube
+- Mettre l'infrastructure (structure du dépôt, usage disque, submodules) dans un état durable
+- Comprendre si le RL améliore réellement la policy SFT, et sinon pourquoi
+
+### Travail réalisé
+
+!!! abstract "Avancement"
+    - [x] Fork de ManiSkill et passage (avec `openpi`) d'une dépendance non trackée/installée via `pip` à un vrai git submodule éditable, permettant des modifications directes et trackées plutôt que des monkeypatches à l'exécution
+    - [x] Migration du dépôt d'un stockage entièrement sur `$SCRATCH` vers `$HOME`, en ne gardant que les artefacts volumineux et régénérables (`logs/`, `demos/`) en lien symbolique vers `$SCRATCH`, suivant les recommandations de stockage de Mila
+    - [x] Déplacement des gros caches de paquets (`uv`, `openpi`, `huggingface`, `pip`, `jax`) de `$HOME` vers `$SCRATCH`, libérant le quota `$HOME`
+    - [x] Revue ligne par ligne complète de l'étape d'entraînement RL, trouvant et corrigeant un ensemble de bugs réels : un bug d'écrasement des normalisation stats identique à celui trouvé en évaluation SFT ; ~15 flags CLI passés au script d'entraînement mais jamais lus silencieusement par celui-ci ; un flag d'écrasement de checkpoint codé en dur faisant planter chaque entraînement neuf ; un désalignement entre deux copies différentes d'un flag d'entraînement clé causant un plantage dès qu'il était réglé à une valeur non par défaut
+    - [x] Lancement des premiers vrais entraînements RL sur les trois tâches depuis leurs checkpoints SFT validés
+    - [x] Diagnostic et correction de deux causes distinctes de plantages OOM répétés durant l'entraînement RL : un problème de recompilation JAX déclenché par une forme d'entrée incohérente en cours d'entraînement, et l'allocateur mémoire GPU par défaut de JAX ne réservant que 75% de la carte par défaut
+    - [x] Découverte que le script d'évaluation ne pouvait en réalité évaluer aucun checkpoint RL — il supposait silencieusement que chaque checkpoint était de style SFT et n'aurait toujours évalué que la policy VLA figée ; construction d'un support adéquat pour charger et évaluer l'agent RL complet (residual policy et critic inclus)
+    - [x] Découverte et correction d'un second ensemble de bugs de configuration : plusieurs hyperparamètres RL définis dans les configs de tâche n'étaient jamais réellement lus par le script d'entraînement, retombant silencieusement sur des valeurs par défaut différentes ailleurs dans la codebase ; la valeur d'un hyperparamètre était silencieusement interprétée comme du texte plutôt qu'un nombre par le lecteur de fichier de config
+    - [x] Lancement de courbes d'évaluation complètes (200 seeds fixes retenus par checkpoint) sur les premiers entraînements RL à travers les trois tâches
+    - [x] Lancement d'une série d'expériences de comparaison faisant varier le ratio update-to-data et la proportion de chaque batch d'entraînement tirée des données de démonstration, incluant un entraînement reproduisant les hyperparamètres exacts du papier original dans sa propre durée d'entraînement validée
+    - [x] Reproduction de la recette exacte d'augmentation de données d'entraînement du papier à partir de sa description, et confirmation que la codebase l'implémente déjà correctement
+    - [x] Correction du logging TensorBoard en cours d'entraînement, qui manquait silencieusement la plupart des métriques d'entraînement (seuls le taux de succès et le temps de boucle étaient visibles) à cause d'un problème de filtrage de type
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - `XLA_PYTHON_CLIENT_MEM_FRACTION=0.95` adopté comme réglage GPU standard pour tous les scripts de job RL, résolvant les plantages OOM récurrents
+    - Tous les hyperparamètres RL proviennent désormais exclusivement des configs YAML de tâche, avec des overrides explicites câblés dans le script d'entraînement, plutôt que d'être répartis silencieusement entre le YAML et un fichier de config de modèle séparé
+    - Adoption d'un ratio update-to-data réduit (2, contre 20 dans le papier) comme valeur par défaut de travail, après avoir observé que le ratio du papier déstabilise l'entraînement encore plus vite que le ratio réduit, compte tenu des contraintes de cette configuration simulée
+    - Les entraînements catastrophiques antérieurs aux corrections de mémoire et de configuration ont été supprimés de `$SCRATCH` pour libérer de l'espace disque, en ne gardant que les checkpoints SFT validés et les entraînements RL post-correction
+
+### Difficultés rencontrées
+
+!!! warning "Difficultés"
+    - Chaque entraînement RL essayé jusqu'ici — à travers les trois tâches, à travers chaque ratio update-to-data et chaque réglage de proportion de démonstration testés, y compris un entraînement court reproduisant les hyperparamètres exacts du papier dans sa propre fenêtre d'entraînement validée — finit par dégrader le taux de succès de la policy pré-entraînée par SFT plutôt que de l'améliorer
+    - Cette dégradation est systématiquement précédée et accompagnée d'une instabilité croissante de la loss du critic, suggérant que la cause racine est une fonction de valeur se déstabilisant progressivement plutôt qu'un bug du pipeline (vérifié : l'évaluation utilise désormais bien la residual policy et le critic entraînés, pas seulement la policy VLA figée)
+    - Réduire le ratio update-to-data retarde le déclenchement de cette instabilité mais ne l'a empêchée dans aucune configuration testée jusqu'ici — soulevant la question ouverte de savoir s'il s'agit d'une limitation fondamentale de l'entraînement de critic off-policy à haut ratio update-to-data que les entraînements courts sur robot réel du papier n'ont simplement pas le temps de révéler
+    - Ce constat a été partagé avec le groupe de recherche élargi pour discussion, car il touche directement à la question de recherche centrale du projet
