@@ -103,3 +103,5 @@ To better approach this project, here is a list of the scientific articles I hav
 - ["Exploration by Random Network Distillation"](https://arxiv.org/abs/1810.12894) : Plan to read
 - ["EXPO-FT: Sample-Efficient Reinforcement Learning Finetuning for Vision-Language-Action Models"](https://arxiv.org/abs/2605.25477) : Finished reading
 - ["Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor"](https://arxiv.org/abs/1801.01290) : Currently reading (10%)
+- ["XQCfD: Accelerating Fast Actor-Critic Algorithms with Prior Data and Prior Policies"](https://arxiv.org/abs/2605.10734) : Currently reading (80%)
+
