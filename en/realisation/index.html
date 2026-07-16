@@ -767,6 +767,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-isolating-critic-instability-from-a-structural-selection-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: isolating critic instability from a structural selection bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-extending-the-same-rigor-to-the-ppogrpo-baselines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Extending the same rigor to the PPO/GRPO baselines
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -818,10 +840,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#rl-critic-instability-phase-2-current-central-difficulty" class="md-nav__link">
+  <a href="#rl-critic-instability-phase-2-central-difficulty-substantially-narrowed-down-since-first-reported" class="md-nav__link">
     <span class="md-ellipsis">
       
-        RL critic instability (Phase 2, current central difficulty)
+        RL critic instability (Phase 2, central difficulty — substantially narrowed down since first reported)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confounded-first-regularization-test-resolved-process-lesson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confounded first regularization test (resolved, process lesson)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ppogrpo-baselines-silently-disconnected-from-the-pretrained-policy-resolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PPO/GRPO baselines silently disconnected from the pretrained policy (resolved)
       
     </span>
   </a>
@@ -1149,6 +1193,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-isolating-critic-instability-from-a-structural-selection-bias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: isolating critic instability from a structural selection bias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-extending-the-same-rigor-to-the-ppogrpo-baselines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Extending the same rigor to the PPO/GRPO baselines
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1200,10 +1266,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#rl-critic-instability-phase-2-current-central-difficulty" class="md-nav__link">
+  <a href="#rl-critic-instability-phase-2-central-difficulty-substantially-narrowed-down-since-first-reported" class="md-nav__link">
     <span class="md-ellipsis">
       
-        RL critic instability (Phase 2, current central difficulty)
+        RL critic instability (Phase 2, central difficulty — substantially narrowed down since first reported)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confounded-first-regularization-test-resolved-process-lesson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confounded first regularization test (resolved, process lesson)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ppogrpo-baselines-silently-disconnected-from-the-pretrained-policy-resolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PPO/GRPO baselines silently disconnected from the pretrained policy (resolved)
       
     </span>
   </a>
@@ -1283,7 +1371,7 @@
 <h3 id="pipeline-overview">Pipeline overview<a class="headerlink" href="#pipeline-overview" title="Permanent link">&para;</a></h3>
 <p>The project went through two major phases:</p>
 <p><strong>Phase 1 — On-policy RL (Weeks 1–7):</strong> Direct RL fine-tuning using GRPO/PPO on top of OpenVLA-OFT and π₀ in LIBERO and RoboCasa environments. This phase established the exploration bottleneck hypothesis and the limits of on-policy approaches without SFT warmup.</p>
-<p><strong>Phase 2 — ExpoFT residual policy (Week 8–present):</strong> Reproduction and adaptation of the <a href="https://pd-perry.github.io/expo-ft/">ExpoFT architecture</a> into a dedicated, ManiSkill-simulation-driven codebase (<code>expo-ft</code>), replacing ExpoFT's original real-robot (DROID) data pipeline while keeping the algorithm itself untouched. The VLA (π₀.₅) is kept <strong>frozen</strong>, and a small residual correction policy is trained on top of it via a Q-function, using a combination of off-policy RL and motion-planning demonstrations. This design avoids two limitations of Phase 1: it does not require valid action log-probabilities (which flow-matching VLAs like π₀/π₀.₅ cannot provide, ruling out standard policy-gradient RL on the base model directly) and it bypasses the cold-start exploration problem by seeding the replay buffer with demonstrations.</p>
+<p><strong>Phase 2 — ExpoFT residual policy (Week 8–present):</strong> Reproduction and adaptation of the <a href="https://pd-perry.github.io/expo-ft/">ExpoFT architecture</a> into a dedicated, ManiSkill-simulation-driven codebase (<code>expo-ft</code>), replacing ExpoFT's original real-robot (DROID) data pipeline while initially keeping the algorithm itself untouched, before later diverging from it in a targeted way once instability was diagnosed (see below). The VLA (π₀.₅) is kept <strong>frozen</strong>, and a small residual correction policy is trained on top of it via a Q-function, using a combination of off-policy RL and motion-planning demonstrations. This design avoids two limitations of Phase 1: it does not require valid action log-probabilities (which flow-matching VLAs like π₀/π₀.₅ cannot provide, ruling out standard policy-gradient RL on the base model directly) and it bypasses the cold-start exploration problem by seeding the replay buffer with demonstrations. On-policy baselines (PPO, GRPO) and an off-policy baseline without the residual/argmax scheme (SAC) were later added to the same codebase for direct comparison (see below).</p>
 <p>The chosen methodology is <strong>progressive component stripping</strong>: start from the full ExpoFT recipe (SFT warmup + demonstrations + off-policy RL) and validate each stage rigorously before removing components (dataset size, SFT warmup itself) to identify the minimum supervision actually needed.</p>
 <h3 id="why-openvla-05-over-flow-matching-vlas">Why OpenVLA / π₀.₅ over flow-matching VLAs<a class="headerlink" href="#why-openvla-05-over-flow-matching-vlas" title="Permanent link">&para;</a></h3>
 <p>OpenVLA(-OFT) and π₀.₅ use <strong>discrete action tokens</strong>, which yield valid log-probabilities and therefore support principled policy-gradient RL (GRPO/PPO in Phase 1). Flow-matching models (π₀, MoMaLM) cannot provide tractable likelihoods, which would pollute the experimental design for any approach relying on exact policy gradients. This is also why ExpoFT's residual-policy formulation — which sidesteps the need for VLA log-probabilities entirely by acting as an additive correction learned via a Q-function — is an attractive way to keep using a frozen, capable VLA without being blocked by this limitation.</p>
@@ -1292,7 +1380,7 @@
 <li><strong>Cluster:</strong> Mila HPC (SLURM), A100/A100L GPUs (40GB/80GB)</li>
 <li><strong>Models tested:</strong> OpenVLA-OFT (7B), π₀ (3B) (Phase 1); π₀.₅ (<code>pi05_droid_jointpos</code> checkpoint, frozen) + residual policy (Phase 2)</li>
 <li><strong>Environments:</strong> LIBERO (Spatial, Long), RoboCasa (CloseDrawer) — Phase 1; ManiSkill (StackCube-v1, PushCube-v1, PickCube-v1) — Phase 2</li>
-<li><strong>RL algorithms:</strong> GRPO, PPO (Phase 1); off-policy Q-learning / REDQ-style critic ensemble via ExpoFT (Phase 2)</li>
+<li><strong>RL algorithms:</strong> GRPO, PPO (Phase 1); ExpoFT (frozen VLA + residual policy, off-policy Q-learning via a REDQ-style critic ensemble initially, later a categorical/distributional critic — see below), plus PPO, GRPO, and SAC baselines added directly to the same codebase for comparison (Phase 2)</li>
 <li><strong>Framework:</strong> RLinf (<code>montrealrobotics/RLinf</code>) for Phase 1; standalone <code>expo-ft</code> repository (own fork of <code>openpi</code> and <code>ManiSkill</code> as git submodules) for Phase 2</li>
 <li><strong>Key infrastructure:</strong> Four separate Python venvs to manage dependency conflicts; repository living on <code>$HOME</code> with <code>logs/</code> and <code>demos/</code> symlinked to <code>$SCRATCH</code>; large package caches relocated to <code>$SCRATCH</code></li>
 </ul>
@@ -1524,6 +1612,97 @@
 
 <p><strong>Open research question</strong>, raised to the group for discussion: is this a fundamental limitation of high-UTD off-policy critic training that the paper's own short real-robot runs simply don't run long enough to expose, or is it specific to this simulated setup (smaller dataset, the frozen-VLA + residual-policy architecture, or the memory-constrained batch size)? This bears directly on the project's central research question, since it currently blocks demonstrating any positive RL contribution on top of the validated SFT baseline.</p>
 <p><strong>Untested leads identified for next steps:</strong> a smaller <code>edit_scale</code> (e.g. 0.05) specifically for StackCube, since it is the most precision-demanding task and collapsed most dramatically; <code>replan_steps=4</code> for StackCube (currently a flat 8, while the paper uses 4–8 depending on task); and <code>batch_size=32</code> as a low-risk next test (never yet tried).</p>
+<h3 id="phase-2-rl-stage-isolating-critic-instability-from-a-structural-selection-bias">Phase 2 — RL stage: isolating critic instability from a structural selection bias<a class="headerlink" href="#phase-2-rl-stage-isolating-critic-instability-from-a-structural-selection-bias" title="Permanent link">&para;</a></h3>
+<p>The next phase of work took the leads above and systematically tested them one at a time, while also stepping back to precisely characterize <em>why</em> the critic's own training loss was destabilizing in the first place, rather than continuing to search hyperparameters.</p>
+<p><strong>Mechanism identified.</strong> ExpoFT selects the executed action by sampling several candidate actions (the base VLA's own output, plus several residual-edited variants), scoring all of them with the critic, and taking the highest-scoring one — and that same critic is then used to bootstrap its own training target for whichever candidate was picked. This is a textbook maximization/self-reference bias (closely related to the reason Double Q-learning exists): the argmax will systematically prefer whichever candidate the critic happens to overestimate, and that overestimated value then becomes part of the critic's own next training target, reinforcing the error. This mechanism was identified as the most likely root cause of the growing critic-loss instability described above, and became the organizing hypothesis for the rest of this phase of work.</p>
+<p><strong>First mitigations tried, individually — none resolved the collapse:</strong></p>
+<ul>
+<li>Fixed-temperature ablation, freezing the critic's image encoder, gradient clipping on the critic, and critic weight decay were each tested in isolation as candidate stabilizers. None changed the qualitative outcome (<code>target_q_max</code> still grew without bound, <code>critic_loss</code> still grew increasingly spiky, <code>eval/success_rate</code> still collapsed).</li>
+<li>A smaller <code>edit_scale</code> (0.05, following the paper's own guidance for precision-demanding tasks) was tested on StackCube specifically. Same outcome.</li>
+<li>Critic pretraining — a warm-start phase, prior to any RL, that trains only the critic (never the residual policy) on demonstration data via the same Bellman-backup mechanism used later — was implemented as a YAML-toggleable option, following a similar idea proposed in the XQCfD paper (arXiv 2605.10734) for critic/actor coherence. Tested in isolation: did not resolve the collapse. Notably, <code>target_q_max</code> during this offline-only pretraining phase <em>itself</em> began climbing again partway through, on demonstration data alone — evidence that the instability is not primarily about the online data the critic sees, but about the argmax/bootstrap mechanism itself.</li>
+</ul>
+<p><strong>Rebuilding the critic architecture (XQC / XQCfD).</strong> To test whether the critic's own training dynamics (as opposed to the selection mechanism) were the primary driver, the critic was rebuilt from scratch following XQC (arXiv 2509.25174) and XQCfD (arXiv 2605.10734): a <strong>categorical (C51-style, fixed bounded support)</strong> critic head replacing the original unbounded scalar regression target, with <strong>batch normalization and weight normalization</strong> on the critic's MLP, and <strong>no ensemble</strong> (matching XQCfD's own reported setup). The reward signal is normalized by a running estimate of its own scale before being used, so the fixed value bounds stay meaningful across tasks without hand-tuning them individually. The original architecture was preserved, unmodified, in a separate module rather than overwritten, specifically so the two could be run side by side under otherwise identical conditions.</p>
+<p><strong>Result:</strong> the categorical critic's own value estimates behave in a qualitatively different, healthier way — they converge and stabilize within a bounded range instead of climbing indefinitely, and the critic's training loss stays smooth rather than growing increasingly spiky. But <code>eval/success_rate</code> still collapses in essentially the same way. This was an important negative result: it rules out critic-training instability itself as the primary driver of the policy degradation.</p>
+<table>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/critic-architecture-comparison-target-q-max.png" alt="Curve">
+
+            *target_q_max — original vs. categorical critic architecture*
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/critic-architecture-comparison-critic-loss.png" alt="Curve">
+
+            *critic_loss — original vs. categorical critic architecture*
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/critic-architecture-comparison-success-rate.png" alt="Curve">
+
+            *eval/success_rate — original vs. categorical critic architecture*
+        </td>
+    </tr>
+</table>
+
+<p><strong>A second, independent bug found and fixed: reward/termination timing.</strong> A closer review of the online training loop found that the environment's reward and episode-termination signal were being read <em>before</em> the action for that step was actually taken, rather than after — meaning every stored transition was paired with the outcome of the <em>previous</em> action rather than the one it was actually meant to represent. This was confirmed to be a genuine, structural mismatch (not just a labeling convention) via a small controlled reproduction outside the main codebase, and traced to affect only the online RL data-collection loop — supervised fine-tuning, demonstration generation, and critic pretraining all use separate data pipelines that were never affected. The tasks used in this project rely on a shaped (dense), not sparse, reward signal, which limits how much of the smoothly-varying part of the reward this timing shift could have disrupted in practice — but the discrete success bonus layered on top of that shaping term is exactly the kind of value such a shift would misattribute most.</p>
+<p>The fix was applied, and a second controlled before/after comparison was run under otherwise identical conditions. <strong>Result:</strong> the same pattern as the architecture change above — <code>target_q_max</code> stabilizes noticeably compared to the unfixed version, but <code>eval/success_rate</code> again collapses in essentially the same way regardless.</p>
+<table>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/reward-timing-fix-comparison-target-q-max.png" alt="Curve">
+
+            *target_q_max — before vs. after the reward-timing fix*
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/reward-timing-fix-comparison-success-rate.png" alt="Curve">
+
+            *eval/success_rate — before vs. after the reward-timing fix*
+        </td>
+    </tr>
+</table>
+
+<p><strong>Why doesn't the original paper report this?</strong> Revisiting the paper's own real-robot setup for an explanation: it relies on a human operator actively correcting the robot in real time during training (most heavily early on), which acts as a continuous circuit breaker on exactly the failure mode described above — a bad, overestimated action never gets the chance to be reinforced, since it gets corrected before it can be recorded. Their training runs are also considerably shorter (on the order of 8–20k steps, versus 100k+ here), and this project's own logs show the instability only becoming severe well past that range. The underlying mechanism in the paper's own formulation is identical to the one used here — nothing about the algorithm itself appears to make it immune — which points to the paper's human-in-the-loop safety net and shorter training horizon as the more likely explanation, rather than a fundamental difference in the method.</p>
+<p><strong>Current leading hypothesis and next steps.</strong> With two independent, real, and confirmed fixes each improving something measurable about the critic without resolving the actual symptom, the selection mechanism itself (the same critic proposing <em>and</em> judging its own preferred candidate) is the leading remaining explanation, by elimination. Two complementary directions from the XQCfD paper are being tested in order, to keep results attributable to a single, citable methodology before considering an alternative fix from a different line of research (decoupling the selection and evaluation steps, in the style of Double DQN, using the online and target critic networks already present in the architecture):</p>
+<ul>
+<li><strong>KL regularization</strong> against the pretrained policy, replacing the generic exploration bonus used by default — computed in closed form between the residual policy's own (pre-squashing) distribution and a fixed reference distribution representing "no correction." An initial test (not yet a fully isolated one — see below) already showed the most encouraging result of this entire investigation: success rate held consistently 5–10 percentage points above a comparable run without it, for most of training, and the regularization term itself remained an active, non-trivial constraint throughout rather than being drowned out by the exploration bonus running alongside it in that first test. An isolated test (with the exploration bonus fully disabled, matching the paper's own formulation exactly) is in progress to confirm how much of that gain is attributable to the regularization term specifically.</li>
+</ul>
+<table>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/kl-regularization-comparison-success-rate.png" alt="Curve">
+
+            *eval/success_rate — with vs. without KL regularization (initial, non-isolated test)*
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/kl-regularization-kl-penalty.png" alt="Curve">
+
+            *The KL regularization term itself over the course of training*
+        </td>
+    </tr>
+</table>
+
+<ul>
+<li><strong>A "stationary" policy architecture</strong> (not yet implemented), the remaining piece of the XQCfD recipe, intended to make the policy default to high-uncertainty, conservative behavior when acting outside the region its demonstrations actually cover, rather than continuing to act confidently.</li>
+</ul>
+<p>The original, scalar-critic architecture was also made directly selectable (not just preserved as a passive reference) so it can be re-run under the exact same conditions as the categorical one on request, for further comparison.</p>
+<h3 id="phase-2-extending-the-same-rigor-to-the-ppogrpo-baselines">Phase 2 — Extending the same rigor to the PPO/GRPO baselines<a class="headerlink" href="#phase-2-extending-the-same-rigor-to-the-ppogrpo-baselines" title="Permanent link">&para;</a></h3>
+<p>On-policy baselines (PPO, GRPO) were added to the same codebase to provide additional points of comparison, sharing the same training loop and infrastructure as ExpoFT. Exercising this code for the first time surfaced several independent, confirmed numerical bugs — none previously caught, since this code path had never actually been run to completion before:</p>
+<ul>
+<li>A network-construction incompatibility between the value-function network and a shared piece of infrastructure that assumed a different (ensemble) network shape</li>
+<li>An action post-processing step that padded the action's dimensionality twice, once too many</li>
+<li>An incorrect fallback check for a quantity (the policy's entropy) that has no closed form for this project's action distribution, silently taking the wrong code path and crashing instead of using the sample-based approximation that was already implemented for exactly this situation</li>
+<li>An unclipped ratio term in the PPO/GRPO objective that could, after enough policy drift, silently reach floating-point infinity and corrupt an entire batch's loss</li>
+<li>A numerical instability at the exact boundary of the (tanh-squashed) action space, encountered when replaying certain stored actions, which could similarly corrupt a gradient step</li>
+</ul>
+<p>Each of these was confirmed with a small, targeted, reproducible test built specifically to isolate it, rather than being fixed from code inspection alone. A defensive safeguard was also added on top of all of these: if a computed gradient is ever found to be non-finite for any reason, that particular update is now skipped entirely (leaving the model and optimizer state untouched) rather than being allowed to silently corrupt training, with diagnostic logging added at each stage of the computation so any future occurrence is immediately traceable rather than presenting as a bare crash much later.</p>
+<p><strong>A more fundamental finding.</strong> Investigating why these baselines showed no learning signal at all from the very start of training (rather than the "starts well, then degrades" pattern seen with ExpoFT) revealed that their trainable policy network had never actually been connected to the supervised-pretrained checkpoint in the first place: it is a small, separately and randomly initialized network, with the pretrained checkpoint used only to convert its inputs and outputs to and from the right format — not to give it any of the pretrained policy's own behavior to start from. This is a reasonable consequence of using a flow-matching base model, which does not expose the kind of action likelihood these two algorithms need directly, but it meant these baselines were effectively being asked to relearn manipulation from scratch, reproducing this project's own Phase 1 finding (on-policy RL cannot bootstrap without a competent starting policy) despite the intent being to test on-policy fine-tuning <em>from</em> the SFT checkpoint. A behavior-cloning warm-start option, mirroring the critic-pretraining idea used for ExpoFT, was added for these baselines to close this gap before drawing further conclusions from them.</p>
 <hr />
 <h2 id="major-difficulties-encountered">Major difficulties encountered<a class="headerlink" href="#major-difficulties-encountered" title="Permanent link">&para;</a></h2>
 <h3 id="exploration-bottleneck-phase-1-fundamental">Exploration bottleneck (Phase 1, fundamental)<a class="headerlink" href="#exploration-bottleneck-phase-1-fundamental" title="Permanent link">&para;</a></h3>
@@ -1532,8 +1711,12 @@
 <p>The single largest source of wasted effort in Phase 2: a cartesian-vs-joint-space control mismatch produced symptoms (near-0% success, arm approaching but not completing the task) that looked identical to a genuine task-difficulty ceiling. Diagnosing it required building rigorous, ground-truth replay validation tooling rather than trusting training curves alone. Several of the further bugs found during the systematic review that followed were silent — they did not crash anything, they simply produced plausible-looking but wrong numbers — which is what made a full systematic review necessary rather than a targeted fix.</p>
 <h3 id="pickcube-task-design-incompatibility-resolved">PickCube task-design incompatibility (resolved)<a class="headerlink" href="#pickcube-task-design-incompatibility-resolved" title="Permanent link">&para;</a></h3>
 <p>A failure mode that initially looked like a policy or exploration problem (0% success, no improvement) turned out to be a fundamental observability gap between the task's design (hidden goal marker) and the project's DROID-mimicking observation schema. Required camera-level diagnostics to trace correctly, and PickCube-v1 was dropped in a first pass as a result. A subsequent monkeypatch unhiding the goal marker from the sensor camera resolved the gap without compromising the observation schema, and the task was reintegrated. Lesson generalized: verify VLA camera/observability alignment with a given ManiSkill task's design (hidden goal markers, fixed camera angle, wrist camera presence) before assuming poor results reflect task difficulty — and before assuming the incompatibility is unfixable.</p>
-<h3 id="rl-critic-instability-phase-2-current-central-difficulty">RL critic instability (Phase 2, current central difficulty)<a class="headerlink" href="#rl-critic-instability-phase-2-current-central-difficulty" title="Permanent link">&para;</a></h3>
-<p>Every RL configuration tried so far degrades rather than improves the validated SFT policy, with the degradation correlated with growing critic loss instability. Reducing the UTD ratio delays the onset of collapse but has not, in any configuration tried, prevented it outright — including a run matching the paper's own exact hyperparameters within the paper's own validated training length. This is currently the central open problem blocking the project's core research question and has been shared with the broader research group for discussion.</p>
+<h3 id="rl-critic-instability-phase-2-central-difficulty-substantially-narrowed-down-since-first-reported">RL critic instability (Phase 2, central difficulty — substantially narrowed down since first reported)<a class="headerlink" href="#rl-critic-instability-phase-2-central-difficulty-substantially-narrowed-down-since-first-reported" title="Permanent link">&para;</a></h3>
+<p>Every RL configuration tried so far degrades rather than improves the validated SFT policy, with the degradation initially correlated with growing critic loss instability. Two independent, real fixes — a rebuilt critic architecture with structurally bounded value estimates, and a corrected reward/termination timing bug in the data-collection loop — were each confirmed to meaningfully stabilize the critic's own training dynamics, but neither changed the collapse in policy performance. This shifted the leading hypothesis away from critic-training instability itself and toward the action-selection mechanism (the same critic proposing and judging its own preferred action), which is now being tested directly rather than inferred by elimination. A useful, if initially counter-intuitive, lesson from this stretch of work: a healthier-looking critic is not the same thing as a better policy, and the two need to be checked separately rather than assumed to move together.</p>
+<h3 id="confounded-first-regularization-test-resolved-process-lesson">Confounded first regularization test (resolved, process lesson)<a class="headerlink" href="#confounded-first-regularization-test-resolved-process-lesson" title="Permanent link">&para;</a></h3>
+<p>The first test of KL regularization against the pretrained policy was run with the default exploration bonus still active alongside it, rather than disabled as the source paper's own formulation implies — meaning the encouraging result from that run could not yet be attributed to the regularization term specifically. Caught before drawing a conclusion from it; a properly isolated follow-up test is in progress. General lesson: when adding a term to an existing objective, explicitly check every other term it could interact with before reporting a result, rather than assuming a new option is independent of what is already there.</p>
+<h3 id="ppogrpo-baselines-silently-disconnected-from-the-pretrained-policy-resolved">PPO/GRPO baselines silently disconnected from the pretrained policy (resolved)<a class="headerlink" href="#ppogrpo-baselines-silently-disconnected-from-the-pretrained-policy-resolved" title="Permanent link">&para;</a></h3>
+<p>These baselines were assumed to be continuing from the supervised-pretrained checkpoint, the same way the primary ExpoFT method does — they were not. Their trainable policy network was a separate, randomly-initialized network the entire time, with the pretrained checkpoint used only for input/output formatting. This was not caught by any test passing or any run crashing; it only surfaced once the <em>results</em> from these baselines were examined critically (persistent near-zero performance from the very first step) rather than the code being assumed correct because it ran without error.</p>
 <h3 id="infrastructure-cluster-ray-and-storage-phase-1-and-2">Infrastructure — cluster, Ray, and storage (Phase 1 and 2)<a class="headerlink" href="#infrastructure-cluster-ray-and-storage-phase-1-and-2" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Model loaded twice into GPU memory (RolloutGroup + ActorGroup) → OOM on L40S (44GB) → switched to A100L (80GB) with <code>enable_offload: True</code> (Phase 1)</li>
@@ -1632,6 +1815,34 @@
 <td>Deleted catastrophic pre-fix RL runs from <code>$SCRATCH</code></td>
 <td>Frees disk space; keeps only validated SFT checkpoints and post-fix RL runs</td>
 </tr>
+<tr>
+<td>Rebuilt the critic as a categorical (bounded-support) architecture, per XQC/XQCfD</td>
+<td>Directly tests whether unbounded critic-value growth was the root cause of policy degradation, rather than continuing to search hyperparameters around the original architecture</td>
+</tr>
+<tr>
+<td>Preserved the original critic architecture in a separate, still-runnable module rather than overwriting it</td>
+<td>Keeps a clean A/B comparison against the categorical rewrite available at any time, rather than a one-way migration</td>
+</tr>
+<tr>
+<td>Adaptive (running-estimate) reward normalization instead of fixed, hand-tuned value bounds</td>
+<td>Keeps the categorical critic's fixed support meaningful across tasks without per-task tuning, and without needing to reproject the support mid-training</td>
+</tr>
+<tr>
+<td>Testing the XQCfD paper's own mitigations (critic pretraining, categorical critic, KL regularization, stationary architecture) in order, before an alternative fix from a different line of research</td>
+<td>Keeps results attributable to a single, citable methodology rather than mixing approaches from unrelated papers</td>
+</tr>
+<tr>
+<td>KL regularization implemented as an additional, toggleable term rather than a hard replacement of the existing exploration bonus</td>
+<td>Preserves the ability to reproduce the paper's exact formulation (by disabling the other term) while keeping both available independently for ablation</td>
+</tr>
+<tr>
+<td>Added a behavior-cloning warm-start option for the PPO/GRPO baselines</td>
+<td>Addresses the discovery that their trainable policy had no connection to the pretrained checkpoint otherwise</td>
+</tr>
+<tr>
+<td>Added a defensive non-finite-gradient guard to the PPO/GRPO update step</td>
+<td>Prevents a future, as-yet-unknown numerical issue from silently corrupting a training run, independent of whether its root cause has been found</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -1644,6 +1855,7 @@
 <li><a href="https://huggingface.co/josh11234/ExpoFT-Pi05-PushCube-v1-SFT-86p"><code>josh11234/ExpoFT-Pi05-PushCube-v1-SFT-86p</code></a> (86 %success on 200 held-out seeds)</li>
 <li><a href="https://huggingface.co/josh11234/ExpoFT-Pi05-PickCube-v1-SFT"><code>josh11234/ExpoFT-Pi05-PickCube-v1-SFT</code></a> (22 %success on 200 held-out seeds)</li>
 </ul>
+<p>The critic-architecture comparison, reward-timing-fix comparison, and KL-regularization figures referenced in the latest updates above are still to be added — placeholders use the same <code>images/</code> convention as the rest of this page.</p>
 
 
 
