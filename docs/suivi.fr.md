@@ -303,7 +303,7 @@ title: Suivi du projet
     - Le mode d'échec de PickCube ressemblait au départ à un problème de policy/exploration et a nécessité des diagnostics au niveau caméra pour être réellement rattaché à la conception d'observabilité de l'environnement
 
 
-## Semaine 10 (6–10 juillet 2026) — semaine en cours
+## Semaine 10 (6–10 juillet 2026)
 
 ### Objectifs de la période
 - Réviser l'étape d'entraînement RL/ExpoFT aussi rigoureusement que l'étape SFT l'a été
@@ -342,3 +342,43 @@ title: Suivi du projet
     - Cette dégradation est systématiquement précédée et accompagnée d'une instabilité croissante de la loss du critic, suggérant que la cause racine est une fonction de valeur se déstabilisant progressivement plutôt qu'un bug du pipeline (vérifié : l'évaluation utilise désormais bien la residual policy et le critic entraînés, pas seulement la policy VLA figée)
     - Réduire le ratio update-to-data retarde le déclenchement de cette instabilité mais ne l'a empêchée dans aucune configuration testée jusqu'ici — soulevant la question ouverte de savoir s'il s'agit d'une limitation fondamentale de l'entraînement de critic off-policy à haut ratio update-to-data que les entraînements courts sur robot réel du papier n'ont simplement pas le temps de révéler
     - Ce constat a été partagé avec le groupe de recherche élargi pour discussion, car il touche directement à la question de recherche centrale du projet
+
+
+## Semaine 11 (13–17 juillet 2026) — semaine en cours
+
+### Objectifs de la période
+
+- Déterminer si la dégradation des performances du RL observée à la fin de la semaine 10 est due à une instabilité de l'entraînement du critic, à un problème d'intégrité des données, ou à un problème structurel lié à l'algorithme lui-même
+- Reconstruire l'architecture du critic afin qu'elle corresponde le plus fidèlement possible aux articles XQC/XQCfD, et tester chacun des mécanismes proposés individuellement plutôt que de les activer tous simultanément
+- Appliquer la même rigueur d'analyse aux baselines PPO/GRPO qui avaient été ajoutées mais qui n'avaient jamais réellement été exécutées
+- Mettre à jour la documentation du projet (README, changelog) avec l'ensemble des découvertes effectuées
+
+### Travaux réalisés
+
+!!! abstract "Progrès"
+    - [x] Implémentation du pré-entraînement du critic (warm-start BC/TD de type XQCfD sur les démonstrations avant le début du RL, activable via YAML) et test isolé — cela n'a pas permis de résoudre la dégradation observée à lui seul
+    - [x] Reconstruction complète de l'architecture du critic afin de correspondre à XQC/XQCfD : remplacement du critic original basé sur une régression scalaire et un ensemble de critics par un critic catégoriel (support borné, style C51) utilisant batch normalization et weight normalization — l'architecture originale a été conservée inchangée dans un fichier séparé afin de rester directement exécutable pour les comparaisons
+    - [x] Ajout d'une normalisation adaptative des récompenses (estimation continue de l'échelle des récompenses) afin que les bornes fixes du critic restent pertinentes entre différentes tâches sans nécessiter un réglage manuel — vérifié que cette approche reste valide même lorsqu'un changement important et soudain de l'échelle des récompenses survient
+    - [x] Réalisation de comparaisons contrôlées entre la nouvelle architecture du critic et l'ancienne, ainsi qu'entre la boucle de collecte de données avec le bug de synchronisation des récompenses corrigé et la version contenant le bug — dans les deux cas, les estimations de valeur du critic sont devenues significativement plus stables et mieux comportées, mais le taux de succès de la policy s'est effondré de manière identique, ce qui constitue lui-même une découverte importante (voir Décisions)
+    - [x] Identification et correction d'un véritable bug dans la boucle de collecte de données en ligne : le signal de récompense/terminaison de l'environnement était lu un pas trop tôt, ce qui associait chaque transition stockée à la récompense de l'action précédente plutôt qu'à celle ayant réellement produit cette transition — confirmé par une reproduction contrôlée et non uniquement par une lecture du code ; le problème est limité à la collecte RL en ligne (le pré-entraînement supervisé et la génération des démonstrations n'ont jamais été affectés)
+    - [x] Analyse de la raison pour laquelle les expériences sur robot réel de l'article original ne semblent pas rencontrer cette même dégradation malgré l'utilisation d'un mécanisme identique — l'explication la plus probable est leur correction humaine en temps réel pendant l'entraînement ainsi que leur horizon d'entraînement beaucoup plus court, plutôt qu'une différence fondamentale dans l'algorithme lui-même
+    - [x] Implémentation d'une régularisation KL vers la policy pré-entraînée (remplaçant le bonus d'exploration générique, conformément à XQCfD) pour la policy résiduelle entraînable, et réalisation d'un premier test — bien qu'un écart de configuration ait empêché ce premier essai d'être totalement isolé, les résultats sont les plus encourageants obtenus durant cette investigation jusqu'à présent (amélioration constante du taux de succès par rapport à une exécution comparable sans cette régularisation) ; un test isolé de suivi est en cours
+    - [x] Extension de la même rigueur de débogage aux baselines PPO et GRPO ajoutées précédemment mais jamais réellement testées : identification et correction de plusieurs bugs numériques indépendants (incompatibilité lors de la construction du réseau, erreur de format d'action, fallback incorrect pour une valeur n'ayant pas de forme fermée pour notre type de policy, valeur non bornée pouvant atteindre silencieusement l'infini en cas de dérive de la policy, et instabilité numérique à la frontière de l'espace d'action) — chaque problème a été confirmé par un test ciblé et reproductible plutôt que par simple inspection du code, avec ajout de protections défensives afin qu'une occurrence similaire future soit détectée et ignorée plutôt que de corrompre silencieusement l'entraînement
+    - [x] Découverte que la policy entraînable de PPO/GRPO n'était en réalité jamais connectée au checkpoint pré-entraîné supervisé — elle correspondait à un réseau séparé initialisé aléatoirement, tandis que le checkpoint pré-entraîné était uniquement utilisé pour le pré/post-traitement des entrées et sorties. Cela explique pourquoi ces baselines ne recevaient aucun signal d'apprentissage utile dès le départ, indépendamment des bugs précédemment identifiés. Ajout d'une option équivalente de warm-start par behavior cloning pour corriger ce problème
+    - [x] Mise à jour complète du README du projet : résultats actuels, nouvelle architecture du critic et sa justification, bug de synchronisation temporelle et son périmètre, ainsi qu'un changelog complet des corrections réalisées durant cette phase
+    - [x] Rendre l'architecture originale du critic directement sélectionnable et exécutable (et pas seulement conservée comme référence statique) afin de permettre des comparaisons A/B avec la nouvelle architecture dans des conditions identiques
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - Traiter séparément la reconstruction de l'architecture du critic et la correction du bug de synchronisation des récompenses, avec des tests indépendants plutôt que de regrouper les modifications, afin que leurs effets (ou leur absence d'effet) puissent être attribués précisément à chaque changement
+    - Puisque ces deux corrections réelles et confirmées ont amélioré le comportement propre du critic sans modifier les performances de la policy, l'hypothèse principale s'est déplacée vers le mécanisme de sélection d'action lui-même (le même critic propose et évalue sa propre action préférée, ce qui introduit un biais connu dans ce type d'algorithme), plutôt que vers l'entraînement du critic
+    - Décision d'épuiser d'abord les mécanismes proposés par l'article lui-même (pré-entraînement du critic, nouvelle architecture du critic, régularisation KL, et — à venir — une modification architecturale visant à rendre la policy consciente lorsqu'elle sort de son domaine familier) avant de tester une solution alternative issue d'une autre ligne de recherche, afin que les résultats obtenus ou non restent attribuables à une approche unique et clairement référencée
+    - Confirmation que les tâches utilisées reposent sur une récompense dense (shaped reward) et non une récompense sparse — élément important pour évaluer l'importance réelle du bug de synchronisation dans notre contexte, comparativement au cadre original de l'article basé sur des récompenses sparse et un robot réel
+
+### Difficultés rencontrées
+
+!!! warning "Difficultés"
+    - Deux corrections indépendantes et confirmées (l'architecture du critic et le bug de synchronisation des récompenses) ont chacune amélioré de manière mesurable le comportement du critic sans améliorer les performances réelles de la policy — résultat utile pour réduire l'espace des causes possibles, mais qui rappelle que « un critic plus sain » et « une meilleure policy » ne sont pas nécessairement équivalents
+    - Le premier test de régularisation KL était biaisé par la présence résiduelle d'un terme de bonus d'exploration qui aurait dû être désactivé pour un test isolé — l'erreur a été détectée avant de tirer des conclusions, mais souligne l'importance de vérifier toutes les interactions possibles lors de l'ajout d'une nouvelle fonctionnalité
+    - Les baselines PPO/GRPO ne réalisaient pas ce qui était supposé depuis leur intégration (continuer depuis la policy pré-entraînée) — une différence importante et difficile à détecter qui n'a été révélée qu'après une analyse critique de leurs résultats plutôt qu'une simple interprétation directe des performances obtenues

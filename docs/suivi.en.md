@@ -303,7 +303,7 @@ title: Project Tracking
     - PickCube's failure mode looked at first like a policy/exploration problem and required camera-level diagnostics to actually trace to the environment's own observability design
 
 
-## Week 10 (July 6–10, 2026) — current week
+## Week 10 (July 6–10, 2026)
 
 ### Goals for the period
 - Review the RL/ExpoFT training stage as rigorously as the SFT stage was reviewed, before trusting any RL result
@@ -342,3 +342,43 @@ title: Project Tracking
     - The degradation is consistently preceded and accompanied by growing instability in the critic's training loss, suggesting the root cause is a progressively destabilizing value function rather than a bug in the pipeline itself (verified: the evaluation now demonstrably uses the trained residual policy and critic, not just the frozen base policy)
     - Reducing the update-to-data ratio delays the onset of this instability but has not, in any configuration tried so far, prevented it — raising the open question of whether this is a fundamental limitation of high-update-ratio off-policy critic training that the paper's own short, real-robot training runs simply do not run long enough to expose
     - This finding was shared with the broader research group for discussion, as it directly bears on the project's central research question
+
+
+
+## Week 11 (July 13–17, 2026) — current week
+
+### Goals for the period
+- Determine whether the RL degradation observed at the end of Week 10 is a critic-training instability problem, a data-integrity problem, or something structural in the algorithm itself
+- Rebuild the critic architecture to match the XQC/XQCfD papers as closely as possible, and test each of their proposed mechanisms in isolation rather than all at once
+- Extend the same rigor to the PPO/GRPO baselines that had been added but never actually exercised
+- Bring the project's documentation (README, changelog) up to date with everything found
+
+### Work completed
+
+!!! abstract "Progress"
+    - [x] Implemented critic pretraining (XQCfD-style BC/TD warm-start on demonstrations before RL starts, toggleable via YAML) and tested it in isolation — did not resolve the degradation on its own
+    - [x] Rebuilt the critic architecture from scratch to match XQC/XQCfD: a categorical (bounded-support, C51-style) critic with batch norm and weight norm, replacing the original scalar-regression critic and its ensemble — the original architecture was preserved unmodified in a separate file rather than overwritten, specifically so it stays directly runnable for comparison
+    - [x] Added adaptive reward normalization (a running estimate of reward scale) so the critic's fixed value bounds stay meaningful across tasks without hand-tuning them per task — verified this holds even under a sudden, large shift in a task's reward scale
+    - [x] Ran controlled comparisons of the new critic architecture against the old one, and separately of a newly-found reward-timing bug (below) fixed vs. unfixed — in both cases, the critic's own value estimates became measurably more stable and well-behaved, but the policy's success rate collapsed in the same way regardless, which was itself an important finding (see Decisions)
+    - [x] Found and fixed a real bug in the online data-collection loop: the environment's reward/termination signal was being read one step too early, so every stored transition was paired with the reward from the *previous* action rather than the one that actually produced it — confirmed via a controlled reproduction, not just a code read, and confirmed the scope is limited to online RL collection (supervised pretraining and demonstration generation were never affected)
+    - [x] Investigated why the original paper's real-robot experiments don't appear to hit this same degradation despite using an identical mechanism — traced most likely to their live human-in-the-loop correction during training and their much shorter training horizon, rather than anything different in the algorithm itself
+    - [x] Implemented KL regularization against the pretrained policy (replacing the generic exploration bonus, per XQCfD) for the trainable residual policy, and ran an initial test — even though a configuration gap meant this first run wasn't a fully isolated test, results were the most encouraging seen in this investigation so far (a consistent improvement in success rate over a comparable run without it); an isolated follow-up test is in progress
+    - [x] Extended the same debugging rigor to the PPO and GRPO baselines added but not yet exercised: found and fixed several independent numerical bugs (a network-construction incompatibility, an action-formatting error, an incorrect fallback for a value that has no closed form for our policy type, an unbounded value that could silently reach infinity under policy drift, and a numerical instability at the boundary of the action space) — each confirmed with a targeted, reproducible test rather than by inspection alone, and a defensive safeguard added on top so a future occurrence of any similar issue is caught and skipped rather than corrupting training silently
+    - [x] Discovered that PPO/GRPO's trainable policy was never actually connected to the supervised-pretrained checkpoint in the first place — it is a separate, randomly-initialized network, with the pretrained checkpoint used only to pre/post-process its inputs and outputs. This explains why these baselines showed no learning signal from the start, independent of any of the bugs above. Added an equivalent behavior-cloning warm-start option for these baselines to address it
+    - [x] Brought the project README fully up to date: current findings, the new critic architecture and its rationale, the timing bug and its scope, and a complete changelog of the fixes made during this phase
+    - [x] Made the original critic architecture directly selectable and runnable (not just preserved as a static reference) so it can be A/B-tested against the new one under identical conditions on request
+
+### Decisions and adjustments
+
+!!! info "Decisions"
+    - Treating the critic-architecture rebuild and the data-timing fix as two separate, independently-tested changes rather than bundling them, specifically so their effects (or lack thereof) could each be attributed cleanly
+    - Given both of those real, confirmed fixes improved the critic's own behavior without changing the policy's outcome, the leading hypothesis shifted to the action-selection mechanism itself (the same critic both proposes and judges its own preferred action, a known bias pattern in this style of algorithm) rather than anything about how the critic is trained
+    - Chose to exhaust the paper's own proposed mechanisms (critic pretraining, the new critic architecture, KL regularization, and — still to come — an architectural change intended to make the policy aware of when it's outside familiar territory) before testing an alternative fix from a different line of research, so that what does or doesn't work stays attributable to a single, citable approach
+    - Confirmed the tasks in use rely on a shaped (dense), not sparse, reward signal — relevant context for judging how much the timing bug actually mattered in practice, versus in the original paper's sparse-reward, real-robot setting
+
+### Difficulties encountered
+
+!!! warning "Difficulties"
+    - Two independent, confirmed fixes (the critic architecture, the reward-timing bug) each produced a real, measurable improvement to the critic's behavior without improving the actual policy performance — a useful result for narrowing down the cause, but a reminder that "the critic looks healthier" and "the policy is getting better" are not the same thing
+    - The first test of KL regularization was confounded by a leftover exploration-bonus term that should have been disabled for an isolated test — caught before drawing any conclusion from it, but a reminder to double check every knob a new feature interacts with before reporting results
+    - The PPO/GRPO baselines were not doing what they were assumed to be doing (continuing from the pretrained policy) for the entire time they had been in use — a significant, non-obvious gap that only surfaced once their results were looked at critically rather than taken at face value
