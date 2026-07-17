@@ -350,7 +350,6 @@ title: Project Tracking
 ### Goals for the period
 - Determine whether the RL degradation observed at the end of Week 10 is a critic-training instability problem, a data-integrity problem, or something structural in the algorithm itself
 - Rebuild the critic architecture to match the XQC/XQCfD papers as closely as possible, and test each of their proposed mechanisms in isolation rather than all at once
-- Extend the same rigor to the PPO/GRPO baselines that had been added but never actually exercised
 - Bring the project's documentation (README, changelog) up to date with everything found
 
 ### Work completed
@@ -363,9 +362,8 @@ title: Project Tracking
     - [x] Found and fixed a real bug in the online data-collection loop: the environment's reward/termination signal was being read one step too early, so every stored transition was paired with the reward from the *previous* action rather than the one that actually produced it — confirmed via a controlled reproduction, not just a code read, and confirmed the scope is limited to online RL collection (supervised pretraining and demonstration generation were never affected)
     - [x] Investigated why the original paper's real-robot experiments don't appear to hit this same degradation despite using an identical mechanism — traced most likely to their live human-in-the-loop correction during training and their much shorter training horizon, rather than anything different in the algorithm itself
     - [x] Implemented KL regularization against the pretrained policy (replacing the generic exploration bonus, per XQCfD) for the trainable residual policy, and ran an initial test — even though a configuration gap meant this first run wasn't a fully isolated test, results were the most encouraging seen in this investigation so far (a consistent improvement in success rate over a comparable run without it); an isolated follow-up test is in progress
-    - [x] Extended the same debugging rigor to the PPO and GRPO baselines added but not yet exercised: found and fixed several independent numerical bugs (a network-construction incompatibility, an action-formatting error, an incorrect fallback for a value that has no closed form for our policy type, an unbounded value that could silently reach infinity under policy drift, and a numerical instability at the boundary of the action space) — each confirmed with a targeted, reproducible test rather than by inspection alone, and a defensive safeguard added on top so a future occurrence of any similar issue is caught and skipped rather than corrupting training silently
-    - [x] Discovered that PPO/GRPO's trainable policy was never actually connected to the supervised-pretrained checkpoint in the first place — it is a separate, randomly-initialized network, with the pretrained checkpoint used only to pre/post-process its inputs and outputs. This explains why these baselines showed no learning signal from the start, independent of any of the bugs above. Added an equivalent behavior-cloning warm-start option for these baselines to address it
     - [x] Brought the project README fully up to date: current findings, the new critic architecture and its rationale, the timing bug and its scope, and a complete changelog of the fixes made during this phase
+    - [x] Added pipelines for on-policy algorithms like PPO and GRPO for future comparisons
     - [x] Made the original critic architecture directly selectable and runnable (not just preserved as a static reference) so it can be A/B-tested against the new one under identical conditions on request
 
 ### Decisions and adjustments
