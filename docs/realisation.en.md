@@ -377,14 +377,14 @@ The fix was applied, and a second controlled before/after comparison was run und
         <td>
             <img src="{{ config.site_url }}/images/reward-timing-fix-comparison-target-q-max.png" alt="Curve">
 
-            *target_q_max — before vs. after the reward-timing fix*
+            *target_q_max — before (green) vs. after (red) the reward-timing fix*
         </td>
     </tr>
     <tr>
         <td>
             <img src="{{ config.site_url }}/images/reward-timing-fix-comparison-success-rate.png" alt="Curve">
 
-            *eval/success_rate — before vs. after the reward-timing fix*
+            *eval/success_rate — before (green) vs. after (red) the reward-timing fix*
         </td>
     </tr>
 </table>
@@ -400,7 +400,7 @@ The fix was applied, and a second controlled before/after comparison was run und
         <td>
             <img src="{{ config.site_url }}/images/kl-regularization-comparison-success-rate.png" alt="Curve">
 
-            *eval/success_rate — with vs. without KL regularization (initial, non-isolated test)*
+            *eval/success_rate — with (in pink) vs. without (in red) KL regularization (initial, non-isolated test)*
         </td>
     </tr>
     <tr>

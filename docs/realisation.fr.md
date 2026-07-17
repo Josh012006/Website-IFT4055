@@ -888,14 +888,14 @@ Le fix a été appliqué, et une seconde comparaison contrôlée avant/après a 
         <td>
             <img src="{{ config.site_url }}/images/reward-timing-fix-comparison-target-q-max.png" alt="Curve">
 
-            *target_q_max — avant vs. après le fix de timing de récompense*
+            *target_q_max — avant (en vert) vs. après (en rouge) le fix de timing de récompense*
         </td>
     </tr>
     <tr>
         <td>
             <img src="{{ config.site_url }}/images/reward-timing-fix-comparison-success-rate.png" alt="Curve">
 
-            *eval/success_rate — avant vs. après le fix de timing de récompense*
+            *eval/success_rate — avant (en vert) vs. après (en rouge) le fix de timing de récompense*
         </td>
     </tr>
 </table>
@@ -911,7 +911,7 @@ Le fix a été appliqué, et une seconde comparaison contrôlée avant/après a 
         <td>
             <img src="{{ config.site_url }}/images/kl-regularization-comparison-success-rate.png" alt="Curve">
 
-            *eval/success_rate — avec vs. sans régularisation KL (premier test, non isolé)*
+            *eval/success_rate — avec (en rose) vs. sans (en rouge) régularisation KL (premier test, non isolé)*
         </td>
     </tr>
     <tr>
