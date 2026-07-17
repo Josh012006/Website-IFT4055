@@ -28,9 +28,6 @@ The project went through two major phases:
 
 The chosen methodology is **progressive component stripping**: start from the full ExpoFT recipe (SFT warmup + demonstrations + off-policy RL) and validate each stage rigorously before removing components (dataset size, SFT warmup itself) to identify the minimum supervision actually needed.
 
-### Why OpenVLA / π₀.₅ over flow-matching VLAs
-
-OpenVLA(-OFT) and π₀.₅ use **discrete action tokens**, which yield valid log-probabilities and therefore support principled policy-gradient RL (GRPO/PPO in Phase 1). Flow-matching models (π₀, MoMaLM) cannot provide tractable likelihoods, which would pollute the experimental design for any approach relying on exact policy gradients. This is also why ExpoFT's residual-policy formulation — which sidesteps the need for VLA log-probabilities entirely by acting as an additive correction learned via a Q-function — is an attractive way to keep using a frozen, capable VLA without being blocked by this limitation.
 
 ### Working environment
 

@@ -28,9 +28,6 @@ Le projet s'est déroulé en deux grandes phases :
 
 La méthodologie retenue est le **retrait progressif de composants** : partir de la recette ExpoFT complète (warmup SFT + démonstrations + RL off-policy) et valider rigoureusement chaque étage avant de retirer des composants (taille du dataset, warmup SFT lui-même) pour identifier la supervision minimale réellement nécessaire.
 
-### Pourquoi OpenVLA / π₀.₅ plutôt que des VLA à flow-matching
-
-OpenVLA(-OFT) et π₀.₅ utilisent des **tokens d'action discrets**, qui produisent des log-probabilités valides et permettent donc un policy-gradient RL principiel (GRPO/PPO en Phase 1). Les modèles à flow-matching (π₀, MoMaLM) ne peuvent pas fournir de vraisemblances exploitables, ce qui polluerait le design expérimental de toute approche reposant sur des gradients de politique exacts. C'est aussi pourquoi la formulation en politique résiduelle d'ExpoFT — qui contourne entièrement le besoin de log-probabilités du VLA en agissant comme une correction additive apprise via une Q-function — est un moyen attractif de continuer à utiliser un VLA figé et compétent sans être bloqué par cette limitation.
 
 ### Environnement de travail
 
