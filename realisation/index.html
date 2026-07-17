@@ -580,17 +580,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pourquoi-openvla-05-plutot-que-des-vla-a-flow-matching" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pourquoi OpenVLA / π₀.₅ plutôt que des VLA à flow-matching
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#environnement-de-travail" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1006,17 +995,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pourquoi-openvla-05-plutot-que-des-vla-a-flow-matching" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pourquoi OpenVLA / π₀.₅ plutôt que des VLA à flow-matching
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#environnement-de-travail" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1373,8 +1351,6 @@
 <p><strong>Phase 1 — RL on-policy (Semaines 1–7) :</strong> Fine-tuning RL direct via GRPO/PPO sur OpenVLA-OFT et π₀ dans les environnements LIBERO et RoboCasa. Cette phase a établi l'hypothèse du goulot d'étranglement d'exploration et les limites des approches on-policy sans warmup SFT.</p>
 <p><strong>Phase 2 — Politique résiduelle ExpoFT (Semaine 8–présent) :</strong> Reproduction et adaptation de l'<a href="https://pd-perry.github.io/expo-ft/">architecture ExpoFT</a> dans un codebase dédié, piloté entièrement par la simulation ManiSkill (<code>expo-ft</code>), remplaçant le pipeline de données original d'ExpoFT (robot réel, DROID) tout en gardant initialement l'algorithme lui-même intact, avant de s'en écarter de façon ciblée une fois l'instabilité diagnostiquée (voir plus bas). Le VLA (π₀.₅) est gardé <strong>figé</strong>, et une petite politique de correction résiduelle est entraînée par-dessus via une Q-function, en combinant RL off-policy et démonstrations par motion planning. Ce design évite deux limitations de la Phase 1 : il ne nécessite pas de log-probabilités d'action valides (que les VLA à flow-matching comme π₀/π₀.₅ ne peuvent pas fournir, excluant le policy-gradient RL standard directement sur le modèle de base) et il contourne le problème d'exploration à froid en amorçant le replay buffer avec des démonstrations. Des baselines on-policy (PPO, GRPO) et une baseline off-policy sans le schéma résidu/argmax (SAC) ont ensuite été ajoutées au même codebase pour comparaison directe (voir plus bas).</p>
 <p>La méthodologie retenue est le <strong>retrait progressif de composants</strong> : partir de la recette ExpoFT complète (warmup SFT + démonstrations + RL off-policy) et valider rigoureusement chaque étage avant de retirer des composants (taille du dataset, warmup SFT lui-même) pour identifier la supervision minimale réellement nécessaire.</p>
-<h3 id="pourquoi-openvla-05-plutot-que-des-vla-a-flow-matching">Pourquoi OpenVLA / π₀.₅ plutôt que des VLA à flow-matching<a class="headerlink" href="#pourquoi-openvla-05-plutot-que-des-vla-a-flow-matching" title="Permanent link">&para;</a></h3>
-<p>OpenVLA(-OFT) et π₀.₅ utilisent des <strong>tokens d'action discrets</strong>, qui produisent des log-probabilités valides et permettent donc un policy-gradient RL principiel (GRPO/PPO en Phase 1). Les modèles à flow-matching (π₀, MoMaLM) ne peuvent pas fournir de vraisemblances exploitables, ce qui polluerait le design expérimental de toute approche reposant sur des gradients de politique exacts. C'est aussi pourquoi la formulation en politique résiduelle d'ExpoFT — qui contourne entièrement le besoin de log-probabilités du VLA en agissant comme une correction additive apprise via une Q-function — est un moyen attractif de continuer à utiliser un VLA figé et compétent sans être bloqué par cette limitation.</p>
 <h3 id="environnement-de-travail">Environnement de travail<a class="headerlink" href="#environnement-de-travail" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Cluster :</strong> Mila HPC (SLURM), GPU A100/A100L (40GB/80GB)</li>
@@ -1875,7 +1851,7 @@ title: Travail réalisé</p>
 <p><strong>Phase 1 — RL on-policy (Semaines 1–7) :</strong> Fine-tuning RL direct via GRPO/PPO sur OpenVLA-OFT et π₀ dans les environnements LIBERO et RoboCasa. Cette phase a établi l'hypothèse du goulot d'étranglement d'exploration et les limites des approches on-policy sans warmup SFT.</p>
 <p><strong>Phase 2 — Politique résiduelle ExpoFT (Semaine 8–présent) :</strong> Reproduction et adaptation de l'<a href="https://pd-perry.github.io/expo-ft/">architecture ExpoFT</a> dans un codebase dédié, piloté entièrement par la simulation ManiSkill (<code>expo-ft</code>), remplaçant le pipeline de données original d'ExpoFT (robot réel, DROID) tout en gardant initialement l'algorithme lui-même intact, avant de s'en écarter de façon ciblée une fois l'instabilité diagnostiquée (voir plus bas). Le VLA (π₀.₅) est gardé <strong>figé</strong>, et une petite politique de correction résiduelle est entraînée par-dessus via une Q-function, en combinant RL off-policy et démonstrations par motion planning. Ce design évite deux limitations de la Phase 1 : il ne nécessite pas de log-probabilités d'action valides (que les VLA à flow-matching comme π₀/π₀.₅ ne peuvent pas fournir, excluant le policy-gradient RL standard directement sur le modèle de base) et il contourne le problème d'exploration à froid en amorçant le replay buffer avec des démonstrations. Des baselines on-policy (PPO, GRPO) et une baseline off-policy sans le schéma résidu/argmax (SAC) ont ensuite été ajoutées au même codebase pour comparaison directe (voir plus bas).</p>
 <p>La méthodologie retenue est le <strong>retrait progressif de composants</strong> : partir de la recette ExpoFT complète (warmup SFT + démonstrations + RL off-policy) et valider rigoureusement chaque étage avant de retirer des composants (taille du dataset, warmup SFT lui-même) pour identifier la supervision minimale réellement nécessaire.</p>
-<h3 id="pourquoi-openvla-05-plutot-que-des-vla-a-flow-matching_1">Pourquoi OpenVLA / π₀.₅ plutôt que des VLA à flow-matching<a class="headerlink" href="#pourquoi-openvla-05-plutot-que-des-vla-a-flow-matching_1" title="Permanent link">&para;</a></h3>
+<h3 id="pourquoi-openvla-05-plutot-que-des-vla-a-flow-matching">Pourquoi OpenVLA / π₀.₅ plutôt que des VLA à flow-matching<a class="headerlink" href="#pourquoi-openvla-05-plutot-que-des-vla-a-flow-matching" title="Permanent link">&para;</a></h3>
 <p>OpenVLA(-OFT) et π₀.₅ utilisent des <strong>tokens d'action discrets</strong>, qui produisent des log-probabilités valides et permettent donc un policy-gradient RL principiel (GRPO/PPO en Phase 1). Les modèles à flow-matching (π₀, MoMaLM) ne peuvent pas fournir de vraisemblances exploitables, ce qui polluerait le design expérimental de toute approche reposant sur des gradients de politique exacts. C'est aussi pourquoi la formulation en politique résiduelle d'ExpoFT — qui contourne entièrement le besoin de log-probabilités du VLA en agissant comme une correction additive apprise via une Q-function — est un moyen attractif de continuer à utiliser un VLA figé et compétent sans être bloqué par cette limitation.</p>
 <h3 id="environnement-de-travail_1">Environnement de travail<a class="headerlink" href="#environnement-de-travail_1" title="Permanent link">&para;</a></h3>
 <ul>
