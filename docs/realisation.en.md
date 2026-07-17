@@ -349,21 +349,21 @@ The next phase of work took the leads above and systematically tested them one a
         <td>
             <img src="{{ config.site_url }}/images/critic-architecture-comparison-target-q-max.png" alt="Curve">
 
-            *target_q_max — original vs. categorical critic architecture*
+            *target_q_max — original (yellow) vs. categorical (brown) critic architecture*
         </td>
     </tr>
     <tr>
         <td>
             <img src="{{ config.site_url }}/images/critic-architecture-comparison-critic-loss.png" alt="Curve">
 
-            *critic_loss — original vs. categorical critic architecture*
+            *critic_loss — original (yellow) vs. categorical (brown) critic architecture*
         </td>
     </tr>
     <tr>
         <td>
             <img src="{{ config.site_url }}/images/critic-architecture-comparison-success-rate.png" alt="Curve">
 
-            *eval/success_rate — original vs. categorical critic architecture*
+            *eval/success_rate — original (yellow) vs. categorical (brown) critic architecture*
         </td>
     </tr>
 </table>

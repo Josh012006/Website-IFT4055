@@ -860,21 +860,21 @@ La phase de travail suivante a repris les pistes ci-dessus et les a testées sys
         <td>
             <img src="{{ config.site_url }}/images/critic-architecture-comparison-target-q-max.png" alt="Curve">
 
-            *target_q_max — architecture de critic originale vs. catégorielle*
+            *target_q_max — architecture de critic originale (en jaune) vs. catégorielle (en marron)*
         </td>
     </tr>
     <tr>
         <td>
             <img src="{{ config.site_url }}/images/critic-architecture-comparison-critic-loss.png" alt="Curve">
 
-            *critic_loss — architecture de critic originale vs. catégorielle*
+            *critic_loss — architecture de critic originale (en jaune) vs. catégorielle (en marron)*
         </td>
     </tr>
     <tr>
         <td>
             <img src="{{ config.site_url }}/images/critic-architecture-comparison-success-rate.png" alt="Curve">
 
-            *eval/success_rate — architecture de critic originale vs. catégorielle*
+            *eval/success_rate — architecture de critic originale (en jaune) vs. catégorielle (en marron)*
         </td>
     </tr>
 </table>
