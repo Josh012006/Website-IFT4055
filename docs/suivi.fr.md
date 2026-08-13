@@ -382,3 +382,128 @@ title: Suivi du projet
     - Deux corrections indépendantes et confirmées (l'architecture du critic et le bug de synchronisation des récompenses) ont chacune amélioré de manière mesurable le comportement du critic sans améliorer les performances réelles de la policy — résultat utile pour réduire l'espace des causes possibles, mais qui rappelle que « un critic plus sain » et « une meilleure policy » ne sont pas nécessairement équivalents
     - Le premier test de régularisation KL était biaisé par la présence résiduelle d'un terme de bonus d'exploration qui aurait dû être désactivé pour un test isolé — l'erreur a été détectée avant de tirer des conclusions, mais souligne l'importance de vérifier toutes les interactions possibles lors de l'ajout d'une nouvelle fonctionnalité
     - Les baselines PPO/GRPO ne réalisaient pas ce qui était supposé depuis leur intégration (continuer depuis la policy pré-entraînée) — une différence importante et difficile à détecter qui n'a été révélée qu'après une analyse critique de leurs résultats plutôt qu'une simple interprétation directe des performances obtenues
+
+
+## Semaine 12 (20–24 juillet 2026)
+
+### Objectifs de la période
+- Terminer de tester isolément les derniers mécanismes proposés par l'article (suivi de la régularisation KL, une modification architecturale pour rendre la politique consciente de sortir de son domaine familier) avant d'envisager des alternatives issues d'autres travaux
+- Déterminer si une combinaison des mécanismes testés change réellement les résultats, pas seulement des tests isolés à une seule variable
+- Obtenir un premier aperçu de la reproductibilité réelle d'un résultat donné, vu à quel point l'entraînement semble bruité jusqu'ici
+
+### Travail réalisé
+
+!!! abstract "Progrès"
+    - [x] Complété le test isolé de suivi sur la régularisation KL (le test précédent avait un réglage résiduel confondant) — seul, il ne reproduit pas le résultat encourageant observé dans le run confondu, ce qui semble a posteriori être un artefact propre à ce run précis plutôt qu'un vrai effet du mécanisme
+    - [x] Implémenté le mécanisme de sélection découplée (séparer quelle action un critic propose de quel critic sert à la juger, adapté à l'ensemble de critics de ce projet) — le mécanisme isolé le plus performant testé jusqu'ici, sans toutefois dépasser clairement la politique pré-entraînée gelée
+    - [x] Testé des combinaisons des mécanismes ci-dessus plutôt que des changements à une seule variable — chaque combinaison testée a performé moins bien que sa meilleure composante individuelle, suggérant que ces mécanismes interfèrent entre eux plutôt que de s'additionner
+    - [x] Testé un budget de correction d'action nettement plus grand pour la politique résiduelle entraînable, sur l'hypothèse que le budget par défaut serait trop petit pour corriger significativement une politique de base plus faible — ça a rendu les résultats uniformément pires dans toutes les combinaisons testées, et a été déprioritisé au profit d'un budget *plus petit*, encore non testé
+    - [x] Relancé la meilleure configuration isolée trouvée jusqu'ici une seconde fois, dans des conditions par ailleurs identiques, spécifiquement pour vérifier la reproductibilité — la performance finale de la reprise différait de l'originale d'environ un tiers en termes relatifs, ce qui veut dire que le résultat d'un seul run dans toute cette investigation doit être lu avec une vraie incertitude
+    - [x] Confirmé qu'un entraînement sans aucun amorçage par la politique pré-entraînée maintient le taux de succès essentiellement à zéro pendant tout le run, soutenant l'hypothèse de travail que cet amorçage est nécessaire, pas seulement utile
+    - [x] Réduit le nombre standard de démonstrations utilisées de 500 à 50 pour tous les runs suivants, après avoir confirmé que ce nombre plus petit n'explique pas à lui seul la dégradation étudiée
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - Fixé la trame narrative pour la rédaction de cette investigation : pas une recherche qui se termine par un correctif unique qui règle tout, mais une élimination progressive d'hypothèses — les limites d'exploration adressées par les démonstrations, la dégradation qui persiste malgré tout, le mécanisme retracé jusqu'à un biais précis et documenté dans la sélection des actions, plusieurs corrections tirées de la littérature tentées sans qu'aucune ne s'avère robuste seule, et le constat de reproductibilité devenant lui-même un résultat à rapporter
+    - Vu qu'aucun mécanisme ni combinaison n'a encore comblé de façon fiable l'écart avec la baseline gelée, déprioriser d'autres balayages de mécanismes au profit d'un réexamen des hypothèses plus en amont (signal de récompense de la tâche, pipeline de données) avant de continuer
+
+### Difficultés rencontrées
+
+!!! warning "Difficultés"
+    - La vérification de reproductibilité a été un rappel à l'ordre : une différence relative d'environ 35% entre deux runs de configuration identique veut dire que la plupart des comparaisons faites jusqu'ici, y compris certaines déjà traitées comme significatives, portent plus d'incertitude qu'un seul run ne peut trancher
+    - Combiner des mécanismes qui aidaient chacun un peu isolément a systématiquement nui plutôt qu'aidé, ce qui n'était pas le résultat attendu et n'est pas encore pleinement compris
+
+
+## Semaine 13 (27–31 juillet 2026)
+
+### Objectifs de la période
+- Réexaminer les hypothèses en amont du critic et du mécanisme de sélection d'action, suite à la décision de la semaine dernière — en particulier le signal de récompense lui-même et l'infrastructure d'évaluation utilisée pour juger les résultats
+- Obtenir un premier ensemble de résultats sous une configuration corrigée, assez rigoureux pour être réellement fiable
+
+### Travail réalisé
+
+!!! abstract "Progrès"
+    - [x] Un collaborateur a signalé que les estimations de valeur loggées semblaient invraisemblablement grandes pour ce qui aurait dû être un signal de succès borné et sparse — ça a motivé une vérification directe du signal de récompense réellement renvoyé par l'environnement, plutôt que ce que la configuration de la tâche disait qu'il devrait renvoyer
+    - [x] Trouvé que le mode de récompense de l'environnement n'était jamais explicitement fixé à la création de l'environnement, retombant silencieusement sur une récompense continue et façonnée plutôt que la récompense sparse et binaire voulue — confirmé directement en rejouant une vraie démonstration et en vérifiant combien de valeurs de récompense enregistrées étaient exactement zéro (aucune, sur plus d'une centaine de valeurs distinctes, alors qu'un signal sparse fonctionnel devrait être zéro presque partout)
+    - [x] Trouvé un second problème, indépendant, spécifique à la nouvelle architecture de critic : sa normalisation de récompense divisait par une estimation courante de l'échelle de la récompense elle-même, laquelle rétrécissait à mesure que le succès devenait plus rare pendant l'entraînement, gonflant la récompense effective pour les rares succès restants — une boucle auto-renforçante superposée au mauvais mode de récompense, bien que confirmée comme structurellement absente de l'architecture de critic originale, non modifiée
+    - [x] Corrigé les deux : fixé explicitement le mode de récompense sparse pour chaque tâche, et ajouté une bascule pour contourner la normalisation affectée sur la nouvelle architecture de critic en mode sparse
+    - [x] En reconstruisant l'infrastructure d'évaluation autour du correctif, trouvé que plusieurs correctifs livrés plus tôt n'avaient en fait jamais été intégrés au projet, laissant d'anciens bugs ressurgir silencieusement — instauré la pratique systématique de vérifier l'historique réel des commits avant de supposer qu'un correctif est actif, plutôt que de faire confiance qu'il a été appliqué
+    - [x] Reconstruit l'infrastructure de courbe d'évaluation pour qu'elle s'exécute immédiatement après qu'un processus d'entraînement se soit complètement terminé (plutôt que jamais, ou comme étape manuelle séparée), spécifiquement pour libérer la mémoire GPU qui entrerait sinon en conflit avec l'évaluation sur la même machine
+    - [x] Obtenu les premiers résultats d'évaluation rigoureuse et tenue à l'écart sous la récompense sparse corrigée : le biais de sélection d'action identifié les semaines précédentes s'est mesurablement amélioré sans complètement disparaître, cohérent avec un facteur réel mais partiel plutôt que l'unique explication ; la nouvelle architecture de critic s'est effondrée de façon catastrophique spécifiquement sous la récompense corrigée (retracé à ses bornes de valeur fixes ne correspondant plus à la plage bien plus étroite de la récompense sparse) ; l'architecture de critic originale, non modifiée, était bruitée mais ne s'est pas effondrée
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - Traiter ceci comme une mise à jour significative des constats des semaines précédentes, pas un remplacement : le bug de mode de récompense ne change pas les preuves du biais de sélection d'action lui-même, mais veut dire que toute conclusion sur *à quel point* ce biais comptait sous l'ancienne récompense incorrecte doit être révisée
+    - Prioriser le recalibrage des bornes de valeur de la nouvelle architecture de critic pour le régime de récompense sparse comme prochain test immédiat, vu que c'est l'explication la plus directe, à une seule variable, de son effondrement
+
+### Difficultés rencontrées
+
+!!! warning "Difficultés"
+    - Deux bugs réels et indépendants (le défaut silencieux du mode de récompense de l'environnement, et la normalisation de récompense du nouveau critic) avaient tranquillement façonné chaque résultat discuté depuis que le projet a dépassé sa phase initiale limitée par l'exploration, sans jamais être suspectés jusqu'à ce qu'un collaborateur questionne un chiffre précis plutôt qu'un comportement précis
+    - Confirmer que certains correctifs déjà livrés n'avaient jamais été intégrés a voulu dire revérifier lesquels des constats précédents avaient même été testés contre le code qu'on supposait qu'ils testaient
+
+
+## Semaine 14 (3–7 août 2026)
+
+### Objectifs de la période
+- Recalibrer les bornes de valeur de la nouvelle architecture de critic pour le régime de récompense sparse et la retester dans des conditions par ailleurs identiques
+- Augmenter le nombre de mises à jour de gradient effectuées par transition collectée, vu que les résultats précédents suggéraient une sensibilité à ce paramètre, pas encore poussé aussi loin que le matériel le permettrait
+- Rendre fiable la reprise d'un run depuis un checkpoint après une préemption, vu que le cluster préempte les jobs de longue durée et que chaque run doit pouvoir survivre à ça
+
+### Travail réalisé
+
+!!! abstract "Progrès"
+    - [x] Augmenter le ratio de mises à jour par donnée a produit les meilleurs résultats vus dans tout le projet jusqu'ici sous la récompense sparse corrigée — taux de succès grimpant de façon soutenue bien au-delà de la baseline gelée sur la plus facile des trois tâches, les deux tâches plus difficiles s'améliorant sans encore l'égaler
+    - [x] Trouvé que reprendre un run depuis un checkpoint à ce ratio de mise à jour plus élevé plantait de façon fiable avec une erreur de mémoire insuffisante, alors que démarrer la même configuration à neuf ne le faisait jamais — entamé une investigation systématique pour comprendre pourquoi la reprise spécifiquement était le déclencheur
+    - [x] Retracé le plantage à un vrai bug, en amont, dans la gestion par le cadriciel de calcul sous-jacent d'une construction de boucle spécifique utilisée pour effectuer efficacement de nombreuses mises à jour de gradient séquentielles, confirmé contre un rapport de bug public correspondant à la même version du cadriciel et au même symptôme ; restructuré cette partie du code d'entraînement pour éviter entièrement le motif concerné
+    - [x] Cette restructuration a introduit son propre problème de mémoire, distinct : sans indication explicite que les résultats intermédiaires pouvaient réutiliser la mémoire plutôt que d'allouer de nouvelles copies, chacune des nombreuses mises à jour séquentielles allouait de la mémoire neuve au lieu de la réutiliser — ajouté l'indication manquante, ce qui a réglé le problème, mais ça a aussi fait émerger un bug de correction plus subtil (un passage jetable et mis au rebut dans ce même chemin de code pouvait invalider de la mémoire dont l'état d'entraînement réel et en cours avait encore besoin) qui a demandé son propre correctif
+    - [x] Trouvé et corrigé plusieurs autres contributeurs, plus petits, à la même classe de problème : un chemin de restauration de checkpoint plus lent et, il s'est avéré, aussi plus gourmand en mémoire que nécessaire ; une deuxième version, compilée séparément, d'une partie du calcul d'entraînement créée la première fois qu'un événement rare (un épisode réussi) survenait profondément dans un run repris, faisant grimper la mémoire de façon imprévisible ; un processus de sauvegarde de checkpoint en arrière-plan dont la mémoire n'était pas confirmée libérée avant que l'entraînement ne continue
+    - [x] Trouvé que la reprise avait un second problème, sans rapport : les transitions collectées pendant l'entraînement n'étaient en fait jamais sauvegardées sur disque, donc chaque reprise redémarrait silencieusement le buffer de replay en ligne à vide, dégradant tranquillement la qualité d'entraînement pendant un long moment après chaque reprise même une fois qu'elle ne plantait plus — activé la sauvegarde de ces transitions et la reconstruction du buffer (et d'une métrique d'entraînement glissante associée) à partir d'elles à la reprise, plutôt que de perdre cet historique
+    - [x] Après tout ce qui précède, encore trouvé un cas où un run à neuf (pas une reprise) plantait avec la même classe d'erreur, qui s'est avéré causé par un changement expérimental séparé et concurrent (un nombre bien plus grand de candidats d'action évalués à la fois) plutôt que par un des correctifs mémoire ci-dessus — un rappel utile de changer une seule chose à la fois quand plusieurs personnes ajustent activement la même configuration
+    - [x] Trouvé qu'une des configurations des deux tâches plus difficiles avait encore un budget de correction d'action très petit, résidu d'une ronde de tests antérieure et depuis dépassée, jamais mis à jour quand le même réglage avait été corrigé sur la tâche la plus facile — probablement une part significative du retard des résultats de cette tâche
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - Traiter la fiabilité de la reprise de checkpoint comme une exigence de premier ordre à partir de maintenant, pas un cas limite, vu la fréquence réelle des préemptions de runs longs sur le cluster
+    - Reporter une investigation plus profonde sur la possibilité d'améliorer significativement l'utilisation du GPU (elle reste bien en dessous de la pleine utilisation tout au long de l'entraînement) après que la ronde actuelle de résultats par tâche soit en main, vu que le levier le plus prometteur disponible (faire tourner plusieurs environnements à la fois) s'avère architecturalement indisponible sous le moteur de simulation physique dont dépendent les démonstrations de ce projet
+
+### Difficultés rencontrées
+
+!!! warning "Difficultés"
+    - Ça a été la période de débogage la plus longue du projet jusqu'ici : plusieurs problèmes de mémoire réellement distincts se chevauchaient dans leur présentation (la même erreur de mémoire insuffisante, à des points similaires de l'entraînement), et résoudre l'un révélait systématiquement le suivant plutôt que le problème n'ait une seule cause racine
+    - Plus d'une fois, un correctif qui réglait le plantage précis poursuivi s'est avéré ne pas être le correctif pour une occurrence *ultérieure* de ce qui semblait être le même problème — un rappel de continuer à revérifier l'erreur réelle plutôt que de supposer qu'un correctif précédent couvre encore une nouvelle défaillance
+
+
+## Semaine 15 (10–14 août 2026)
+
+### Objectifs de la période
+- Relancer les deux tâches plus difficiles avec le budget de correction d'action corrigé trouvé la semaine dernière
+- Répondre à la rétroaction d'un collaborateur sur la méthodologie d'évaluation utilisée jusqu'ici : une fenêtre glissante sur des épisodes d'entraînement en ligne stochastiques est un proxy raisonnable mais ne remplace pas une vraie évaluation déterministe, tenue à l'écart, à intervalles réguliers
+- Commencer à consolider tout ce qui a été trouvé jusqu'ici dans un rapport écrit et une présentation
+
+### Travail réalisé
+
+!!! abstract "Progrès"
+    - [x] Implémenté un protocole d'évaluation déterministe suivant la suggestion du collaborateur : à intervalles fixes et réguliers (y compris avant tout entraînement), évaluer sur un ensemble fixe et réutilisé d'épisodes avec l'exploration de la composante entraînable désactivée, loggé séparément du proxy à fenêtre glissante existant pour que les deux ne soient jamais confondus
+    - [x] Réalisé en cours de route que cette toute première évaluation (avant tout entraînement) doit mesurer la politique pré-entraînée gelée seule, sans aucune contribution de la composante entraînable fraîchement et aléatoirement initialisée — sinon ce premier point de données ne serait pas vraiment une baseline propre, faussant chaque comparaison ultérieure ; corrigé ça à la fois pour la nouvelle évaluation et pour le proxy à fenêtre glissante préexistant, qui avait le même problème
+    - [x] Consolidé ce qui était deux ensembles séparés et redondants de rollouts initiaux (un pour chacun des deux mécanismes d'évaluation ci-dessus) en une seule passe partagée, vu que les deux mesuraient exactement la même chose à ce point précis une fois le correctif précédent appliqué
+    - [x] Réparé un script de balayage d'évaluation séparé qui, il s'est avéré, était silencieusement non fonctionnel depuis un moment — il acceptait correctement ses arguments en ligne de commande mais n'exécutait en fait jamais aucune des évaluations qu'il était censé orchestrer
+    - [x] Investigué pourquoi l'utilisation du GPU reste faible tout au long de l'entraînement et retracé ça au fait que la boucle d'entraînement est fondamentalement séquentielle : l'accélérateur reste inactif pendant que chaque pas de simulation est calculé, un à la fois, sur le processeur généraliste de la machine plutôt que sur l'accélérateur lui-même — confirmé que faire tourner plusieurs environnements simulés à la fois, ce qui serait le correctif le plus direct, n'est pas disponible sous le moteur de simulation physique spécifique dont dépendent les démonstrations et le pré-entraînement de ce projet, et que passer au moteur qui le supporte porte un risque documenté de physique subtilement différente de celle avec laquelle les démonstrations ont été générées
+    - [x] Retracé pourquoi ce moteur physique précis avait été requis en premier lieu jusqu'à une seule décision antérieure : changer la représentation de contrôle du robot pour correspondre à la convention de pré-entraînement propre de la politique pré-entraînée, ce qui a par ailleurs aussi requis ce moteur pour une raison distincte et accessoire (convertir les démonstrations vers la nouvelle représentation)
+    - [x] Confirmé que la source de données réelles de la politique pré-entraînée utilisait une fréquence de contrôle différente de celle de la simulation de ce projet, un écart pas encore corrigé vu que le coût de le corriger maintenant impliquerait de régénérer les démonstrations et de reprendre le fine-tuning supervisé depuis zéro — documenté comme une limite connue et confirmée plutôt qu'agi immédiatement
+    - [x] Audité chaque champ des fichiers de configuration de tâche du projet contre le code d'entraînement réel pour vérifier les réglages résiduels, plus jamais lus — n'en a trouvé aucun, ce qui veut dire que la surface de paramètres est restée propre tout au long de ces changements
+    - [x] Finir la rédaction du rapport écrit et d'une présentation résumant tout le projet
+
+### Décisions et ajustements
+
+!!! info "Décisions"
+    - Documenter le mismatch de fréquence de contrôle et le compromis moteur physique/parallélisation comme limites et travaux futurs plutôt que de corriger l'un ou l'autre maintenant, vu que les deux demanderaient de refaire le pré-entraînement supervisé depuis zéro et que le projet entre dans sa phase de rédaction
+    - Traiter le protocole d'évaluation déterministe comme la norme à partir de maintenant pour toute affirmation sur le fait que l'entraînement a amélioré la performance par rapport à la baseline gelée, le proxy à fenêtre glissante étant gardé seulement comme signal à moindre coût pendant l'entraînement
+
+### Difficultés rencontrées
+
+!!! warning "Difficultés"
+    - Écarter le correctif le plus direct pour l'utilisation du GPU (faire tourner des environnements en parallèle) a demandé une vraie investigation pour confirmer que c'était correctement écarté, plutôt que supposé — la contrainte sous-jacente remontait à travers plusieurs couches jusqu'à une seule décision bien antérieure, prise pour une raison sans rapport

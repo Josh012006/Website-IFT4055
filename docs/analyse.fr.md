@@ -95,13 +95,7 @@ Voici quelques environnements de simulation utilisés pour l’entraînement et 
 Pour mieux aborder ce projet, voici une liste des articles scientifiques que j'ai consulté : 
 
 - ["OpenVLA: An Open-Source Vision-Language-Action Model"](https://arxiv.org/abs/2406.09246) : Lecture terminée
-- ["LoRA: Low-Rank Adaptation of Large Language Models"](https://arxiv.org/abs/2106.09685) : En cours de lecture (10%)
-- ["Training language models to follow instructions with human feedback"](https://arxiv.org/abs/2203.02155) : En cours de lecture (10%)
-- ["Fine-Tuning Vision-Language-Action Models: Optimizing Speed and Success"](https://arxiv.org/abs/2502.19645) : En cours de lecture (10%)
-- ["LIBERO-Plus: In-depth Robustness Analysis of Vision-Language-Action Models"](https://arxiv.org/abs/2510.13626) : En cours de lecture (10%)
+- ["LIBERO-Plus: In-depth Robustness Analysis of Vision-Language-Action Models"](https://arxiv.org/abs/2510.13626) : Passé en revue
 - ["VLAs Are Confined yet Capable of Generalizing to Novel Tasks"](https://openreview.net/forum?id=jtrhwfgseW) : Lecture terminée
-- ["Curiosity-driven Exploration by Self-supervised Prediction"](https://arxiv.org/abs/1705.05363) : Lecture prévue
-- ["Exploration by Random Network Distillation"](https://arxiv.org/abs/1810.12894) : Lecture prévue
 - ["EXPO-FT: Sample-Efficient Reinforcement Learning Finetuning for Vision-Language-Action Models"](https://arxiv.org/abs/2605.25477) : Lecture terminée
-- ["Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor"](https://arxiv.org/abs/1801.01290) : En cours de lecture (10%)
-- ["XQCfD: Accelerating Fast Actor-Critic Algorithms with Prior Data and Prior Policies"](https://arxiv.org/abs/2605.10734) : En cours de lecture (80%)
+- ["XQCfD: Accelerating Fast Actor-Critic Algorithms with Prior Data and Prior Policies"](https://arxiv.org/abs/2605.10734) : Lecture terminée

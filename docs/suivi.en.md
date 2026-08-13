@@ -380,3 +380,128 @@ title: Project Tracking
     - Two independent, confirmed fixes (the critic architecture, the reward-timing bug) each produced a real, measurable improvement to the critic's behavior without improving the actual policy performance — a useful result for narrowing down the cause, but a reminder that "the critic looks healthier" and "the policy is getting better" are not the same thing
     - The first test of KL regularization was confounded by a leftover exploration-bonus term that should have been disabled for an isolated test — caught before drawing any conclusion from it, but a reminder to double check every knob a new feature interacts with before reporting results
     - The PPO/GRPO baselines were not doing what they were assumed to be doing (continuing from the pretrained policy) for the entire time they had been in use — a significant, non-obvious gap that only surfaced once their results were looked at critically rather than taken at face value
+
+
+## Week 12 (July 20–24, 2026)
+
+### Goals for the period
+- Finish testing the paper's remaining proposed mechanisms in isolation (KL regularization follow-up, an architectural change for out-of-distribution awareness) before considering alternatives from other lines of research
+- Determine whether any combination of the tested mechanisms meaningfully changes the outcome, not just isolated single-variable tests
+- Get a first read on how reproducible any given result actually is, given how noisy training has looked so far
+
+### Work completed
+
+!!! abstract "Progress"
+    - [x] Completed the isolated KL-regularization follow-up test (the earlier run had a confounding leftover setting) — on its own, it did not reproduce the encouraging result seen in the confounded run, which in hindsight looks like a run-specific artifact rather than a genuine effect of the mechanism
+    - [x] Implemented the decoupled-selection mechanism (separating which action a critic proposes from which critic is used to judge it, adapted to this project's ensemble-based critic) — this was the single best-performing mechanism tested on its own so far, though still short of clearly outperforming the frozen pretrained policy
+    - [x] Tested combinations of the mechanisms above rather than only single-variable changes — every combination tested performed worse than its best individual component, suggesting these mechanisms interfere with each other rather than compounding
+    - [x] Tested a substantially larger action-correction budget for the trainable residual policy, on the hypothesis that the default budget might be too small to meaningfully correct a weaker base policy — this made results uniformly worse across every combination tried, and was deprioritized in favor of testing a *smaller* budget instead, which remains untested
+    - [x] Ran the best-performing single configuration found so far a second time under otherwise identical conditions, specifically to check reproducibility — the rerun's final performance differed from the original by roughly a third in relative terms, meaning any single run's result in this whole investigation should be read with real uncertainty attached
+    - [x] Confirmed that training without any pretrained-policy warm start at all keeps the success rate at essentially zero for the entire run, supporting the working assumption that the warm start is necessary rather than merely helpful
+    - [x] Reduced the standard number of demonstrations used from 500 to 50 for all subsequent runs, after confirming this smaller number does not by itself explain the degradation being investigated
+
+### Decisions and adjustments
+
+!!! info "Decisions"
+    - Settling on a narrative for how this investigation gets written up: not a search that ends with one fix that solves everything, but a progressive elimination of hypotheses — exploration limitations addressed by demonstrations, degradation persisting regardless, the mechanism traced to a specific, evidenced bias in how actions get selected, several literature-backed corrections attempted with none proving robust on their own, and the reproducibility finding itself becoming a result worth reporting
+    - Given no single mechanism or combination has yet reliably closed the gap to the frozen baseline, deprioritizing further mechanism sweeps in favor of re-examining assumptions further upstream (task reward signal, data pipeline) before continuing
+
+### Difficulties encountered
+
+!!! warning "Difficulties"
+    - The reproducibility check was sobering: a ~35% relative difference between two runs of the identical configuration means most of the comparisons made so far, including some already treated as meaningful, carry more uncertainty than a single run can settle on its own
+    - Combining mechanisms that each helped somewhat in isolation consistently hurt rather than helped, which was not the expected outcome and is not yet fully understood
+
+
+## Week 13 (July 27–31, 2026)
+
+### Goals for the period
+- Re-examine assumptions upstream of the critic and action-selection mechanism, per last week's decision — specifically the reward signal itself and the evaluation infrastructure used to judge results
+- Get a first set of results under a corrected setup, rigorous enough to actually trust
+
+### Work completed
+
+!!! abstract "Progress"
+    - [x] A collaborator flagged that the logged value estimates looked implausibly large for what should have been a bounded, sparse success signal — this prompted a direct check of what reward signal the environment was actually returning, rather than what the task configuration said it should be returning
+    - [x] Found that the environment's reward mode was never explicitly set at environment-creation time, silently falling back to a continuous, shaped reward instead of the intended sparse, binary one — confirmed directly by replaying a real demonstration and checking how many recorded reward values were exactly zero (none were, out of over a hundred distinct values, where a working sparse signal should be zero almost everywhere)
+    - [x] Found a second, independent issue in the new critic architecture specifically: its reward normalization divided by a running estimate of the reward's own scale, which shrank as success became rarer during training, inflating the effective reward for the few successes that remained — a self-reinforcing loop layered on top of the wrong reward mode, though confirmed to be structurally absent from the original, unmodified critic architecture
+    - [x] Fixed both: explicitly set the sparse reward mode for every task, and added a toggle to bypass the affected normalization for the new critic architecture when using a sparse reward
+    - [x] While rebuilding evaluation infrastructure around the fix, found that several fixes delivered earlier had never actually been committed to the project, letting old bugs silently resurface — added a standing practice of checking the actual commit history before assuming a fix is live, rather than trusting that it was applied
+    - [x] Rebuilt the evaluation-curve infrastructure so it runs immediately after a training process has fully exited (rather than never, or as a separate manual step), specifically to free GPU memory that would otherwise conflict with running evaluation on the same machine
+    - [x] Got the first rigorous, held-out evaluation results under the corrected sparse reward: the action-selection bias identified in earlier weeks measurably improved but did not fully disappear, consistent with it being a real but partial contributor rather than the sole explanation; the new critic architecture collapsed catastrophically under the corrected reward specifically (traced to its fixed value bounds no longer matching sparse reward's much narrower actual range); the original, unmodified critic architecture was noisy but did not collapse
+
+### Decisions and adjustments
+
+!!! info "Decisions"
+    - Treating this as a meaningful update to, not a replacement of, the findings from previous weeks: the reward-mode bug does not change the evidence for the action-selection bias itself, but does mean any conclusion drawn about *how much* that bias mattered under the old, incorrect reward needs to be revisited
+    - Prioritizing recalibrating the new critic architecture's value bounds for the sparse-reward regime as the immediate next test, given it is the most direct, single-variable explanation for its collapse
+
+### Difficulties encountered
+
+!!! warning "Difficulties"
+    - Two real, independent bugs (the environment's silent reward-mode default, and the new critic's reward normalization) had been quietly shaping every result discussed since the project moved past its early exploration-limited phase, without ever being suspected until a collaborator questioned a specific number rather than a specific behavior
+    - Confirming that some already-delivered fixes had never been committed meant re-verifying which of several earlier findings were even tested against the code they were assumed to be tested against
+
+
+## Week 14 (August 3–7, 2026)
+
+### Goals for the period
+- Recalibrate the new critic architecture's value bounds for the sparse-reward regime and re-test it under otherwise identical conditions
+- Push the number of gradient updates performed per collected transition higher, since earlier results suggested performance was sensitive to this and had not yet been pushed as far as hardware would allow
+- Get resuming from a checkpoint after a preemption working reliably, since the cluster preempts long-running jobs and every run needs to survive that
+
+### Work completed
+
+!!! abstract "Progress"
+    - [x] Pushing the update-to-data ratio higher produced the best results seen in the whole project so far under the corrected sparse reward — success rate climbing steadily well past the frozen baseline on the easiest of the three tasks, with the two harder tasks improving but not yet matching it
+    - [x] Found that resuming a run from a checkpoint at this higher update ratio reliably crashed with an out-of-memory error, while starting the same configuration fresh never did — began a systematic investigation into why resuming specifically was the trigger
+    - [x] Traced the crash to a real, upstream bug in the underlying ML framework's handling of a specific looping construct used to perform many sequential gradient updates efficiently, confirmed against a public bug report matching the same framework version and the same symptom; restructured that part of the training code to avoid the affected pattern entirely
+    - [x] That restructuring introduced its own, separate memory issue: without an explicit hint that intermediate results could reuse memory rather than allocating fresh copies, each of the many sequential updates was allocating new memory instead of reusing it — added the missing hint, which resolved it, but doing so also surfaced a subtler correctness bug (a discarded, throwaway pass into that same code path could invalidate memory the real, ongoing training state still needed) that required its own fix
+    - [x] Found and fixed several further, smaller contributors to the same class of problem: a checkpoint-restore path that was slower and, it turned out, also more memory-hungry than necessary; a second, separately-compiled version of part of the training computation being created the first time a rare event (a successful episode) occurred deep into a resumed run, unpredictably spiking memory use; a background checkpoint-saving process whose memory was not confirmed released before training continued
+    - [x] Found that resuming had a second, unrelated problem: transitions collected during training were never actually being saved to disk, so every resume silently restarted the online replay buffer from empty, quietly degrading training quality for a long stretch after every resume even once it no longer crashed — enabled saving those transitions and reconstructing the buffer (and a related rolling training metric) from them on resume instead of discarding that history
+    - [x] After all of the above, still found a case where a fresh run (not a resume) crashed with the same class of error, which turned out to be caused by a separate, concurrent experiment change (a much larger number of action candidates being evaluated at once) rather than any of the memory fixes above — a useful reminder to change one thing at a time when several people are actively adjusting the same configuration
+    - [x] Found that one of the two harder tasks' configurations still had a very small action-correction budget left over from an earlier, since-superseded round of testing, never updated when the same setting was corrected on the easiest task — likely a meaningful part of why that task's results had lagged
+
+### Decisions and adjustments
+
+!!! info "Decisions"
+    - Treating checkpoint-resume reliability as a first-class requirement going forward, not an edge case, given how often the cluster actually preempts long runs in practice
+    - Deferring a deeper investigation into whether GPU utilization can be meaningfully improved (it stays well under full utilization throughout training) until after the current round of task-level results is in hand, given the highest-leverage lever available (running several environments at once) turns out to be architecturally unavailable under the physics simulator backend this project's demonstrations depend on
+
+### Difficulties encountered
+
+!!! warning "Difficulties"
+    - This was the most time-consuming stretch of debugging in the project so far: several genuinely distinct memory issues overlapped in how they presented (the same out-of-memory error, at similar points in training), and resolving one repeatedly revealed the next rather than the problem being a single root cause
+    - More than once, a fix that resolved the specific crash being chased turned out not to be the fix for a *later* occurrence of what looked like the same problem — a reminder to keep re-verifying the actual error rather than assuming a previous fix still covers a new failure
+
+
+## Week 15 (August 10–14, 2026)
+
+### Goals for the period
+- Re-run the two harder tasks with the corrected action-correction budget found last week
+- Address a collaborator's feedback on the evaluation methodology used so far: a rolling window over stochastic online training episodes is a reasonable proxy but not a substitute for a proper, held-out, deterministic evaluation run at regular intervals
+- Begin consolidating everything found so far into a written report and presentation
+
+### Work completed
+
+!!! abstract "Progress"
+    - [x] Implemented a deterministic evaluation protocol per the collaborator's suggestion: at fixed, regularly spaced intervals (including before any training happens at all), evaluate on a fixed, reused set of episodes with the trainable component's exploration turned off, logged separately from the existing rolling-window proxy so the two are never confused
+    - [x] Realized partway through that the very first such evaluation (before any training) needs to measure the frozen pretrained policy alone, with no contribution at all from the freshly, randomly initialized trainable component — otherwise that first data point would not actually be a clean baseline, undermining every later comparison against it; fixed this for both the new evaluation and the pre-existing rolling-window proxy, which had the same issue
+    - [x] Consolidated what had been two separate, redundant sets of initial rollouts (one for each of the two evaluation mechanisms above) into a single shared pass, since both were measuring the exact same thing at that specific point once the previous fix was applied
+    - [x] Repaired a separate evaluation-sweep script that, it turned out, had been silently non-functional for some time — it accepted its command-line arguments correctly but never actually ran any of the evaluations it was supposed to orchestrate
+    - [x] Investigated why GPU utilization stays low throughout training and traced it to the training loop being fundamentally sequential: the accelerator sits idle while each simulation step is computed, one at a time, on the machine's general-purpose processor rather than the accelerator itself — confirmed that running multiple simulated environments at once, which would be the most direct fix, is not available under the specific physics-simulation backend this project's demonstrations and pretraining depend on, and that switching to the backend which does support it carries a documented risk of subtly different physics from what the demonstrations were generated with
+    - [x] Traced why that specific physics backend was ever required in the first place back to a single, earlier decision: switching the robot's control representation to match the pretrained policy's own pretraining convention, which happened to also require that backend for an unrelated, incidental reason (converting demonstrations into the new representation)
+    - [x] Confirmed the pretrained policy's own real-world data source used a different control frequency than this project's simulation does, a discrepancy not yet corrected given the cost of fixing it now would mean regenerating demonstrations and repeating supervised fine-tuning from scratch — documented as a known, confirmed limitation rather than acted on immediately
+    - [x] Audited every field in the project's task configuration files against the actual training code to check for leftover, no-longer-read settings — found none, meaning the parameter surface stayed clean throughout all these changes
+    - [x] Finished drafting the written report and a slide presentation summarizing the whole project
+
+### Decisions and adjustments
+
+!!! info "Decisions"
+    - Documenting the control-frequency mismatch and the physics-backend/parallelism tradeoff as limitations and future work rather than fixing either now, given both would require redoing supervised pretraining from scratch and the project is moving into its writing phase
+    - Treating the deterministic evaluation protocol as the standard going forward for any claim about whether training improved over the frozen baseline, with the rolling-window proxy kept only as a lower-cost, in-training signal
+
+### Difficulties encountered
+
+!!! warning "Difficulties"
+    - Ruling out the most direct fix for GPU utilization (running environments in parallel) took real investigation to confirm it was correctly ruled out, rather than assumed — the underlying constraint traced back through several layers to a single, much earlier decision made for an unrelated reason

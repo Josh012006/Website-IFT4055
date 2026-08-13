@@ -120,8 +120,8 @@ de l'équipe et est responsable de la conception et de l'exécution des expérie
 | Activités                          | Début   |   Fin   | Livrable                              | Statut      |
 |------------------------------------|---------|---------|---------------------------------------|-------------|
 | Définition du sujet                | 4 mai   | 15 mai  | Proposition de projet                 | ✅ Terminé  |
-| Revue de littérature préliminaire  | 4 mai   | 29 mai  | Bibliographie commentée / synthèse    | 🔄 En cours |
-| Méthodologie et plan d’analyse     | 18 mai  | 5 juin  | Plan méthodologique                   | 🔄 En cours |
-| Expérimentation ou analyse         | 1 juin  | 24 juil.| Résultats préliminaires               | ⏳ À venir  |
-| Synthèse et interprétation         | 20 juil.| 7 août  | Discussion des résultats et limites   | ⏳ À venir  |
-| Présentation + rapport final       | 7 août  | 14 août | Présentation + rapport de recherche   | ⏳ À venir  |
+| Revue de littérature préliminaire  | 4 mai   | 29 mai  | Bibliographie commentée / synthèse    | ✅ Terminé |
+| Méthodologie et plan d’analyse     | 18 mai  | 5 juin  | Plan méthodologique                   | ✅ Terminé |
+| Expérimentation ou analyse         | 1 juin  | 24 juil.| Résultats préliminaires               | ✅ Terminé  |
+| Synthèse et interprétation         | 20 juil.| 7 août  | Discussion des résultats et limites   | ✅ Terminé  |
+| Présentation + rapport final       | 7 août  | 14 août | Présentation + rapport de recherche   | ✅ Terminé  |
