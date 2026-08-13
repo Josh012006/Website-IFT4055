@@ -1343,6 +1343,11 @@
 </style>
 
 <h1 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">&para;</a></h1>
+<p>This page documents the technical work completed over the course of the project — the
+overall architecture, both experimental phases, every experiment run, the difficulties
+encountered along the way, and the key engineering decisions that shaped the final pipeline.
+For the evaluation results themselves and their interpretation, see the Evaluation &amp;
+Discussion page.</p>
 <h2 id="architecture-and-general-approach">Architecture and general approach<a class="headerlink" href="#architecture-and-general-approach" title="Permanent link">&para;</a></h2>
 <h3 id="research-objective">Research objective<a class="headerlink" href="#research-objective" title="Permanent link">&para;</a></h3>
 <p>The central question of this project is whether RL fine-tuning can enable <strong>out-of-distribution (OOD) generalization</strong> in Vision-Language-Action (VLA) models — that is, allowing a model to succeed on tasks that are maximally distant from its SFT training distribution. A secondary question is whether the primary bottleneck to RL improvement is <strong>exploration</strong> (the policy cannot discover reward signal) or <strong>optimization</strong> (the policy cannot improve given a signal).</p>
@@ -1437,7 +1442,7 @@
     </video>
 </div>
 
-<p><em>π₀.5 on maniskill PushCube-v1 after SFT warmup</em></p>
+<p><em>π₀.₅ on maniskill PushCube-v1 after SFT warmup</em></p>
 <p><img alt="SFT Checkpoint Sweep Curves StackCube-v1" src="https://josh012006.github.io/Website-IFT4055//images/curve-sft-stackcube.png" /></p>
 <div style="text-align: center">
     <video width="480" controls>
@@ -1445,7 +1450,7 @@
     </video>
 </div>
 
-<p><em>π₀.5 on maniskill StackCube-v1 after SFT warmup</em></p>
+<p><em>π₀.₅ on maniskill StackCube-v1 after SFT warmup</em></p>
 <p>And these are episode recordings of the best SFT checkpoint's behavior on StackCube-v1 and PushCube-v1, to visually accompany the sweep curves above (same style as the RoboCasa CloseDrawer video in Phase 1).</p>
 <h3 id="phase-2-task-suite-stackcube-pushcube-and-pickcube-dropped-then-reintegrated">Phase 2 — Task suite: StackCube, PushCube, and PickCube (dropped, then reintegrated)<a class="headerlink" href="#phase-2-task-suite-stackcube-pushcube-and-pickcube-dropped-then-reintegrated" title="Permanent link">&para;</a></h3>
 <p>PickCube-v1 was added as a third task to further diversify the OOD suite, but initially showed a persistent 0% success rate. This was traced to a <strong>task-design incompatibility</strong> rather than a policy or exploration problem: ManiSkill's PickCube-v1 hides the goal marker (<code>goal_site</code>) from the sensor cameras by default, and while <code>obs['extra']['goal_pos']</code> is technically accessible in the simulator, the DROID-mimicking observation schema used throughout this project (image + proprioception only, matching what a real robot would have) had no channel for it. The policy therefore had zero access to the per-episode goal position — visually or numerically — making the task appear fundamentally unsolvable.</p>
@@ -1458,7 +1463,7 @@
     </video>
 </div>
 
-<p><em>π₀.5 on maniskill PickCube-v1 after SFT warmup</em></p>
+<p><em>π₀.₅ on maniskill PickCube-v1 after SFT warmup</em></p>
 <p><strong>Active task suite going forward: StackCube-v1, PushCube-v1, and PickCube-v1.</strong></p>
 <h3 id="phase-2-rl-stage-code-review-and-infrastructure-fixes">Phase 2 — RL stage: code review and infrastructure fixes<a class="headerlink" href="#phase-2-rl-stage-code-review-and-infrastructure-fixes" title="Permanent link">&para;</a></h3>
 <p>Before trusting any RL result, the RL training stage received the same level of line-by-line review as the SFT stage. This surfaced another cluster of real bugs:</p>
@@ -1496,12 +1501,12 @@
             *utd_ratio=10*
         </td>
     </tr>
+    <tr>
         <td>
             <img src="https://josh012006.github.io/Website-IFT4055//images/config2-critic-loss-pushcube.png" alt="Curve">
 
-            *utd_ratio=2` + `offline_ratio=0.5*
+            *utd_ratio=2 + offline_ratio=0.5*
         </td>
-    <tr>
     </tr>
     <tr>
         <td>
@@ -1525,7 +1530,7 @@
         <td>
             <img src="https://josh012006.github.io/Website-IFT4055//images/config2-residual-actor-loss-pushcube.png" alt="Curve">
 
-            *utd_ratio=2` + `offline_ratio=0.5*
+            *utd_ratio=2 + offline_ratio=0.5*
         </td>
     </tr>
     <tr>
@@ -1550,7 +1555,7 @@
         <td>
             <img src="https://josh012006.github.io/Website-IFT4055//images/config2-eval-success-pushcube.png" alt="Curve">
 
-            *utd_ratio=2` + `offline_ratio=0.5*
+            *utd_ratio=2 + offline_ratio=0.5*
         </td>
     </tr>
     <tr>
@@ -1824,14 +1829,13 @@
 <hr />
 <h2 id="figures-visuals-and-demonstrations">Figures, visuals, and demonstrations<a class="headerlink" href="#figures-visuals-and-demonstrations" title="Permanent link">&para;</a></h2>
 <p>Key training curves, episode videos, and checkpoint weights for Phase 1 are embedded inline in each experiment section above. Final weights for the RoboCasa CloseDrawer PPO run are available on HuggingFace: <a href="https://huggingface.co/josh11234/RLinf-Pi0-RoboCasa-CloseDrawer-PPO"><code>josh11234/RLinf-Pi0-RoboCasa-CloseDrawer-PPO</code></a>.</p>
-<p>Phase 2 figures and videos are also integrated in the experiments descriptions above. Post-SFT weights for the Pi0.5 on the maniskill tasks are available on HuggingFace: </p>
+<p>Phase 2 figures and videos are also integrated in the experiments descriptions above. Post-SFT weights for the Pi0.5 on the maniskill tasks are available on HuggingFace:</p>
 <ul>
 <li><a href="https://huggingface.co/josh11234/ExpoFT-Pi05-StackCube-v1-SFT"><code>josh11234/ExpoFT-Pi05-StackCube-v1-SFT</code></a> (41 %success on 200 held-out seeds)</li>
 <li><a href="https://huggingface.co/josh11234/ExpoFT-Pi05-PushCube-v1-SFT-62p"><code>josh11234/ExpoFT-Pi05-PushCube-v1-SFT-62p</code></a> (62 %success on 200 held-out seeds)</li>
 <li><a href="https://huggingface.co/josh11234/ExpoFT-Pi05-PushCube-v1-SFT-86p"><code>josh11234/ExpoFT-Pi05-PushCube-v1-SFT-86p</code></a> (86 %success on 200 held-out seeds)</li>
 <li><a href="https://huggingface.co/josh11234/ExpoFT-Pi05-PickCube-v1-SFT"><code>josh11234/ExpoFT-Pi05-PickCube-v1-SFT</code></a> (22 %success on 200 held-out seeds)</li>
 </ul>
-<p>The critic-architecture comparison, reward-timing-fix comparison, and KL-regularization figures referenced in the latest updates above are still to be added — placeholders use the same <code>images/</code> convention as the rest of this page.</p>
 
 
 
