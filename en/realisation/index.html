@@ -778,6 +778,61 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-a-direct-test-of-the-selection-bias-hypothesis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: a direct test of the selection-bias hypothesis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-a-critical-reward-configuration-bug-and-its-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: a critical reward-configuration bug and its fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-categorical-critic-recalibration-issue-under-the-corrected-reward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: categorical critic recalibration issue under the corrected reward
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-revisiting-utd-ratio-under-the-corrected-reward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: revisiting UTD ratio under the corrected reward
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-final-evaluation-on-all-three-tasks-under-the-corrected-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: final evaluation on all three tasks under the corrected configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -833,6 +888,17 @@
     <span class="md-ellipsis">
       
         RL critic instability (Phase 2, central difficulty — substantially narrowed down since first reported)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reward-configuration-bug-phase-2-resolved-significant-downstream-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reward-configuration bug (Phase 2, resolved — significant downstream impact)
       
     </span>
   </a>
@@ -1193,6 +1259,61 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-a-direct-test-of-the-selection-bias-hypothesis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: a direct test of the selection-bias hypothesis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-a-critical-reward-configuration-bug-and-its-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: a critical reward-configuration bug and its fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-categorical-critic-recalibration-issue-under-the-corrected-reward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: categorical critic recalibration issue under the corrected reward
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-revisiting-utd-ratio-under-the-corrected-reward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: revisiting UTD ratio under the corrected reward
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-rl-stage-final-evaluation-on-all-three-tasks-under-the-corrected-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — RL stage: final evaluation on all three tasks under the corrected configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1248,6 +1369,17 @@
     <span class="md-ellipsis">
       
         RL critic instability (Phase 2, central difficulty — substantially narrowed down since first reported)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reward-configuration-bug-phase-2-resolved-significant-downstream-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reward-configuration bug (Phase 2, resolved — significant downstream impact)
       
     </span>
   </a>
@@ -1684,6 +1816,50 @@ Discussion page.</p>
 </ul>
 <p>Each of these was confirmed with a small, targeted, reproducible test built specifically to isolate it, rather than being fixed from code inspection alone. A defensive safeguard was also added on top of all of these: if a computed gradient is ever found to be non-finite for any reason, that particular update is now skipped entirely (leaving the model and optimizer state untouched) rather than being allowed to silently corrupt training, with diagnostic logging added at each stage of the computation so any future occurrence is immediately traceable rather than presenting as a bare crash much later.</p>
 <p><strong>A more fundamental finding.</strong> Investigating why these baselines showed no learning signal at all from the very start of training (rather than the "starts well, then degrades" pattern seen with ExpoFT) revealed that their trainable policy network had never actually been connected to the supervised-pretrained checkpoint in the first place: it is a small, separately and randomly initialized network, with the pretrained checkpoint used only to convert its inputs and outputs to and from the right format — not to give it any of the pretrained policy's own behavior to start from. This is a reasonable consequence of using a flow-matching base model, which does not expose the kind of action likelihood these two algorithms need directly, but it meant these baselines were effectively being asked to relearn manipulation from scratch, reproducing this project's own Phase 1 finding (on-policy RL cannot bootstrap without a competent starting policy) despite the intent being to test on-policy fine-tuning <em>from</em> the SFT checkpoint. A behavior-cloning warm-start option, mirroring the critic-pretraining idea used for ExpoFT, was added for these baselines to close this gap before drawing further conclusions from them.</p>
+<h3 id="phase-2-rl-stage-a-direct-test-of-the-selection-bias-hypothesis">Phase 2 — RL stage: a direct test of the selection-bias hypothesis<a class="headerlink" href="#phase-2-rl-stage-a-direct-test-of-the-selection-bias-hypothesis" title="Permanent link">&para;</a></h3>
+<p>Rather than continuing to infer the selection-bias mechanism by elimination, a dedicated <strong>misrank-rate diagnostic</strong> was built to test it directly. For real training states sampled during RL, the critic's score for the action it actually selected is compared against its score for the action a separately validated, high-performing reference policy (~96% success) would have taken instead. If the critic is ranking candidates correctly, it should not systematically prefer its own choice over a demonstrably better one; if the maximization bias is real, it should.</p>
+<p>The diagnostic was run across a sweep of checkpoints (20k through 120k steps) on PushCube-v1. <strong>Result:</strong> the critic preferred its own, worse choice 94–100% of the time, saturated from the very first checkpoint evaluated — a direct, positive confirmation of the maximization/self-reference bias, rather than an inference by elimination.</p>
+<p><img alt="misrank_rate by RL checkpoint" src="https://josh012006.github.io/Website-IFT4055//images/fig_misrank_rate.png" />
+<em>misrank_rate — how often the critic prefers its own, worse action over the reference policy's, by checkpoint (push_cube).</em></p>
+<h3 id="phase-2-rl-stage-a-critical-reward-configuration-bug-and-its-fix">Phase 2 — RL stage: a critical reward-configuration bug and its fix<a class="headerlink" href="#phase-2-rl-stage-a-critical-reward-configuration-bug-and-its-fix" title="Permanent link">&para;</a></h3>
+<p>A collaborator raised a simple sanity check that the investigation above had not yet applied: the critic's typical reported value magnitudes (routinely 13–19) should not be reachable under a sparse, binary reward with a reasonable discount factor. Checking this directly uncovered two compounding, independent bugs:</p>
+<ol>
+<li><strong>The environment had never been explicitly configured for a sparse reward at all.</strong> It was silently using ManiSkill's own dense, shaped default (<code>normalized_dense</code>), confirmed both by inspecting the environment configuration directly and by replaying a real demonstration and logging every single step's reward — no step read exactly zero, which a genuinely sparse, binary reward would produce almost everywhere.</li>
+<li><strong>Independently, the reward used in the critic's training target was being divided by a running estimate of its own scale</strong> — a mechanism intended to keep the categorical critic's fixed value bounds meaningful across tasks without hand-tuning them. As success rate fell during a run, this running estimate shrank, inflating the effective reward for the rare remaining successes: a self-reinforcing loop, unrelated to the selection-bias mechanism identified earlier.</li>
+</ol>
+<p>Both were corrected: <code>reward_mode: sparse</code> was made explicit in all 18 task YAML configs (rather than relying on ManiSkill's default), and a <code>use_reward_normalization: false</code> flag was added to bypass the running-scale rescaling entirely.</p>
+<p>This finding required an honest reframing rather than a retraction. The misrank-rate evidence above is a <em>relative</em> comparison between two actions under the same critic, and is unaffected by the reward's absolute scale — it still stands. What it does substantially weaken is the earlier framing of raw value magnitudes (13–19) as self-evidently absurd: under the dense, rescaled reward that was actually in use at the time, such magnitudes were not, on their own, a bound violation.</p>
+<h3 id="phase-2-rl-stage-categorical-critic-recalibration-issue-under-the-corrected-reward">Phase 2 — RL stage: categorical critic recalibration issue under the corrected reward<a class="headerlink" href="#phase-2-rl-stage-categorical-critic-recalibration-issue-under-the-corrected-reward" title="Permanent link">&para;</a></h3>
+<p>Under the newly corrected sparse reward, the categorical critic's fixed atom support (<code>v_min=-10</code>, <code>v_max=20</code>) — originally calibrated for the old dense, rescaled reward regime — turned out to be badly mismatched for the sparse reward's true, much narrower range (roughly [0, 1]). Tested on PushCube-v1 with <code>edit_scale=0.2</code>, the categorical critic collapsed catastrophically under the corrected reward: from a 60.5% SFT starting point down to single digits by 100–120k steps.</p>
+<p>Falling back to a simpler MSE/REDQ-style scalar critic under the same corrected sparse reward was noisy, but non-catastrophic — this is the critic architecture used for the final evaluation below. Recalibrating the categorical critic's atom support to roughly <code>[-1, 2]</code> to match the sparse reward's true range is the natural next test, not yet run.</p>
+<h3 id="phase-2-rl-stage-revisiting-utd-ratio-under-the-corrected-reward">Phase 2 — RL stage: revisiting UTD ratio under the corrected reward<a class="headerlink" href="#phase-2-rl-stage-revisiting-utd-ratio-under-the-corrected-reward" title="Permanent link">&para;</a></h3>
+<p>With the reward-configuration bug fixed, the update-to-data (UTD) ratio comparison from the central instability finding above was repeated under the corrected sparse reward, using the MSE critic. <strong>The result reversed:</strong> <code>utd_ratio=20</code> — the same setting that had collapsed fastest and most severely under the miscalibrated reward — was now the most stable, best-performing configuration, while <code>utd_ratio=1</code> degraded steadily over the same horizon.</p>
+<p><img alt="eval/success_rate under UTD ratio 1 vs. UTD ratio 20, sparse reward, corrected configuration" src="https://josh012006.github.io/Website-IFT4055//images/utd_reversal_after_fix.png" />
+<em>eval/success_rate — UTD ratio 1 (pink) vs. UTD ratio 20 (purple), sparse reward, MSE critic, corrected configuration.</em></p>
+<p>A plausible reading, still to be fully unpacked: the UTD ratio does not have an intrinsically stabilizing or destabilizing effect on its own — it amplifies whatever underlying training signal is present. Under the earlier, miscalibrated reward, a higher ratio amplified a self-reinforcing error faster; under the corrected reward, the same amplification instead accelerates otherwise-sound learning.</p>
+<h3 id="phase-2-rl-stage-final-evaluation-on-all-three-tasks-under-the-corrected-configuration">Phase 2 — RL stage: final evaluation on all three tasks under the corrected configuration<a class="headerlink" href="#phase-2-rl-stage-final-evaluation-on-all-three-tasks-under-the-corrected-configuration" title="Permanent link">&para;</a></h3>
+<p>The corrected configuration (<code>reward_mode: sparse</code>, <code>use_reward_normalization: false</code>, MSE critic, <code>utd_ratio=20</code>) was then tested on all three active tasks — StackCube-v1, PushCube-v1, and PickCube-v1 — using the same validated SFT checkpoints as every earlier comparison.</p>
+<table>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/final-curve-pushcube.png" alt="Curve">
+
+            *PushCube-v1 — eval/success_rate after the reward fix*
+        </td>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/final-curve-stackcube.png" alt="Curve">
+
+            *StackCube-v1 — eval/success_rate after the reward fix*
+        </td>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/final-curve-pickcube.png" alt="Curve">
+
+            *PickCube-v1 — eval/success_rate after the reward fix*
+        </td>
+    </tr>
+</table>
+
+<p><strong>Result:</strong> PushCube-v1 clearly beat its SFT baseline (62% → 90%). StackCube-v1 and PickCube-v1 no longer collapsed toward zero — a qualitative improvement over every pre-fix configuration — but oscillated around their starting SFT performance (StackCube 41% → 32%; PickCube 22% → 16%) rather than improving steadily. StackCube-v1's high task difficulty and PickCube-v1's low starting success rate are the leading suspects for why those two tasks did not show the same clear gain as PushCube-v1; recalibrating the categorical critic's atom support for the sparse-reward regime (above) remains the most promising untested lead for closing that gap.</p>
 <hr />
 <h2 id="major-difficulties-encountered">Major difficulties encountered<a class="headerlink" href="#major-difficulties-encountered" title="Permanent link">&para;</a></h2>
 <h3 id="exploration-bottleneck-phase-1-fundamental">Exploration bottleneck (Phase 1, fundamental)<a class="headerlink" href="#exploration-bottleneck-phase-1-fundamental" title="Permanent link">&para;</a></h3>
@@ -1694,6 +1870,8 @@ Discussion page.</p>
 <p>A failure mode that initially looked like a policy or exploration problem (0% success, no improvement) turned out to be a fundamental observability gap between the task's design (hidden goal marker) and the project's DROID-mimicking observation schema. Required camera-level diagnostics to trace correctly, and PickCube-v1 was dropped in a first pass as a result. A subsequent monkeypatch unhiding the goal marker from the sensor camera resolved the gap without compromising the observation schema, and the task was reintegrated. Lesson generalized: verify VLA camera/observability alignment with a given ManiSkill task's design (hidden goal markers, fixed camera angle, wrist camera presence) before assuming poor results reflect task difficulty — and before assuming the incompatibility is unfixable.</p>
 <h3 id="rl-critic-instability-phase-2-central-difficulty-substantially-narrowed-down-since-first-reported">RL critic instability (Phase 2, central difficulty — substantially narrowed down since first reported)<a class="headerlink" href="#rl-critic-instability-phase-2-central-difficulty-substantially-narrowed-down-since-first-reported" title="Permanent link">&para;</a></h3>
 <p>Every RL configuration tried so far degrades rather than improves the validated SFT policy, with the degradation initially correlated with growing critic loss instability. Two independent, real fixes — a rebuilt critic architecture with structurally bounded value estimates, and a corrected reward/termination timing bug in the data-collection loop — were each confirmed to meaningfully stabilize the critic's own training dynamics, but neither changed the collapse in policy performance. This shifted the leading hypothesis away from critic-training instability itself and toward the action-selection mechanism (the same critic proposing and judging its own preferred action), which is now being tested directly rather than inferred by elimination. A useful, if initially counter-intuitive, lesson from this stretch of work: a healthier-looking critic is not the same thing as a better policy, and the two need to be checked separately rather than assumed to move together.</p>
+<h3 id="reward-configuration-bug-phase-2-resolved-significant-downstream-impact">Reward-configuration bug (Phase 2, resolved — significant downstream impact)<a class="headerlink" href="#reward-configuration-bug-phase-2-resolved-significant-downstream-impact" title="Permanent link">&para;</a></h3>
+<p>The environment had silently been using ManiSkill's dense, shaped default reward instead of the intended sparse one, and the critic's reward normalization was dividing by a running estimate of its own scale — a self-reinforcing loop as success rate fell. Neither bug crashed anything or produced an obviously wrong training curve; both were caught only by a numeric sanity check on the critic's typical value magnitudes, which looked too large to be reachable under a genuinely sparse reward. Fixing both reversed the UTD-ratio comparison from the central instability finding and changed which critic architecture (MSE rather than categorical) was viable going forward. Lesson generalized: numeric sanity checks on logged values themselves — not just on whether the policy succeeds or the code runs without error — can surface bugs invisible to both.</p>
 <h3 id="confounded-first-regularization-test-resolved-process-lesson">Confounded first regularization test (resolved, process lesson)<a class="headerlink" href="#confounded-first-regularization-test-resolved-process-lesson" title="Permanent link">&para;</a></h3>
 <p>The first test of KL regularization against the pretrained policy was run with the default exploration bonus still active alongside it, rather than disabled as the source paper's own formulation implies — meaning the encouraging result from that run could not yet be attributed to the regularization term specifically. Caught before drawing a conclusion from it; a properly isolated follow-up test is in progress. General lesson: when adding a term to an existing objective, explicitly check every other term it could interact with before reporting a result, rather than assuming a new option is independent of what is already there.</p>
 <h3 id="ppogrpo-baselines-silently-disconnected-from-the-pretrained-policy-resolved">PPO/GRPO baselines silently disconnected from the pretrained policy (resolved)<a class="headerlink" href="#ppogrpo-baselines-silently-disconnected-from-the-pretrained-policy-resolved" title="Permanent link">&para;</a></h3>
@@ -1823,6 +2001,22 @@ Discussion page.</p>
 <tr>
 <td>Added a defensive non-finite-gradient guard to the PPO/GRPO update step</td>
 <td>Prevents a future, as-yet-unknown numerical issue from silently corrupting a training run, independent of whether its root cause has been found</td>
+</tr>
+<tr>
+<td>Built a misrank-rate diagnostic comparing the critic's own selected action to a validated reference policy's</td>
+<td>Tests the selection-bias hypothesis directly instead of continuing to infer it by elimination</td>
+</tr>
+<tr>
+<td>Made <code>reward_mode: sparse</code> explicit in all 18 task YAML configs</td>
+<td>ManiSkill was silently defaulting to a dense, shaped reward; sparse was the intended setting all along</td>
+</tr>
+<tr>
+<td>Added <code>use_reward_normalization: false</code> to bypass the critic's running-scale reward rescaling</td>
+<td>The running-scale normalization created a self-reinforcing loop as success rate fell, inflating the effective reward for rare remaining successes</td>
+</tr>
+<tr>
+<td>Fell back to an MSE/REDQ-style scalar critic instead of the categorical critic under the corrected sparse reward</td>
+<td>The categorical critic's fixed atom support, calibrated for the old dense/rescaled regime, was badly mismatched for the sparse reward's true ~[0,1] range and collapsed catastrophically</td>
 </tr>
 </tbody>
 </table>

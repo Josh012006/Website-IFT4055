@@ -778,6 +778,61 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#phase-2-etape-rl-un-test-direct-de-lhypothese-de-biais-de-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Étape RL : un test direct de l'hypothèse de biais de sélection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-etape-rl-un-bug-critique-de-configuration-de-la-recompense-et-sa-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Étape RL : un bug critique de configuration de la récompense et sa correction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-etape-rl-probleme-de-recalibration-du-critic-categoriel-sous-la-recompense-corrigee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Étape RL : problème de recalibration du critic catégoriel sous la récompense corrigée
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-etape-rl-revisiter-le-ratio-utd-sous-la-recompense-corrigee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Étape RL : revisiter le ratio UTD sous la récompense corrigée
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-etape-rl-evaluation-finale-sur-les-trois-taches-sous-la-configuration-corrigee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Étape RL : évaluation finale sur les trois tâches sous la configuration corrigée
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -833,6 +888,17 @@
     <span class="md-ellipsis">
       
         Instabilité du critic RL (Phase 2, difficulté centrale — considérablement cernée depuis le premier signalement)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-de-configuration-de-la-recompense-phase-2-resolu-impact-significatif-en-aval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bug de configuration de la récompense (Phase 2, résolu — impact significatif en aval)
       
     </span>
   </a>
@@ -1193,6 +1259,61 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#phase-2-etape-rl-un-test-direct-de-lhypothese-de-biais-de-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Étape RL : un test direct de l'hypothèse de biais de sélection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-etape-rl-un-bug-critique-de-configuration-de-la-recompense-et-sa-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Étape RL : un bug critique de configuration de la récompense et sa correction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-etape-rl-probleme-de-recalibration-du-critic-categoriel-sous-la-recompense-corrigee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Étape RL : problème de recalibration du critic catégoriel sous la récompense corrigée
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-etape-rl-revisiter-le-ratio-utd-sous-la-recompense-corrigee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Étape RL : revisiter le ratio UTD sous la récompense corrigée
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-etape-rl-evaluation-finale-sur-les-trois-taches-sous-la-configuration-corrigee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Étape RL : évaluation finale sur les trois tâches sous la configuration corrigée
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1248,6 +1369,17 @@
     <span class="md-ellipsis">
       
         Instabilité du critic RL (Phase 2, difficulté centrale — considérablement cernée depuis le premier signalement)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-de-configuration-de-la-recompense-phase-2-resolu-impact-significatif-en-aval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bug de configuration de la récompense (Phase 2, résolu — impact significatif en aval)
       
     </span>
   </a>
@@ -1998,6 +2130,115 @@ s'amorcer sans une politique de départ compétente) malgré l'intention de test
 on-policy <em>à partir</em> du checkpoint SFT. Une option de warm-start par behavior cloning, reprenant
 l'idée du critic pretraining utilisée pour ExpoFT, a été ajoutée pour ces baselines afin de
 combler cet écart avant d'en tirer de nouvelles conclusions.</p>
+<h3 id="phase-2-etape-rl-un-test-direct-de-lhypothese-de-biais-de-selection">Phase 2 — Étape RL : un test direct de l'hypothèse de biais de sélection<a class="headerlink" href="#phase-2-etape-rl-un-test-direct-de-lhypothese-de-biais-de-selection" title="Permanent link">&para;</a></h3>
+<p>Plutôt que de continuer à inférer le mécanisme de biais de sélection par élimination, un
+diagnostic dédié de <strong>misrank rate</strong> a été construit pour le tester directement. Pour des
+états d'entraînement réels échantillonnés durant le RL, le score du critic pour l'action
+qu'il a effectivement sélectionnée est comparé à son score pour l'action qu'aurait prise à la
+place une politique de référence validée séparément, très performante (~96 % de succès). Si
+le critic classe correctement les candidats, il ne devrait pas préférer systématiquement son
+propre choix face à un choix démontrablement meilleur ; si le biais de maximisation est réel,
+il le devrait.</p>
+<p>Le diagnostic a été exécuté sur un balayage de checkpoints (de 20 000 à 120 000 pas) sur
+PushCube-v1. <strong>Résultat :</strong> le critic préférait son propre choix, pourtant pire, 94 à 100 %
+du temps, saturé dès le tout premier checkpoint évalué — une confirmation directe et positive
+du biais de maximisation/autoréférence, plutôt qu'une inférence par élimination.</p>
+<p><img alt="misrank_rate by RL checkpoint" src="https://josh012006.github.io/Website-IFT4055//images/fig_misrank_rate.png" />
+<em>misrank_rate — à quelle fréquence le critic préfère sa propre action, pire, par rapport à
+celle de la politique de référence, par checkpoint (push_cube).</em></p>
+<h3 id="phase-2-etape-rl-un-bug-critique-de-configuration-de-la-recompense-et-sa-correction">Phase 2 — Étape RL : un bug critique de configuration de la récompense et sa correction<a class="headerlink" href="#phase-2-etape-rl-un-bug-critique-de-configuration-de-la-recompense-et-sa-correction" title="Permanent link">&para;</a></h3>
+<p>Un collaborateur a soulevé une vérification de cohérence simple que l'investigation
+ci-dessus n'avait pas encore appliquée : les magnitudes de valeurs habituellement rapportées
+par le critic (couramment entre 13 et 19) ne devraient pas être atteignables sous une
+récompense sparse et binaire avec un facteur d'actualisation raisonnable. Vérifier cela
+directement a révélé deux bugs indépendants qui se combinaient :</p>
+<ol>
+<li><strong>L'environnement n'avait jamais été explicitement configuré en récompense sparse.</strong> Il
+   utilisait silencieusement le mode dense et façonné par défaut de ManiSkill
+   (<code>normalized_dense</code>), confirmé à la fois en inspectant directement la configuration de
+   l'environnement et en rejouant une vraie démonstration tout en enregistrant la récompense
+   de chaque pas individuellement — aucun pas ne lisait exactement zéro, ce qu'une récompense
+   véritablement sparse et binaire produirait presque partout.</li>
+<li><strong>Indépendamment, la récompense utilisée dans la cible d'entraînement du critic était
+   divisée par une estimation courante de sa propre échelle</strong> — un mécanisme destiné à garder
+   les bornes de valeur fixes du critic catégoriel significatives à travers les tâches sans
+   les régler à la main. À mesure que le taux de succès chutait en cours de run, cette
+   estimation courante rétrécissait, gonflant la récompense effective des rares succès
+   restants : une boucle autorenforçante, sans lien avec le mécanisme de biais de sélection
+   identifié précédemment.</li>
+</ol>
+<p>Les deux ont été corrigés : <code>reward_mode: sparse</code> a été rendu explicite dans les 18 configs
+YAML de tâches (plutôt que de compter sur le défaut de ManiSkill), et un flag
+<code>use_reward_normalization: false</code> a été ajouté pour contourner entièrement le rescaling par
+échelle courante.</p>
+<p>Cette découverte a nécessité un recadrage honnête plutôt qu'une rétractation. La preuve du
+misrank rate ci-dessus est une comparaison <em>relative</em> entre deux actions sous le même critic,
+et n'est pas affectée par l'échelle absolue de la récompense — elle tient toujours. Ce
+qu'elle affaiblit substantiellement, c'est le cadrage antérieur selon lequel les magnitudes de
+valeurs brutes (13–19) étaient absurdes en elles-mêmes : sous la récompense dense et
+rescalée réellement en usage à l'époque, de telles magnitudes n'étaient pas, en soi, une
+violation des bornes.</p>
+<h3 id="phase-2-etape-rl-probleme-de-recalibration-du-critic-categoriel-sous-la-recompense-corrigee">Phase 2 — Étape RL : problème de recalibration du critic catégoriel sous la récompense corrigée<a class="headerlink" href="#phase-2-etape-rl-probleme-de-recalibration-du-critic-categoriel-sous-la-recompense-corrigee" title="Permanent link">&para;</a></h3>
+<p>Sous la récompense sparse nouvellement corrigée, le support d'atomes fixe du critic
+catégoriel (<code>v_min=-10</code>, <code>v_max=20</code>) — calibré à l'origine pour l'ancien régime de récompense
+dense et rescalée — s'est révélé mal adapté à la plage réelle, beaucoup plus étroite, de la
+récompense sparse (environ [0, 1]). Testé sur PushCube-v1 avec <code>edit_scale=0.2</code>, le critic
+catégoriel s'est effondré catastrophiquement sous la récompense corrigée : d'un point de
+départ SFT de 60,5 % jusqu'à des valeurs à un chiffre vers 100 000–120 000 pas.</p>
+<p>Revenir à un critic scalaire plus simple, de style MSE/REDQ, sous la même récompense sparse
+corrigée, s'est révélé bruité mais non catastrophique — c'est l'architecture de critic
+utilisée pour l'évaluation finale ci-dessous. Recalibrer le support d'atomes du critic
+catégoriel à environ <code>[-1, 2]</code> pour correspondre à la plage réelle de la récompense sparse est
+le prochain test naturel, pas encore effectué.</p>
+<h3 id="phase-2-etape-rl-revisiter-le-ratio-utd-sous-la-recompense-corrigee">Phase 2 — Étape RL : revisiter le ratio UTD sous la récompense corrigée<a class="headerlink" href="#phase-2-etape-rl-revisiter-le-ratio-utd-sous-la-recompense-corrigee" title="Permanent link">&para;</a></h3>
+<p>Une fois le bug de configuration de la récompense corrigé, la comparaison du ratio
+update-to-data (UTD) du résultat central sur l'instabilité ci-dessus a été répétée sous la
+récompense sparse corrigée, avec le critic MSE. <strong>Le résultat s'est inversé :</strong>
+<code>utd_ratio=20</code> — le même réglage qui s'était effondré le plus vite et le plus sévèrement sous
+la récompense mal calibrée — est devenu la configuration la plus stable et la plus
+performante, tandis qu'<code>utd_ratio=1</code> se dégradait régulièrement sur le même horizon.</p>
+<p><img alt="eval/success_rate under UTD ratio 1 vs. UTD ratio 20, sparse reward, corrected configuration" src="https://josh012006.github.io/Website-IFT4055//images/utd_reversal_after_fix.png" />
+<em>eval/success_rate — ratio UTD = 1 (rose) vs. ratio UTD = 20 (violet), récompense sparse,
+critic MSE, configuration corrigée.</em></p>
+<p>Une lecture plausible, encore à développer pleinement : le ratio UTD n'a pas d'effet
+intrinsèquement stabilisant ou déstabilisant en soi — il amplifie le signal d'entraînement
+sous-jacent présent. Sous l'ancienne récompense mal calibrée, un ratio plus élevé amplifiait
+plus vite une erreur autorenforçante ; sous la récompense corrigée, la même amplification
+accélère au contraire un apprentissage par ailleurs sain.</p>
+<h3 id="phase-2-etape-rl-evaluation-finale-sur-les-trois-taches-sous-la-configuration-corrigee">Phase 2 — Étape RL : évaluation finale sur les trois tâches sous la configuration corrigée<a class="headerlink" href="#phase-2-etape-rl-evaluation-finale-sur-les-trois-taches-sous-la-configuration-corrigee" title="Permanent link">&para;</a></h3>
+<p>La configuration corrigée (<code>reward_mode: sparse</code>, <code>use_reward_normalization: false</code>, critic
+MSE, <code>utd_ratio=20</code>) a ensuite été testée sur les trois tâches actives — StackCube-v1,
+PushCube-v1 et PickCube-v1 — en utilisant les mêmes checkpoints SFT validés que pour chaque
+comparaison précédente.</p>
+<table>
+    <tr>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/final-curve-pushcube.png" alt="Curve">
+
+            *PushCube-v1 — eval/success_rate après la correction de la récompense*
+        </td>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/final-curve-stackcube.png" alt="Curve">
+
+            *StackCube-v1 — eval/success_rate après la correction de la récompense*
+        </td>
+        <td>
+            <img src="https://josh012006.github.io/Website-IFT4055//images/final-curve-pickcube.png" alt="Curve">
+
+            *PickCube-v1 — eval/success_rate après la correction de la récompense*
+        </td>
+    </tr>
+</table>
+
+<p><strong>Résultat :</strong> PushCube-v1 a clairement dépassé sa baseline SFT (62 % → 90 %). StackCube-v1 et
+PickCube-v1 ne s'effondraient plus vers zéro — une amélioration qualitative par rapport à
+chaque configuration pré-correction — mais oscillaient autour de leur performance SFT de
+départ (StackCube 41 % → 32 % ; PickCube 22 % → 16 %) plutôt que de s'améliorer régulièrement.
+La haute difficulté de la tâche pour StackCube-v1 et le faible taux de succès de départ pour
+PickCube-v1 sont les principaux suspects expliquant pourquoi ces deux tâches n'ont pas montré
+le même gain net que PushCube-v1 ; recalibrer le support d'atomes du critic catégoriel pour le
+régime de récompense sparse (ci-dessus) reste la piste non testée la plus prometteuse pour
+combler cet écart.</p>
 <hr />
 <h2 id="difficultes-majeures-rencontrees">Difficultés majeures rencontrées<a class="headerlink" href="#difficultes-majeures-rencontrees" title="Permanent link">&para;</a></h2>
 <h3 id="le-goulot-detranglement-de-lexploration-phase-1-fondamental">Le goulot d'étranglement de l'exploration (Phase 1, fondamental)<a class="headerlink" href="#le-goulot-detranglement-de-lexploration-phase-1-fondamental" title="Permanent link">&para;</a></h3>
@@ -2042,6 +2283,20 @@ directement plutôt qu'inféré par élimination. Une leçon utile, quoique d'ab
 contre-intuitive, de cette période de travail : un critic qui a l'air plus sain n'est pas la
 même chose qu'une meilleure politique, et les deux doivent être vérifiés séparément plutôt que
 supposés évoluer ensemble.</p>
+<h3 id="bug-de-configuration-de-la-recompense-phase-2-resolu-impact-significatif-en-aval">Bug de configuration de la récompense (Phase 2, résolu — impact significatif en aval)<a class="headerlink" href="#bug-de-configuration-de-la-recompense-phase-2-resolu-impact-significatif-en-aval" title="Permanent link">&para;</a></h3>
+<p>L'environnement utilisait silencieusement la récompense dense et façonnée par défaut de
+ManiSkill au lieu de la récompense sparse prévue, et la normalisation de la récompense du
+critic divisait par une estimation courante de sa propre échelle — une boucle
+autorenforçante à mesure que le taux de succès chutait. Aucun des deux bugs ne faisait
+planter quoi que ce soit ni ne produisait une courbe d'entraînement manifestement fausse ;
+tous deux n'ont été détectés que par une vérification numérique de cohérence sur les
+magnitudes de valeurs habituelles du critic, qui semblaient trop grandes pour être
+atteignables sous une récompense véritablement sparse. Corriger les deux a inversé la
+comparaison de ratio UTD du résultat central sur l'instabilité, et a changé quelle
+architecture de critic (MSE plutôt que catégorielle) était viable pour la suite. Leçon
+généralisée : des vérifications numériques de cohérence sur les valeurs elles-mêmes — pas
+seulement sur le succès de la politique ou l'absence de crash du code — peuvent révéler des
+bugs invisibles aux deux.</p>
 <h3 id="premier-test-de-regularisation-confondu-resolu-lecon-de-processus">Premier test de régularisation confondu (résolu, leçon de processus)<a class="headerlink" href="#premier-test-de-regularisation-confondu-resolu-lecon-de-processus" title="Permanent link">&para;</a></h3>
 <p>Le premier test de régularisation KL contre la politique préentraînée a été exécuté avec le
 bonus d'exploration par défaut toujours actif en parallèle, plutôt que désactivé comme le
@@ -2194,6 +2449,22 @@ erreur.</p>
 <tr>
 <td>Ajout d'une garde défensive contre les gradients non finis à l'étape de mise à jour PPO/GRPO</td>
 <td>Empêche un futur problème numérique, encore inconnu, de corrompre silencieusement un run d'entraînement, indépendamment du fait que sa cause racine ait été trouvée ou non</td>
+</tr>
+<tr>
+<td>Construction d'un diagnostic misrank rate comparant l'action sélectionnée par le critic à celle d'une politique de référence validée</td>
+<td>Teste directement l'hypothèse de biais de sélection plutôt que de continuer à l'inférer par élimination</td>
+</tr>
+<tr>
+<td><code>reward_mode: sparse</code> rendu explicite dans les 18 configs YAML de tâches</td>
+<td>ManiSkill retombait silencieusement sur une récompense dense et façonnée par défaut ; sparse était le réglage prévu depuis le début</td>
+</tr>
+<tr>
+<td>Ajout de <code>use_reward_normalization: false</code> pour contourner le rescaling de récompense par échelle courante du critic</td>
+<td>La normalisation par échelle courante créait une boucle autorenforçante à mesure que le taux de succès chutait, gonflant la récompense effective des rares succès restants</td>
+</tr>
+<tr>
+<td>Retour à un critic scalaire de style MSE/REDQ plutôt qu'au critic catégoriel sous la récompense sparse corrigée</td>
+<td>Le support d'atomes fixe du critic catégoriel, calibré pour l'ancien régime dense/rescalé, était mal adapté à la plage réelle ~[0,1] de la récompense sparse et s'est effondré catastrophiquement</td>
 </tr>
 </tbody>
 </table>
