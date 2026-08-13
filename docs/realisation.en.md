@@ -12,6 +12,12 @@ title: Work Completed
 
 # Implementation
 
+This page documents the technical work completed over the course of the project — the
+overall architecture, both experimental phases, every experiment run, the difficulties
+encountered along the way, and the key engineering decisions that shaped the final pipeline.
+For the evaluation results themselves and their interpretation, see the Evaluation &
+Discussion page.
+
 ## Architecture and general approach
 
 ### Research objective
@@ -146,7 +152,7 @@ Here are the SFT checkpoint sweep curves (success rate vs. training step/iterati
     </video>
 </div>
 
-*π₀.5 on maniskill PushCube-v1 after SFT warmup*
+*π₀.₅ on maniskill PushCube-v1 after SFT warmup*
 
 
 ![SFT Checkpoint Sweep Curves StackCube-v1]({{ config.site_url }}/images/curve-sft-stackcube.png)
@@ -157,7 +163,7 @@ Here are the SFT checkpoint sweep curves (success rate vs. training step/iterati
     </video>
 </div>
 
-*π₀.5 on maniskill StackCube-v1 after SFT warmup*
+*π₀.₅ on maniskill StackCube-v1 after SFT warmup*
 
 
 
@@ -179,7 +185,7 @@ So I also ran an SFT-warmup on PickCube-v1. Here are the performances :
     </video>
 </div>
 
-*π₀.5 on maniskill PickCube-v1 after SFT warmup*
+*π₀.₅ on maniskill PickCube-v1 after SFT warmup*
 
 
 **Active task suite going forward: StackCube-v1, PushCube-v1, and PickCube-v1.**
@@ -231,12 +237,12 @@ Here is a comparison of the training metrics across the three UTD ratio configur
             *utd_ratio=10*
         </td>
     </tr>
+    <tr>
         <td>
             <img src="{{ config.site_url }}/images/config2-critic-loss-pushcube.png" alt="Curve">
 
-            *utd_ratio=2` + `offline_ratio=0.5*
+            *utd_ratio=2 + offline_ratio=0.5*
         </td>
-    <tr>
     </tr>
     <tr>
         <td>
@@ -261,7 +267,7 @@ Here is a comparison of the training metrics across the three UTD ratio configur
         <td>
             <img src="{{ config.site_url }}/images/config2-residual-actor-loss-pushcube.png" alt="Curve">
 
-            *utd_ratio=2` + `offline_ratio=0.5*
+            *utd_ratio=2 + offline_ratio=0.5*
         </td>
     </tr>
     <tr>
@@ -287,7 +293,7 @@ Here is a comparison of the training metrics across the three UTD ratio configur
         <td>
             <img src="{{ config.site_url }}/images/config2-eval-success-pushcube.png" alt="Curve">
 
-            *utd_ratio=2` + `offline_ratio=0.5*
+            *utd_ratio=2 + offline_ratio=0.5*
         </td>
     </tr>
     <tr>
@@ -499,11 +505,9 @@ These baselines were assumed to be continuing from the supervised-pretrained che
 
 Key training curves, episode videos, and checkpoint weights for Phase 1 are embedded inline in each experiment section above. Final weights for the RoboCasa CloseDrawer PPO run are available on HuggingFace: [`josh11234/RLinf-Pi0-RoboCasa-CloseDrawer-PPO`](https://huggingface.co/josh11234/RLinf-Pi0-RoboCasa-CloseDrawer-PPO).
 
-Phase 2 figures and videos are also integrated in the experiments descriptions above. Post-SFT weights for the Pi0.5 on the maniskill tasks are available on HuggingFace: 
+Phase 2 figures and videos are also integrated in the experiments descriptions above. Post-SFT weights for the Pi0.5 on the maniskill tasks are available on HuggingFace:
 
 - [`josh11234/ExpoFT-Pi05-StackCube-v1-SFT`](https://huggingface.co/josh11234/ExpoFT-Pi05-StackCube-v1-SFT) (41 %success on 200 held-out seeds)
 - [`josh11234/ExpoFT-Pi05-PushCube-v1-SFT-62p`](https://huggingface.co/josh11234/ExpoFT-Pi05-PushCube-v1-SFT-62p) (62 %success on 200 held-out seeds)
 - [`josh11234/ExpoFT-Pi05-PushCube-v1-SFT-86p`](https://huggingface.co/josh11234/ExpoFT-Pi05-PushCube-v1-SFT-86p) (86 %success on 200 held-out seeds)
 - [`josh11234/ExpoFT-Pi05-PickCube-v1-SFT`](https://huggingface.co/josh11234/ExpoFT-Pi05-PickCube-v1-SFT) (22 %success on 200 held-out seeds)
-
-The critic-architecture comparison, reward-timing-fix comparison, and KL-regularization figures referenced in the latest updates above are still to be added — placeholders use the same `images/` convention as the rest of this page.
