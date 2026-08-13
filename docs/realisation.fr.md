@@ -750,7 +750,135 @@ on-policy *à partir* du checkpoint SFT. Une option de warm-start par behavior c
 l'idée du critic pretraining utilisée pour ExpoFT, a été ajoutée pour ces baselines afin de
 combler cet écart avant d'en tirer de nouvelles conclusions.
 
+### Phase 2 — Étape RL : un test direct de l'hypothèse de biais de sélection
+
+Plutôt que de continuer à inférer le mécanisme de biais de sélection par élimination, un
+diagnostic dédié de **misrank rate** a été construit pour le tester directement. Pour des
+états d'entraînement réels échantillonnés durant le RL, le score du critic pour l'action
+qu'il a effectivement sélectionnée est comparé à son score pour l'action qu'aurait prise à la
+place une politique de référence validée séparément, très performante (~96 % de succès). Si
+le critic classe correctement les candidats, il ne devrait pas préférer systématiquement son
+propre choix face à un choix démontrablement meilleur ; si le biais de maximisation est réel,
+il le devrait.
+
+Le diagnostic a été exécuté sur un balayage de checkpoints (de 20 000 à 120 000 pas) sur
+PushCube-v1. **Résultat :** le critic préférait son propre choix, pourtant pire, 94 à 100 %
+du temps, saturé dès le tout premier checkpoint évalué — une confirmation directe et positive
+du biais de maximisation/autoréférence, plutôt qu'une inférence par élimination.
+
+![misrank_rate by RL checkpoint]({{ config.site_url }}/images/fig_misrank_rate.png)
+*misrank_rate — à quelle fréquence le critic préfère sa propre action, pire, par rapport à
+celle de la politique de référence, par checkpoint (push_cube).*
+
+### Phase 2 — Étape RL : un bug critique de configuration de la récompense et sa correction
+
+Un collaborateur a soulevé une vérification de cohérence simple que l'investigation
+ci-dessus n'avait pas encore appliquée : les magnitudes de valeurs habituellement rapportées
+par le critic (couramment entre 13 et 19) ne devraient pas être atteignables sous une
+récompense sparse et binaire avec un facteur d'actualisation raisonnable. Vérifier cela
+directement a révélé deux bugs indépendants qui se combinaient :
+
+1. **L'environnement n'avait jamais été explicitement configuré en récompense sparse.** Il
+   utilisait silencieusement le mode dense et façonné par défaut de ManiSkill
+   (`normalized_dense`), confirmé à la fois en inspectant directement la configuration de
+   l'environnement et en rejouant une vraie démonstration tout en enregistrant la récompense
+   de chaque pas individuellement — aucun pas ne lisait exactement zéro, ce qu'une récompense
+   véritablement sparse et binaire produirait presque partout.
+2. **Indépendamment, la récompense utilisée dans la cible d'entraînement du critic était
+   divisée par une estimation courante de sa propre échelle** — un mécanisme destiné à garder
+   les bornes de valeur fixes du critic catégoriel significatives à travers les tâches sans
+   les régler à la main. À mesure que le taux de succès chutait en cours de run, cette
+   estimation courante rétrécissait, gonflant la récompense effective des rares succès
+   restants : une boucle autorenforçante, sans lien avec le mécanisme de biais de sélection
+   identifié précédemment.
+
+Les deux ont été corrigés : `reward_mode: sparse` a été rendu explicite dans les 18 configs
+YAML de tâches (plutôt que de compter sur le défaut de ManiSkill), et un flag
+`use_reward_normalization: false` a été ajouté pour contourner entièrement le rescaling par
+échelle courante.
+
+Cette découverte a nécessité un recadrage honnête plutôt qu'une rétractation. La preuve du
+misrank rate ci-dessus est une comparaison *relative* entre deux actions sous le même critic,
+et n'est pas affectée par l'échelle absolue de la récompense — elle tient toujours. Ce
+qu'elle affaiblit substantiellement, c'est le cadrage antérieur selon lequel les magnitudes de
+valeurs brutes (13–19) étaient absurdes en elles-mêmes : sous la récompense dense et
+rescalée réellement en usage à l'époque, de telles magnitudes n'étaient pas, en soi, une
+violation des bornes.
+
+### Phase 2 — Étape RL : problème de recalibration du critic catégoriel sous la récompense corrigée
+
+Sous la récompense sparse nouvellement corrigée, le support d'atomes fixe du critic
+catégoriel (`v_min=-10`, `v_max=20`) — calibré à l'origine pour l'ancien régime de récompense
+dense et rescalée — s'est révélé mal adapté à la plage réelle, beaucoup plus étroite, de la
+récompense sparse (environ [0, 1]). Testé sur PushCube-v1 avec `edit_scale=0.2`, le critic
+catégoriel s'est effondré catastrophiquement sous la récompense corrigée : d'un point de
+départ SFT de 60,5 % jusqu'à des valeurs à un chiffre vers 100 000–120 000 pas.
+
+Revenir à un critic scalaire plus simple, de style MSE/REDQ, sous la même récompense sparse
+corrigée, s'est révélé bruité mais non catastrophique — c'est l'architecture de critic
+utilisée pour l'évaluation finale ci-dessous. Recalibrer le support d'atomes du critic
+catégoriel à environ `[-1, 2]` pour correspondre à la plage réelle de la récompense sparse est
+le prochain test naturel, pas encore effectué.
+
+### Phase 2 — Étape RL : revisiter le ratio UTD sous la récompense corrigée
+
+Une fois le bug de configuration de la récompense corrigé, la comparaison du ratio
+update-to-data (UTD) du résultat central sur l'instabilité ci-dessus a été répétée sous la
+récompense sparse corrigée, avec le critic MSE. **Le résultat s'est inversé :**
+`utd_ratio=20` — le même réglage qui s'était effondré le plus vite et le plus sévèrement sous
+la récompense mal calibrée — est devenu la configuration la plus stable et la plus
+performante, tandis qu'`utd_ratio=1` se dégradait régulièrement sur le même horizon.
+
+![eval/success_rate under UTD ratio 1 vs. UTD ratio 20, sparse reward, corrected configuration]({{ config.site_url }}/images/utd_reversal_after_fix.png)
+*eval/success_rate — ratio UTD = 1 (rose) vs. ratio UTD = 20 (violet), récompense sparse,
+critic MSE, configuration corrigée.*
+
+Une lecture plausible, encore à développer pleinement : le ratio UTD n'a pas d'effet
+intrinsèquement stabilisant ou déstabilisant en soi — il amplifie le signal d'entraînement
+sous-jacent présent. Sous l'ancienne récompense mal calibrée, un ratio plus élevé amplifiait
+plus vite une erreur autorenforçante ; sous la récompense corrigée, la même amplification
+accélère au contraire un apprentissage par ailleurs sain.
+
+### Phase 2 — Étape RL : évaluation finale sur les trois tâches sous la configuration corrigée
+
+La configuration corrigée (`reward_mode: sparse`, `use_reward_normalization: false`, critic
+MSE, `utd_ratio=20`) a ensuite été testée sur les trois tâches actives — StackCube-v1,
+PushCube-v1 et PickCube-v1 — en utilisant les mêmes checkpoints SFT validés que pour chaque
+comparaison précédente.
+
+<table>
+    <tr>
+        <td>
+            <img src="{{ config.site_url }}/images/final-curve-pushcube.png" alt="Curve">
+
+            *PushCube-v1 — eval/success_rate après la correction de la récompense*
+        </td>
+        <td>
+            <img src="{{ config.site_url }}/images/final-curve-stackcube.png" alt="Curve">
+
+            *StackCube-v1 — eval/success_rate après la correction de la récompense*
+        </td>
+        <td>
+            <img src="{{ config.site_url }}/images/final-curve-pickcube.png" alt="Curve">
+
+            *PickCube-v1 — eval/success_rate après la correction de la récompense*
+        </td>
+    </tr>
+</table>
+
+**Résultat :** PushCube-v1 a clairement dépassé sa baseline SFT (62 % → 90 %). StackCube-v1 et
+PickCube-v1 ne s'effondraient plus vers zéro — une amélioration qualitative par rapport à
+chaque configuration pré-correction — mais oscillaient autour de leur performance SFT de
+départ (StackCube 41 % → 32 % ; PickCube 22 % → 16 %) plutôt que de s'améliorer régulièrement.
+La haute difficulté de la tâche pour StackCube-v1 et le faible taux de succès de départ pour
+PickCube-v1 sont les principaux suspects expliquant pourquoi ces deux tâches n'ont pas montré
+le même gain net que PushCube-v1 ; recalibrer le support d'atomes du critic catégoriel pour le
+régime de récompense sparse (ci-dessus) reste la piste non testée la plus prometteuse pour
+combler cet écart.
+
 ---
+
+
 
 ## Difficultés majeures rencontrées
 
@@ -799,6 +927,21 @@ directement plutôt qu'inféré par élimination. Une leçon utile, quoique d'ab
 contre-intuitive, de cette période de travail : un critic qui a l'air plus sain n'est pas la
 même chose qu'une meilleure politique, et les deux doivent être vérifiés séparément plutôt que
 supposés évoluer ensemble.
+
+### Bug de configuration de la récompense (Phase 2, résolu — impact significatif en aval)
+L'environnement utilisait silencieusement la récompense dense et façonnée par défaut de
+ManiSkill au lieu de la récompense sparse prévue, et la normalisation de la récompense du
+critic divisait par une estimation courante de sa propre échelle — une boucle
+autorenforçante à mesure que le taux de succès chutait. Aucun des deux bugs ne faisait
+planter quoi que ce soit ni ne produisait une courbe d'entraînement manifestement fausse ;
+tous deux n'ont été détectés que par une vérification numérique de cohérence sur les
+magnitudes de valeurs habituelles du critic, qui semblaient trop grandes pour être
+atteignables sous une récompense véritablement sparse. Corriger les deux a inversé la
+comparaison de ratio UTD du résultat central sur l'instabilité, et a changé quelle
+architecture de critic (MSE plutôt que catégorielle) était viable pour la suite. Leçon
+généralisée : des vérifications numériques de cohérence sur les valeurs elles-mêmes — pas
+seulement sur le succès de la politique ou l'absence de crash du code — peuvent révéler des
+bugs invisibles aux deux.
 
 ### Premier test de régularisation confondu (résolu, leçon de processus)
 Le premier test de régularisation KL contre la politique préentraînée a été exécuté avec le
@@ -869,6 +1012,10 @@ erreur.
 | Régularisation KL implémentée comme un terme additionnel et activable plutôt qu'un remplacement pur et simple du bonus d'exploration existant | Préserve la capacité de reproduire la formulation exacte du papier (en désactivant l'autre terme) tout en gardant les deux disponibles indépendamment pour l'ablation |
 | Ajout d'une option de warm-start par behavior cloning pour les baselines PPO/GRPO | Répond à la découverte que leur politique entraînable n'avait autrement aucun lien avec le checkpoint préentraîné |
 | Ajout d'une garde défensive contre les gradients non finis à l'étape de mise à jour PPO/GRPO | Empêche un futur problème numérique, encore inconnu, de corrompre silencieusement un run d'entraînement, indépendamment du fait que sa cause racine ait été trouvée ou non |
+| Construction d'un diagnostic misrank rate comparant l'action sélectionnée par le critic à celle d'une politique de référence validée | Teste directement l'hypothèse de biais de sélection plutôt que de continuer à l'inférer par élimination |
+| `reward_mode: sparse` rendu explicite dans les 18 configs YAML de tâches | ManiSkill retombait silencieusement sur une récompense dense et façonnée par défaut ; sparse était le réglage prévu depuis le début |
+| Ajout de `use_reward_normalization: false` pour contourner le rescaling de récompense par échelle courante du critic | La normalisation par échelle courante créait une boucle autorenforçante à mesure que le taux de succès chutait, gonflant la récompense effective des rares succès restants |
+| Retour à un critic scalaire de style MSE/REDQ plutôt qu'au critic catégoriel sous la récompense sparse corrigée | Le support d'atomes fixe du critic catégoriel, calibré pour l'ancien régime dense/rescalé, était mal adapté à la plage réelle ~[0,1] de la récompense sparse et s'est effondré catastrophiquement |
 
 ---
 

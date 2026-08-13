@@ -436,6 +436,67 @@ Each of these was confirmed with a small, targeted, reproducible test built spec
 
 **A more fundamental finding.** Investigating why these baselines showed no learning signal at all from the very start of training (rather than the "starts well, then degrades" pattern seen with ExpoFT) revealed that their trainable policy network had never actually been connected to the supervised-pretrained checkpoint in the first place: it is a small, separately and randomly initialized network, with the pretrained checkpoint used only to convert its inputs and outputs to and from the right format — not to give it any of the pretrained policy's own behavior to start from. This is a reasonable consequence of using a flow-matching base model, which does not expose the kind of action likelihood these two algorithms need directly, but it meant these baselines were effectively being asked to relearn manipulation from scratch, reproducing this project's own Phase 1 finding (on-policy RL cannot bootstrap without a competent starting policy) despite the intent being to test on-policy fine-tuning *from* the SFT checkpoint. A behavior-cloning warm-start option, mirroring the critic-pretraining idea used for ExpoFT, was added for these baselines to close this gap before drawing further conclusions from them.
 
+### Phase 2 — RL stage: a direct test of the selection-bias hypothesis
+
+Rather than continuing to infer the selection-bias mechanism by elimination, a dedicated **misrank-rate diagnostic** was built to test it directly. For real training states sampled during RL, the critic's score for the action it actually selected is compared against its score for the action a separately validated, high-performing reference policy (~96% success) would have taken instead. If the critic is ranking candidates correctly, it should not systematically prefer its own choice over a demonstrably better one; if the maximization bias is real, it should.
+
+The diagnostic was run across a sweep of checkpoints (20k through 120k steps) on PushCube-v1. **Result:** the critic preferred its own, worse choice 94–100% of the time, saturated from the very first checkpoint evaluated — a direct, positive confirmation of the maximization/self-reference bias, rather than an inference by elimination.
+
+![misrank_rate by RL checkpoint]({{ config.site_url }}/images/fig_misrank_rate.png)
+*misrank_rate — how often the critic prefers its own, worse action over the reference policy's, by checkpoint (push_cube).*
+
+### Phase 2 — RL stage: a critical reward-configuration bug and its fix
+
+A collaborator raised a simple sanity check that the investigation above had not yet applied: the critic's typical reported value magnitudes (routinely 13–19) should not be reachable under a sparse, binary reward with a reasonable discount factor. Checking this directly uncovered two compounding, independent bugs:
+
+1. **The environment had never been explicitly configured for a sparse reward at all.** It was silently using ManiSkill's own dense, shaped default (`normalized_dense`), confirmed both by inspecting the environment configuration directly and by replaying a real demonstration and logging every single step's reward — no step read exactly zero, which a genuinely sparse, binary reward would produce almost everywhere.
+2. **Independently, the reward used in the critic's training target was being divided by a running estimate of its own scale** — a mechanism intended to keep the categorical critic's fixed value bounds meaningful across tasks without hand-tuning them. As success rate fell during a run, this running estimate shrank, inflating the effective reward for the rare remaining successes: a self-reinforcing loop, unrelated to the selection-bias mechanism identified earlier.
+
+Both were corrected: `reward_mode: sparse` was made explicit in all 18 task YAML configs (rather than relying on ManiSkill's default), and a `use_reward_normalization: false` flag was added to bypass the running-scale rescaling entirely.
+
+This finding required an honest reframing rather than a retraction. The misrank-rate evidence above is a *relative* comparison between two actions under the same critic, and is unaffected by the reward's absolute scale — it still stands. What it does substantially weaken is the earlier framing of raw value magnitudes (13–19) as self-evidently absurd: under the dense, rescaled reward that was actually in use at the time, such magnitudes were not, on their own, a bound violation.
+
+### Phase 2 — RL stage: categorical critic recalibration issue under the corrected reward
+
+Under the newly corrected sparse reward, the categorical critic's fixed atom support (`v_min=-10`, `v_max=20`) — originally calibrated for the old dense, rescaled reward regime — turned out to be badly mismatched for the sparse reward's true, much narrower range (roughly [0, 1]). Tested on PushCube-v1 with `edit_scale=0.2`, the categorical critic collapsed catastrophically under the corrected reward: from a 60.5% SFT starting point down to single digits by 100–120k steps.
+
+Falling back to a simpler MSE/REDQ-style scalar critic under the same corrected sparse reward was noisy, but non-catastrophic — this is the critic architecture used for the final evaluation below. Recalibrating the categorical critic's atom support to roughly `[-1, 2]` to match the sparse reward's true range is the natural next test, not yet run.
+
+### Phase 2 — RL stage: revisiting UTD ratio under the corrected reward
+
+With the reward-configuration bug fixed, the update-to-data (UTD) ratio comparison from the central instability finding above was repeated under the corrected sparse reward, using the MSE critic. **The result reversed:** `utd_ratio=20` — the same setting that had collapsed fastest and most severely under the miscalibrated reward — was now the most stable, best-performing configuration, while `utd_ratio=1` degraded steadily over the same horizon.
+
+![eval/success_rate under UTD ratio 1 vs. UTD ratio 20, sparse reward, corrected configuration]({{ config.site_url }}/images/utd_reversal_after_fix.png)
+*eval/success_rate — UTD ratio 1 (pink) vs. UTD ratio 20 (purple), sparse reward, MSE critic, corrected configuration.*
+
+A plausible reading, still to be fully unpacked: the UTD ratio does not have an intrinsically stabilizing or destabilizing effect on its own — it amplifies whatever underlying training signal is present. Under the earlier, miscalibrated reward, a higher ratio amplified a self-reinforcing error faster; under the corrected reward, the same amplification instead accelerates otherwise-sound learning.
+
+### Phase 2 — RL stage: final evaluation on all three tasks under the corrected configuration
+
+The corrected configuration (`reward_mode: sparse`, `use_reward_normalization: false`, MSE critic, `utd_ratio=20`) was then tested on all three active tasks — StackCube-v1, PushCube-v1, and PickCube-v1 — using the same validated SFT checkpoints as every earlier comparison.
+
+<table>
+    <tr>
+        <td>
+            <img src="{{ config.site_url }}/images/final-curve-pushcube.png" alt="Curve">
+
+            *PushCube-v1 — eval/success_rate after the reward fix*
+        </td>
+        <td>
+            <img src="{{ config.site_url }}/images/final-curve-stackcube.png" alt="Curve">
+
+            *StackCube-v1 — eval/success_rate after the reward fix*
+        </td>
+        <td>
+            <img src="{{ config.site_url }}/images/final-curve-pickcube.png" alt="Curve">
+
+            *PickCube-v1 — eval/success_rate after the reward fix*
+        </td>
+    </tr>
+</table>
+
+**Result:** PushCube-v1 clearly beat its SFT baseline (62% → 90%). StackCube-v1 and PickCube-v1 no longer collapsed toward zero — a qualitative improvement over every pre-fix configuration — but oscillated around their starting SFT performance (StackCube 41% → 32%; PickCube 22% → 16%) rather than improving steadily. StackCube-v1's high task difficulty and PickCube-v1's low starting success rate are the leading suspects for why those two tasks did not show the same clear gain as PushCube-v1; recalibrating the categorical critic's atom support for the sparse-reward regime (above) remains the most promising untested lead for closing that gap.
+
 ---
 
 ## Major difficulties encountered
@@ -451,6 +512,9 @@ A failure mode that initially looked like a policy or exploration problem (0% su
 
 ### RL critic instability (Phase 2, central difficulty — substantially narrowed down since first reported)
 Every RL configuration tried so far degrades rather than improves the validated SFT policy, with the degradation initially correlated with growing critic loss instability. Two independent, real fixes — a rebuilt critic architecture with structurally bounded value estimates, and a corrected reward/termination timing bug in the data-collection loop — were each confirmed to meaningfully stabilize the critic's own training dynamics, but neither changed the collapse in policy performance. This shifted the leading hypothesis away from critic-training instability itself and toward the action-selection mechanism (the same critic proposing and judging its own preferred action), which is now being tested directly rather than inferred by elimination. A useful, if initially counter-intuitive, lesson from this stretch of work: a healthier-looking critic is not the same thing as a better policy, and the two need to be checked separately rather than assumed to move together.
+
+### Reward-configuration bug (Phase 2, resolved — significant downstream impact)
+The environment had silently been using ManiSkill's dense, shaped default reward instead of the intended sparse one, and the critic's reward normalization was dividing by a running estimate of its own scale — a self-reinforcing loop as success rate fell. Neither bug crashed anything or produced an obviously wrong training curve; both were caught only by a numeric sanity check on the critic's typical value magnitudes, which looked too large to be reachable under a genuinely sparse reward. Fixing both reversed the UTD-ratio comparison from the central instability finding and changed which critic architecture (MSE rather than categorical) was viable going forward. Lesson generalized: numeric sanity checks on logged values themselves — not just on whether the policy succeeds or the code runs without error — can surface bugs invisible to both.
 
 ### Confounded first regularization test (resolved, process lesson)
 The first test of KL regularization against the pretrained policy was run with the default exploration bonus still active alongside it, rather than disabled as the source paper's own formulation implies — meaning the encouraging result from that run could not yet be attributed to the regularization term specifically. Caught before drawing a conclusion from it; a properly isolated follow-up test is in progress. General lesson: when adding a term to an existing objective, explicitly check every other term it could interact with before reporting a result, rather than assuming a new option is independent of what is already there.
@@ -498,6 +562,10 @@ These baselines were assumed to be continuing from the supervised-pretrained che
 | KL regularization implemented as an additional, toggleable term rather than a hard replacement of the existing exploration bonus | Preserves the ability to reproduce the paper's exact formulation (by disabling the other term) while keeping both available independently for ablation |
 | Added a behavior-cloning warm-start option for the PPO/GRPO baselines | Addresses the discovery that their trainable policy had no connection to the pretrained checkpoint otherwise |
 | Added a defensive non-finite-gradient guard to the PPO/GRPO update step | Prevents a future, as-yet-unknown numerical issue from silently corrupting a training run, independent of whether its root cause has been found |
+| Built a misrank-rate diagnostic comparing the critic's own selected action to a validated reference policy's | Tests the selection-bias hypothesis directly instead of continuing to infer it by elimination |
+| Made `reward_mode: sparse` explicit in all 18 task YAML configs | ManiSkill was silently defaulting to a dense, shaped reward; sparse was the intended setting all along |
+| Added `use_reward_normalization: false` to bypass the critic's running-scale reward rescaling | The running-scale normalization created a self-reinforcing loop as success rate fell, inflating the effective reward for rare remaining successes |
+| Fell back to an MSE/REDQ-style scalar critic instead of the categorical critic under the corrected sparse reward | The categorical critic's fixed atom support, calibrated for the old dense/rescaled regime, was badly mismatched for the sparse reward's true ~[0,1] range and collapsed catastrophically |
 
 ---
 
